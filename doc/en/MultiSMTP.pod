@@ -1,0 +1,17 @@
+=head1 NAME
+
+MultiSMTP - make OTRS aware of multiple SMTP servers
+
+=head1 DESCRIPTION
+
+A standard OTRS installation is not able to use different SMTP servers for each sender address. This can lead to problems as many recipient servers deny to deliver the mails as a reverse lookup does not respond the hostname of the sender address.
+
+So each sender address needs its own SMTP server - and this is provided with this package.
+
+After installation, there is a new item in the Email block in the admin area. That is to manage the address -> SMTP server mapping. You can configure the settings for each address given in the system addresses. And you can define the type of SMTP connection (plain SMTP or SMTP/S). The user's password can be stored in an encrypted way - if you want to use this feature, you have to install the Perl modules Crypt::CBC and Crypt::DES.
+
+When a mail is sent, the package searches for the SMTP settings that belong to the sender address and if it can't find anything, it uses the SMTP settings from SysConfig (that is used by the standard SMTP mechanism).
+
+=head1 AUTHOR AND LICENSE
+
+=cut

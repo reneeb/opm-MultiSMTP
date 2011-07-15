@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<otrs_config version="1.0" init="Application">
+    <CVS>$Id: MultiSMTP.xml,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $</CVS>
+    <ConfigItem Name="Frontend::Module###AdminMultiSMTP" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the invoice states interface.</Description>
+        <Group>MultiSMTP</Group>
+        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Group>admin</Group>
+                <Description>Manage SMTP settings.</Description>
+                <Title>SMTP settings</Title>
+                <NavBarName>Admin</NavBarName>
+                <NavBarModule>
+                    <Module>Kernel::Output::HTML::NavBarModuleAdmin</Module>
+                    <Name Translatable="1">SMTP settings</Name>
+                    <Description Translatable="1">Manage SMTP settings.</Description>
+                    <Block>Email</Block>
+                    <Prio>1000</Prio>
+                </NavBarModule>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="MultiSMTP::Salt">
+        <Description Translatable="1">The salt for password encryption.</Description>
+        <Group>MultiSMTP</Group>
+        <SubGroup>Encryption</SubGroup>
+        <Setting>
+            <String Regex="">Salt</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="MultiSMTP::EncryptionKey">
+        <Description Translatable="1">The key for password encryption.</Description>
+        <Group>MultiSMTP</Group>
+        <SubGroup>Encryption</SubGroup>
+        <Setting>
+            <String Regex="">EncryptionKey</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="MultiSMTP::Fallback">
+        <Description Translatable="1">The fallback mechanism when multi smtp fails.</Description>
+        <Group>MultiSMTP</Group>
+        <SubGroup>Core</SubGroup>
+        <Setting>
+            <Option SelectedID="Kernel::System::Email::SMTP">
+                <Item Key="Kernel::System::Email::SMTP">Kernel::System::Email::SMTP</Item>
+                <Item Key="Kernel::System::Email::SMTPS">Kernel::System::Email::SMTPS</Item>
+                <Item Key="Kernel::System::Email::SMTPTLS">Kernel::System::Email::SMTPTLS</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+</otrs_config>

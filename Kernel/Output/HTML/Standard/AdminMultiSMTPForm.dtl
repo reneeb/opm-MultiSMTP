@@ -1,0 +1,154 @@
+# --
+# AgentMultiSMTPForm.dtl - provides HTML form for AdminPerlServicesInvoiceStates
+# Copyright (C) 2001-2010 OTRS AG, http://otrs.org/
+# --
+# $Id: AdminMultiSMTPForm.dtl,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
+    <h1>$Text{"SMTP Management"}</h1>
+    <div class="SidebarColumn">
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>$Text{"Actions"}</h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+                    <li>
+                        <a href="$Env{"Baselink"}Action=$Env{"Action"}" class="CallForAction"><span>$Text{"Go to overview"}</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="ContentColumn">
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>$Text{"Add/Change SMTP"}</h2>
+            </div>
+            <div class="Content">
+                <form action="$Env{"CGIHandle"}" method="post" class="Validate">
+
+                    <input type="hidden" name="Action" value="$Env{"Action"}"/>
+                    <input type="hidden" name="Subaction" value="$QData{"Subaction"}"/>
+                    <input type="hidden" name="ID" value="$QData{"ID"}"/>
+
+                    <fieldset class="TableLike">
+                        <label for="Host" class="Mandatory">
+                            <span class="Marker">*</span>
+                            $Text{"Host"}:
+                        </label>
+                        <div class="Field">
+                            <input type="text" id="Host" name="Host" value="$QData{"Host"}" class="W75pc Validate_Required $QData{"HostInvalid"}"/>
+                            <div id="HostError" class="TooltipErrorMessage">
+                                <p>$Text{"A host is required."}</p>
+                            </div>
+                            <div id="HostServerError" class="TooltipErrorMessage">
+                                <p>$Text{"A host is required."}</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="User" class="Mandatory">
+                            <span class="Marker">*</span>
+                            $Text{"User"}:
+                        </label>
+                        <div class="Field">
+                            <input type="text" id="User" name="User" value="$QData{"User"}" class="W75pc Validate_Required $QData{"UserInvalid"}" maxlength="120"/>,
+                            <div id="UserError" class="TooltipErrorMessage">
+                                <p>$Text{"User is mandatory."}</p>
+                            </div>
+                            <div id="UserServerError" class="TooltipErrorMessage">
+                                <p>$Text{"User is mandatory."}</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="Port" class="Mandatory">
+                            <span class="Marker">*</span>
+                            $Text{"Port"}:
+                        </label>
+                        <div class="Field">
+                            <input type="text" id="Port" name="Port" value="$QData{"Port"}" class="W75pc Validate_Required $QData{"PortInvalid"}" maxlength="120"/>,
+                            <div id="PortError" class="TooltipErrorMessage">
+                                <p>$Text{"Port is mandatory."}</p>
+                            </div>
+                            <div id="PortServerError" class="TooltipErrorMessage">
+                                <p>$Text{"Port is mandatory."}</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="PasswordDecrypted" class="Mandatory">
+                            <span class="Marker">*</span>
+                            $Text{"Password"}:
+                        </label>
+                        <div class="Field">
+                            <input type="password" id="PasswordDecrypted" name="PasswordDecrypted" value="$QData{"PasswordDecrypted"}" class="W75pc Validate_Required $QData{"PasswordInvalid"}" maxlength="120"/>,
+                            <div id="PasswordDecryptedError" class="TooltipErrorMessage">
+                                <p>$Text{"Password is mandatory."}</p>
+                            </div>
+                            <div id="PasswordDecryptedServerError" class="TooltipErrorMessage">
+                                <p>$Text{"Password is mandatory."}</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="Emails" class="Mandatory">
+                            <span class="Marker">*</span>
+                            $Text{"Emails"}:
+                        </label>
+                        <div class="Field">
+                            $Data{"EmailsSelect"}
+                            <div id="UserError" class="TooltipErrorMessage">
+                                <p>$Text{"Email is mandatory."}</p>
+                            </div>
+                            <div id="UserServerError" class="TooltipErrorMessage">
+                                <p>$Text{"Email is mandatory."}</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="Type" class="Mandatory">
+                            <span class="Marker">*</span>
+                            $Text{"Type"}:
+                        </label>
+                        <div class="Field">
+                            $Data{"TypeSelect"}
+                            <div id="UserError" class="TooltipErrorMessage">
+                                <p>$Text{"Type is mandatory."}</p>
+                            </div>
+                            <div id="UserServerError" class="TooltipErrorMessage">
+                                <p>$Text{"Type is mandatory."}</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+
+                        <label for="ValidID" class="Mandatory">
+                            <span class="Marker">*</span>
+                            $Text{"Valid"}:
+                        </label>
+                        <div class="Field">
+                            $Data{"ValidSelect"}
+                        </div>
+                        <div class="Clear"></div>
+
+                        <div class="Field">
+                            <button class="Primary" type="submit" value="$Text{"Save"}">$Text{"Save"}</button>
+                            $Text{"or"}
+                            <a href="$Env{"Baselink"}Action=$Env{"Action"}">$Text{"Cancel"}</a>
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="Clear"></div>
+</div>
