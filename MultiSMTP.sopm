@@ -2,7 +2,7 @@
 <otrs_package version="1.0">
     <CVS>$Id: MultiSMTP.sopm,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $</CVS>
     <Name>MultiSMTP</Name>
-    <Version>0.0.0</Version>
+    <Version>0.0.4</Version>
     <Framework>3.0.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
     <URL>http://perl-services.de/</URL>

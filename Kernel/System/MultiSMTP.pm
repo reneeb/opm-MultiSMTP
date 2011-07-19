@@ -153,7 +153,7 @@ sub SMTPAdd {
         SQL => 'INSERT INTO ps_multi_smtp '
             . '(host, user, password, encrypted, type, create_time, create_by, '
             . ' valid_id, change_time, change_by, port) '
-            . 'VALUES (?, ?, ?, ?, ?, current_timestamp, ?, ?, current_timestamp, ?)',
+            . 'VALUES (?, ?, ?, ?, ?, current_timestamp, ?, ?, current_timestamp, ?, ?)',
         Bind => [
             \$Param{Host},
             \$Param{User},
@@ -326,39 +326,39 @@ sub SMTPGet {
 
     my %SMTP;
     while ( my @Data = $Self->{DBObject}->FetchrowArray() ) {
-        %SMTP = (
-            ID         => $Data[0],
-            Host       => $Data[1], 
-            User       => $Data[2],
-            Password   => $Data[3],
-            Type       => $Data[4],
-            Encrypted  => $Data[6],
-            ChangeTime => $Data[7],
-            ChangeBy   => $Data[8],
-            CreateTime => $Data[9],
-            CreateBy   => $Data[10],
-            ValidID    => $Data[11],
-            Port       => $Data[12],
-        );
+        $SMTP{ID}         = $Data[0];
+        $SMTP{Host}       = $Data[1];
+        $SMTP{User}       = $Data[2];
+        $SMTP{Password}   = $Data[3];
+        $SMTP{Type}       = $Data[4];
+        $SMTP{Encrypted}  = $Data[6];
+        $SMTP{ChangeTime} = $Data[7];
+        $SMTP{ChangeBy}   = $Data[8];
+        $SMTP{CreateTime} = $Data[9];
+        $SMTP{CreateBy}   = $Data[10];
+        $SMTP{ValidID}    = $Data[11];
+        $SMTP{Port}       = $Data[12];
 
         push @{ $SMTP{Emails} }, $Data[5];
     }
 
-    $SMTP{Valid}   = $Self->{ValidObject}->ValidLookup( ValidID => $SMTP{ValidID} );
-    $SMTP{Creator} = $Self->{UserObject}->UserLookup( UserID => $SMTP{CreateBy} );
-    $SMTP{Changer} = $Self->{UserObject}->UserLookup( UserID => $SMTP{ChangeBy} );
+    if ( %SMTP ) {
+        $SMTP{Valid}   = $Self->{ValidObject}->ValidLookup( ValidID => $SMTP{ValidID} );
+        $SMTP{Creator} = $Self->{UserObject}->UserLookup( UserID => $SMTP{CreateBy} );
+        $SMTP{Changer} = $Self->{UserObject}->UserLookup( UserID => $SMTP{ChangeBy} );
 
-    if ( $SMTP{Encrypted} ) {
-        my $Cipher = Crypt::CBC->new(
-            -key    => $Self->{EncryptionKey},
-            -cipher => $Self->{EncryptionModule},
-            -salt   => $Self->{EncryptionSalt},
-        );
+        if ( $SMTP{Encrypted} ) {
+            my $Cipher = Crypt::CBC->new(
+                -key    => $Self->{EncryptionKey},
+                -cipher => $Self->{EncryptionModule},
+                -salt   => $Self->{EncryptionSalt},
+            );
 
-        $Param{PasswordDecrypted} = $Cipher->decrypt( $Param{Password} );
-    }
-    else {
-        $Param{PasswordDecrypted} = $Param{Password};
+            $SMTP{PasswordDecrypted} = $Cipher->decrypt( $SMTP{Password} );
+        }
+        else {
+            $SMTP{PasswordDecrypted} = $SMTP{Password};
+        }
     }
 
     return %SMTP;
@@ -486,6 +486,25 @@ sub SMTPGetForAddress {
             ValidID    => $Data[11],
             Port       => $Data[12],
         );
+    }
+
+    if ( %SMTP ) {
+        $SMTP{Valid}   = $Self->{ValidObject}->ValidLookup( ValidID => $SMTP{ValidID} );
+        $SMTP{Creator} = $Self->{UserObject}->UserLookup( UserID => $SMTP{CreateBy} );
+        $SMTP{Changer} = $Self->{UserObject}->UserLookup( UserID => $SMTP{ChangeBy} );
+
+        if ( $SMTP{Encrypted} ) {
+            my $Cipher = Crypt::CBC->new(
+                -key    => $Self->{EncryptionKey},
+                -cipher => $Self->{EncryptionModule},
+                -salt   => $Self->{EncryptionSalt},
+            );
+
+            $SMTP{PasswordDecrypted} = $Cipher->decrypt( $SMTP{Password} );
+        }
+        else {
+            $SMTP{PasswordDecrypted} = $SMTP{Password};
+        }
     }
 
     return %SMTP;
