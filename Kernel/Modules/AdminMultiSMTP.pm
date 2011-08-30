@@ -210,7 +210,8 @@ sub _MaskSMTPForm {
     $Param{Port} ||= 25;
 
     my %SMTPAddresses;
-    $SMTPAddresses{$_} = 1 for @{ $Param{Emails} || $SMTP{Emails} || [] };
+    my @Selected = @{ $Param{Emails} || [] } ? @{ $Param{Emails} } : @{ $SMTP{Emails} || [] };
+    $SMTPAddresses{$_} = 1 for @Selected;
     
     my %SystemAddresses = $Self->{SMTPObject}->SystemAddressList(
         %SMTPAddresses,
@@ -221,7 +222,7 @@ sub _MaskSMTPForm {
         Name        => 'Emails',
         Size        => 5,
         Multiple    => 1,
-        SelectedIDs => $Param{Emails} || $SMTP{Emails},
+        SelectedIDs => \@Selected,
         HTMLQuote   => 1,
     );
 
