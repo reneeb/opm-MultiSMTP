@@ -500,7 +500,7 @@ returns a list of all system addresses that are not already mapped to a SMTP.
 =cut
 
 sub SystemAddressList {
-    my ($Self) = @_;
+    my ( $Self, %Param ) = @_;
 
     my $SQL = 'SELECT value0, value1 FROM system_address';
 
@@ -515,8 +515,9 @@ sub SystemAddressList {
 
     my %List;
     for my $Address ( @Addresses ) {
-        next if $Self->SMTPGetForAddress( Address => $Address->{address} );
-        $List{ $Address->{address} } = sprintf "%s (%s)", $Address->{address}, $Address->{name};
+        my $Email = $Address->{address};
+        next if !$Param{$Email} && $Self->SMTPGetForAddress( Address => $Email );
+        $List{$Email} = sprintf "%s (%s)", $Email, $Address->{name};
     }
 
     return %List;

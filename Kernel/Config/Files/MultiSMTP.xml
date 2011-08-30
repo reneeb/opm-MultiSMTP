@@ -22,11 +22,11 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="MultiSMTP::Salt">
-        <Description Translatable="1">The salt for password encryption.</Description>
+        <Description Translatable="1">The salt for password encryption. It has to have exactly 8 bytes!</Description>
         <Group>MultiSMTP</Group>
         <SubGroup>Encryption</SubGroup>
         <Setting>
-            <String Regex="">Salt</String>
+            <String Regex="">SaltSalt</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="MultiSMTP::EncryptionKey">

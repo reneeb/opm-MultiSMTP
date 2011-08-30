@@ -209,7 +209,13 @@ sub _MaskSMTPForm {
 
     $Param{Port} ||= 25;
 
-    my %SystemAddresses = $Self->{SMTPObject}->SystemAddressList();
+    my %SMTPAddresses;
+    $SMTPAddresses{$_} = 1 for @{ $Param{Emails} || $SMTP{Emails} || [] };
+    
+    my %SystemAddresses = $Self->{SMTPObject}->SystemAddressList(
+        %SMTPAddresses,
+    );
+    
     $Param{EmailsSelect} = $Self->{LayoutObject}->BuildSelection(
         Data        => \%SystemAddresses,
         Name        => 'Emails',
