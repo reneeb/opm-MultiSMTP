@@ -56,7 +56,9 @@
 <!-- dtl:block:SMTPRow -->
                         <tr>
                             <td>
+                                <a href="$Env{"Baselink"}Action=AdminMultiSMTP;Subaction=Edit;ID=$LQData{"ID"}">
                                 $QData{"ID"}
+                                </a>
                             </td>
                             <td>
                                 $QData{"Host"}
