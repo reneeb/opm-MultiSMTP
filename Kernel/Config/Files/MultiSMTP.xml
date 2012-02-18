@@ -15,7 +15,8 @@
                     <Module>Kernel::Output::HTML::NavBarModuleAdmin</Module>
                     <Name Translatable="1">SMTP settings</Name>
                     <Description Translatable="1">Manage SMTP settings.</Description>
-                    <Block>Email</Block>
+                    <Block>Block4</Block>
+                    <!-- MultiSMTP-capeIT (only for 3.0x) Block>Email</Block -->
                     <Prio>1000</Prio>
                 </NavBarModule>
             </FrontendModuleReg>
@@ -45,7 +46,7 @@
             <Option SelectedID="Kernel::System::Email::SMTP">
                 <Item Key="Kernel::System::Email::SMTP">Kernel::System::Email::SMTP</Item>
                 <Item Key="Kernel::System::Email::SMTPS">Kernel::System::Email::SMTPS</Item>
-                <Item Key="Kernel::System::Email::SMTPTLS">Kernel::System::Email::SMTPTLS</Item>
+                <!--  MultiSMTP-capeIT (only for 3.0x) Item Key="Kernel::System::Email::SMTPTLS">Kernel::System::Email::SMTPTLS</Item -->
             </Option>
         </Setting>
     </ConfigItem>

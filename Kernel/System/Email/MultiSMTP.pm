@@ -1,6 +1,11 @@
 # --
 # Kernel/System/Email/MultiSMTP.pm - the global email send module
 # Copyright (C) 2001-2010 OTRS AG, http://otrs.org/
+# Extensions Copyright (C) 2006-2012 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Frank(dot)Oberender(at)cape(dash)it(dot)de
+#
 # --
 # $Id: MultiSMTP.pm,v 1.29 2010/01/12 15:55:38 martin Exp $
 # --
@@ -18,10 +23,14 @@ use Kernel::System::EmailParser;
 use Kernel::System::MultiSMTP;
 use Kernel::System::Email::SMTP;
 use Kernel::System::Email::SMTPS;
-use Kernel::System::Email::SMTPTLS;
+# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
+#use Kernel::System::Email::SMTPTLS;
+# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
 use Kernel::System::Email::MultiSMTP::SMTP;
 use Kernel::System::Email::MultiSMTP::SMTPS;
-use Kernel::System::Email::MultiSMTP::SMTPTLS;
+# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
+#use Kernel::System::Email::MultiSMTP::SMTPTLS;
+# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
 
 
 use vars qw($VERSION);
@@ -40,18 +49,20 @@ sub new {
     }
 
     # create needed object
-    $Self->{MSMTPObject}  = Kernel::System::MultiSMTP->new( %Param );
-    $Self->{ParserObject} = Kernel::System::EmailParser->new(
-        %{$Self},
-        Mode  => 'Standalone',
-        Debug => 0,
-    );
+    $Self->{MSMTPObject}  = Kernel::System::MultiSMTP->new( %Param );# MultiSMTP for OTRS-Framwork 2.4.x
+# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
+    #$Self->{ParserObject} = Kernel::System::EmailParser->new(
+        #%{$Self},
+        #Mode  => 'Standalone',
+        #Debug => 0,
+    #);
+# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
 
     return $Self;
 }
 
 sub Check {
-    return (Successful => 1, MultiSMTP => shift ); 
+    return (Successful => 1, MultiSMTP => shift );
 }
 
 sub Send {
@@ -75,9 +86,17 @@ sub Send {
         return;
     }
 
-    my $PlainFrom = $Self->{ParserObject}->GetEmailAddress(
-        Email => $Param{From},
-    );
+# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
+    #my $PlainFrom = $Self->{ParserObject}->GetEmailAddress(
+        #Email => $Param{From},
+    #);
+    my $PlainFrom = '';
+    for my $EmailSplit ( Mail::Address->parse( $Param{From} ) ) {
+        $PlainFrom = $EmailSplit->address();
+    }
+    $PlainFrom = '' if $PlainFrom !~ /@/;
+
+# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
 
     my %SMTP = $Self->{MSMTPObject}->SMTPGetForAddress(
         Address => $PlainFrom,
@@ -108,7 +127,7 @@ sub Send {
     );
 
     return if !$SMTPObject;
-    
+
     $SMTPObject->Send( %Param );
 
     return 1;
