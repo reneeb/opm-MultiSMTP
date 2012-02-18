@@ -213,12 +213,12 @@ sub _MaskSMTPForm {
     }
 
     $Param{Port} ||= 25;
-use Data::Dumper;
-print STDERR "Emails: ".Dumper($Param{Emails});
-print STDERR "SMTP: ".Dumper($SMTP{Emails});
+#use Data::Dumper;
+#print STDERR "Emails: ".Dumper($Param{Emails});
+#print STDERR "SMTP: ".Dumper($SMTP{Emails});
     my %SMTPAddresses;
     my @Selected = @{ $Param{Emails} || [] } ? @{ $Param{Emails} } : @{ $SMTP{Emails} || [] };
-print STDERR "Selected: ".Dumper(\@Selected);
+#print STDERR "Selected: ".Dumper(\@Selected);
     $SMTPAddresses{$_} = 1 for @Selected;
 
     my %SystemAddresses = $Self->{SMTPObject}->SystemAddressList(
