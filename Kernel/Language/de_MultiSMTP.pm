@@ -1,6 +1,11 @@
 # --
 # Kernel/Language/de_MultiSMTP.pm - the german translation of MultiSMTP
 # Copyright (C) 2011 Perl-Services.de, http://perl-services.de/
+# Extensions Copyright (C) 2006-2012 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Frank(dot)Oberender(at)cape(dash)it(dot)de
+#
 # --
 # $Id: de_MultiSMTP.pm,v 1.3 2011/07/13 10:45:32 rb Exp $
 # --
@@ -31,6 +36,11 @@ sub Data {
     $Lang->{'Add SMTP'}             = 'SMTP hinzufügen';
     $Lang->{'SMTP settings'}        = 'SMTP-Einstellungen';
     $Lang->{'Manage SMTP settings'} = 'SMTP-Einstellungen verwalten';
+
+# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
+    $Lang->{'Add a new SMTP-Account.'} = 'Füge neues SMTP-Konto hinzu.';
+    $Lang->{'SMTP Management'} = 'SMTP Verwaltung';
+# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
 
     return 1;
 }

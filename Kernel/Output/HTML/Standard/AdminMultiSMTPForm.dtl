@@ -1,6 +1,11 @@
 # --
 # AgentMultiSMTPForm.dtl - provides HTML form for AdminPerlServicesInvoiceStates
 # Copyright (C) 2001-2010 OTRS AG, http://otrs.org/
+# Extensions Copyright (C) 2006-2012 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Frank(dot)Oberender(at)cape(dash)it(dot)de
+#
 # --
 # $Id: AdminMultiSMTPForm.dtl,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
 # --
@@ -9,146 +14,111 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
-    <h1>$Text{"SMTP Management"}</h1>
-    <div class="SidebarColumn">
-        <div class="WidgetSimple">
-            <div class="Header">
-                <h2>$Text{"Actions"}</h2>
-            </div>
-            <div class="Content">
-                <ul class="ActionList">
-                    <li>
-                        <a href="$Env{"Baselink"}Action=$Env{"Action"}" class="CallForAction"><span>$Text{"Go to overview"}</span></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+    <tr>
+        <td colspan="2" class="mainhead">
+            $Env{"Box0"}$Text{"SMTP Management"}$Env{"Box1"}
+        </td>
+    </tr>
+    <tr>
+        <td width="30%" class="mainbody">
+            <form action="$Env{"CGIHandle"}" method="post">
+                <input type="hidden" name="Action" value="$Env{"Action"}"/>
+                <input type="hidden" name="Subaction" value="Add"/>
+                <table width="100%" cellspacing="0" cellpadding="4">
+                    <tr>
+                        <td class="contenthead">$Text{"Add SMTP"}:</td>
+                    </tr>
+                    <tr>
+                        <td class="contentbody">
+                            $Text{"Add a new SMTP-Account."}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="contentfooter">
+                            <input class="button" type="submit" value="$Text{"Add"}"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </td>
+        <td width="70%" class="mainbody">
+            <form action="$Env{"CGIHandle"}" method="post" class="Validate">
 
-    <div class="ContentColumn">
-        <div class="WidgetSimple">
-            <div class="Header">
-                <h2>$Text{"Add/Change SMTP"}</h2>
-            </div>
-            <div class="Content">
-                <form action="$Env{"CGIHandle"}" method="post" class="Validate">
+                <input type="hidden" name="Action" value="$Env{"Action"}"/>
+                <input type="hidden" name="Subaction" value="$QData{"Subaction"}"/>
+                <input type="hidden" name="ID" value="$QData{"ID"}"/>
+                <table width="100%" cellspacing="0" cellpadding="4">
+                    <tr>
+                        <td class="contenthead">
+                            $Text{"Edit"} ($Text{"$QData{"Subaction"}"}):
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="contentbody">
+                            <table border="0" cellspacing="0" cellpadding="3">
+                                <tr>
+                                    <td class="contentkey">$Text{"Host"}: </td>
+                                    <td class="contentvalue">
+                                        <input type="text" id="Host" name="Host" value="$QData{"Host"}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="contentkey">$Text{"User"}: </td>
+                                    <td class="contentvalue">
+                                        <input type="text" id="User" name="User" value="$QData{"User"}" maxlength="120"/>
+                                    </td>
+                                </tr>
 
-                    <input type="hidden" name="Action" value="$Env{"Action"}"/>
-                    <input type="hidden" name="Subaction" value="$QData{"Subaction"}"/>
-                    <input type="hidden" name="ID" value="$QData{"ID"}"/>
+                                <tr>
+                                    <td class="contentkey">$Text{"Port"}: </td>
+                                    <td class="contentvalue">
+                                        <input type="text" id="Port" name="Port" value="$QData{"Port"}" class="W75pc Validate_Required $QData{"PortInvalid"}" maxlength="120"/>
+                                    </td>
+                                </tr>
 
-                    <fieldset class="TableLike">
-                        <label for="Host" class="Mandatory">
-                            <span class="Marker">*</span>
-                            $Text{"Host"}:
-                        </label>
-                        <div class="Field">
-                            <input type="text" id="Host" name="Host" value="$QData{"Host"}" class="W75pc Validate_Required $QData{"HostInvalid"}"/>
-                            <div id="HostError" class="TooltipErrorMessage">
-                                <p>$Text{"A host is required."}</p>
-                            </div>
-                            <div id="HostServerError" class="TooltipErrorMessage">
-                                <p>$Text{"A host is required."}</p>
-                            </div>
-                        </div>
-                        <div class="Clear"></div>
+                                <tr>
+                                    <td class="contentkey">$Text{"Password"}: </td>
+                                    <td class="contentvalue">
+                                        <input type="password" id="PasswordDecrypted" name="PasswordDecrypted" value="$QData{"PasswordDecrypted"}" class="W75pc Validate_Required $QData{"PasswordInvalid"}" maxlength="120"/>
+                                    </td>
+                                </tr>
 
-                        <label for="User" class="Mandatory">
-                            <span class="Marker">*</span>
-                            $Text{"User"}:
-                        </label>
-                        <div class="Field">
-                            <input type="text" id="User" name="User" value="$QData{"User"}" class="W75pc Validate_Required $QData{"UserInvalid"}" maxlength="120"/>,
-                            <div id="UserError" class="TooltipErrorMessage">
-                                <p>$Text{"User is mandatory."}</p>
-                            </div>
-                            <div id="UserServerError" class="TooltipErrorMessage">
-                                <p>$Text{"User is mandatory."}</p>
-                            </div>
-                        </div>
-                        <div class="Clear"></div>
+                                <tr>
+                                    <td class="contentkey">$Text{"Emails"}: </td>
+                                    <td class="contentvalue">
+                                        $Data{"EmailsSelect"}
+                                    </td>
+                                </tr>
 
-                        <label for="Port" class="Mandatory">
-                            <span class="Marker">*</span>
-                            $Text{"Port"}:
-                        </label>
-                        <div class="Field">
-                            <input type="text" id="Port" name="Port" value="$QData{"Port"}" class="W75pc Validate_Required $QData{"PortInvalid"}" maxlength="120"/>,
-                            <div id="PortError" class="TooltipErrorMessage">
-                                <p>$Text{"Port is mandatory."}</p>
-                            </div>
-                            <div id="PortServerError" class="TooltipErrorMessage">
-                                <p>$Text{"Port is mandatory."}</p>
-                            </div>
-                        </div>
-                        <div class="Clear"></div>
+                                <tr>
+                                    <td class="contentkey">$Text{"Type"}: </td>
+                                    <td class="contentvalue">
+                                        $Data{"TypeSelect"}
+                                    </td>
+                                </tr>
 
-                        <label for="PasswordDecrypted" class="Mandatory">
-                            <span class="Marker">*</span>
-                            $Text{"Password"}:
-                        </label>
-                        <div class="Field">
-                            <input type="password" id="PasswordDecrypted" name="PasswordDecrypted" value="$QData{"PasswordDecrypted"}" class="W75pc Validate_Required $QData{"PasswordInvalid"}" maxlength="120"/>,
-                            <div id="PasswordDecryptedError" class="TooltipErrorMessage">
-                                <p>$Text{"Password is mandatory."}</p>
-                            </div>
-                            <div id="PasswordDecryptedServerError" class="TooltipErrorMessage">
-                                <p>$Text{"Password is mandatory."}</p>
-                            </div>
-                        </div>
-                        <div class="Clear"></div>
+                                <tr>
+                                    <td class="contentkey">$Text{"Valid"}: </td>
+                                    <td class="contentvalue">
+                                        $Data{"ValidSelect"}
+                                    </td>
+                                </tr>
 
-                        <label for="Emails" class="Mandatory">
-                            <span class="Marker">*</span>
-                            $Text{"Emails"}:
-                        </label>
-                        <div class="Field">
-                            $Data{"EmailsSelect"}
-                            <div id="UserError" class="TooltipErrorMessage">
-                                <p>$Text{"Email is mandatory."}</p>
-                            </div>
-                            <div id="UserServerError" class="TooltipErrorMessage">
-                                <p>$Text{"Email is mandatory."}</p>
-                            </div>
-                        </div>
-                        <div class="Clear"></div>
-
-                        <label for="Type" class="Mandatory">
-                            <span class="Marker">*</span>
-                            $Text{"Type"}:
-                        </label>
-                        <div class="Field">
-                            $Data{"TypeSelect"}
-                            <div id="UserError" class="TooltipErrorMessage">
-                                <p>$Text{"Type is mandatory."}</p>
-                            </div>
-                            <div id="UserServerError" class="TooltipErrorMessage">
-                                <p>$Text{"Type is mandatory."}</p>
-                            </div>
-                        </div>
-                        <div class="Clear"></div>
-
-
-                        <label for="ValidID" class="Mandatory">
-                            <span class="Marker">*</span>
-                            $Text{"Valid"}:
-                        </label>
-                        <div class="Field">
-                            $Data{"ValidSelect"}
-                        </div>
-                        <div class="Clear"></div>
-
-                        <div class="Field">
-                            <button class="Primary" type="submit" value="$Text{"Save"}">$Text{"Save"}</button>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="contentfooter">
+                            <input class="button" type="submit" value="$Text{"Save"}"/>
+<!--
                             $Text{"or"}
                             <a href="$Env{"Baselink"}Action=$Env{"Action"}">$Text{"Cancel"}</a>
-                        </div>
-                        <div class="Clear"></div>
-                    </fieldset>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="Clear"></div>
-</div>
+-->
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </td>
+    </tr>
+</table>

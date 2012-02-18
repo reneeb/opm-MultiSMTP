@@ -1,6 +1,11 @@
 # --
 # AdminMultiSMTPList.dtl - provides HTML form for AdminMultiSMTPList
 # Copyright (C) 2010-2011 einraumwerk, http://einraumwerk.de/
+# Extensions Copyright (C) 2006-2012 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Frank(dot)Oberender(at)cape(dash)it(dot)de
+#
 # --
 # $Id: AdminMultiSMTPList.dtl,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
 # --
@@ -9,95 +14,117 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
-    <h1>$Text{"SMTP Management"}</h1>
-    <div class="SidebarColumn">
-        <div class="WidgetSimple">
-            <div class="Header">
-                <h2>$Text{"Actions"}</h2>
-            </div>
-            <div class="Content">
-                <ul class="ActionList">
-                    <li>
-                        <a href="$Env{"Baselink"}Action=$Env{"Action"};Subaction=Add" class="CallForAction"><span>$Text{"Add SMTP"}</span></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="ContentColumn">
-        <div class="WidgetSimple">
-            <div class="Header">
-                <h2>$Text{"List"}</h2>
-            </div>
-            <div class="Content">
-                <table class="DataTable" id="SMTP">
-                    <thead>
-                        <tr>
-                            <th>$Text{"ID"}</th>
-                            <th>$Text{"Host"}</th>
-                            <th>$Text{"User"}</th>
-                            <th>$Text{"Port"}</th>
-                            <th>$Text{"Emails"}</th>
-                            <th>$Text{"Type"}</th>
-                            <th>$Text{"Valid"}</th>
-                            <th>$Text{"Date"}</th>
-                            <th>$Text{"Creator"}</th>
-                            <th>$Text{"Action"}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-<!-- dtl:block:NoSMTPFound -->
-                        <tr>
-                            <td colspan="10">$Text{"No matches found."}</td>
-                        </tr>
-<!-- dtl:block:NoSMTPFound -->
-<!-- dtl:block:SMTPRow -->
-                        <tr>
-                            <td>
-                                <a href="$Env{"Baselink"}Action=AdminMultiSMTP;Subaction=Edit;ID=$LQData{"ID"}">
-                                $QData{"ID"}
-                                </a>
-                            </td>
-                            <td>
-                                $QData{"Host"}
-                            </td>
-                            <td>
-                                $QData{"User"}
-                            </td>
-                            <td>
-                                $QData{"Port"}
-                            </td>
-                            <td>
-                                $QData{"EmailString"}
-                            </td>
-                            <td>
-                                $QData{"Type"}
-                            </td>
-                            <td>
-                                $Text{"$Data{"Valid"}"}
-                            </td>
-                            <td>
-                                $QData{"CreateTime"}
-                            </td>
-                            <td>
-                                $QData{"Creator"}
-                            </td>
-                            <td>
-                                <a href="$Env{"Baselink"}Action=AdminMultiSMTP;Subaction=Edit;ID=$LQData{"ID"}">
-                                $Text{"edit"}
-                                </a> |
-                                <a href="$Env{"Baselink"}Action=AdminMultiSMTP;Subaction=Delete;ID=$LQData{"ID"}">
-                                $Text{"delete"}
-                                </a>
-                            </td>
-                        </tr>
-<!-- dtl:block:SMTPRow -->
-                    </tbody>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+    <tr>
+        <td colspan="2" class="mainhead">
+            $Env{"Box0"}$Text{"SMTP Management"}$Env{"Box1"}
+        </td>
+    </tr>
+    <tr>
+        <td width="30%" class="mainbody">
+            <form action="$Env{"CGIHandle"}" method="post">
+                <input type="hidden" name="Action" value="$Env{"Action"}"/>
+                <input type="hidden" name="Subaction" value="Add"/>
+                <table width="100%" cellspacing="0" cellpadding="4">
+                    <tr>
+                        <td class="contenthead">$Text{"Add SMTP"}:</td>
+                    </tr>
+                    <tr>
+                        <td class="contentbody">
+                            $Text{"Add a new SMTP-Account."}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="contentfooter">
+                            <input class="button" type="submit" value="$Text{"Add"}"/>
+                        </td>
+                    </tr>
                 </table>
-            </div>
-        </div>
-    </div>
-    <div class="Clear"></div>
-</div>
+            </form>
+        </td>
+        <td width="70%" class="mainbody">
+            <table width="100%" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td class="contenthead">$Text{"List"}:</td>
+                </tr>
+                <tr>
+                    <td class="contentbody">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                            <tr>
+<!--
+                                <td class="contentkey">$Text{"ID"}</td>
+-->
+                                <td class="contentkey">$Text{"HOST"}</td>
+                                <td class="contentkey">$Text{"User"}</td>
+                                <td class="contentkey">$Text{"Port"}</td>
+                                <td class="contentkey">$Text{"Emails"}</td>
+                                <td class="contentkey">$Text{"Type"}</td>
+                                <td class="contentkey">$Text{"Valid"}</td>
+                                <td class="contentkey">$Text{"Date"}</td>
+                                <td class="contentkey">$Text{"Creator"}</td>
+                                <td class="contentkey">$Text{"Action"}</td>
+                            </tr>
+<!-- dtl:block:SMTPRow -->
+                            <tr>
+<!--
+                                <td class="$QData{"CssClass"}">
+                                    <a href="$Env{"Baselink"}Action=AdminMultiSMTP;Subaction=Edit;ID=$LQData{"ID"}">
+                                        $QData{"ID"}
+                                    </a>
+                                </td>
+-->
+
+
+                                <td class="$QData{"CssClass"}">
+                                    <a href="$Env{"Baselink"}Action=AdminMultiSMTP;Subaction=Edit;ID=$LQData{"ID"}">
+                                        $QData{"Host"}
+                                    </a>
+                                </td>
+                                <td class="$QData{"CssClass"}">
+                                    $QData{"User"}
+                                </td>
+                                <td class="$QData{"CssClass"}">
+                                    $QData{"Port"}
+                                </td>
+                                <td class="$QData{"CssClass"}">
+                                    $QData{"EmailString"}
+                                </td>
+                                <td class="$QData{"CssClass"}">
+                                    $QData{"Type"}
+                                </td>
+                                <td class="$QData{"CssClass"}">
+                                    $Text{"$Data{"Valid"}"}
+                                </td>
+                                <td class="$QData{"CssClass"}">
+                                    $QData{"CreateTime"}
+                                </td>
+                                <td class="$QData{"CssClass"}">
+                                    $QData{"Creator"}
+                                </td>
+                                <td class="$QData{"CssClass"}">
+                                    <a href="$Env{"Baselink"}Action=AdminMultiSMTP;Subaction=Edit;ID=$LQData{"ID"}">
+                                    $Text{"edit"}
+                                    </a> |
+                                    <a href="$Env{"Baselink"}Action=AdminMultiSMTP;Subaction=Delete;ID=$LQData{"ID"}">
+                                    $Text{"delete"}
+                                    </a>
+                                </td>
+                            </tr>
+<!-- dtl:block:SMTPRow -->
+<!-- dtl:block:NoSMTPFound -->
+                            <tr>
+                                <td colspan="10">$Text{"No matches found."}</td>
+                            </tr>
+<!-- dtl:block:NoSMTPFound -->
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="contentfooter">
+                        &nbsp;
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

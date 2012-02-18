@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<otrs_package version="1.0">
-    <CVS>$Id: MultiSMTP.sopm,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $</CVS>
+<otrs_package version="1.1">
     <Name>MultiSMTP</Name>
-    <Version>0.0.4</Version>
-    <Framework>3.0.x</Framework>
+    <Version>0.1.0</Version>
     <Vendor>Perl-Services.de</Vendor>
     <URL>http://perl-services.de/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
     <Description Lang="en">A module that allows OTRS to use several SMTP servers.</Description>
     <Description Lang="de">Ein Modul, mit dem man mehrere SMTP-Server für OTRS nutzen kann.</Description>
+    <Framework>2.4.x</Framework>
     <Filelist>
         <File Permission="644" Location="Kernel/Config/Files/MultiSMTP.xml"/>
         <File Permission="644" Location="Kernel/Language/de_MultiSMTP.pm"/>
@@ -19,39 +18,43 @@
         <File Permission="644" Location="Kernel/System/Email/MultiSMTP.pm"/>
         <File Permission="644" Location="Kernel/System/Email/MultiSMTP/SMTP.pm"/>
         <File Permission="644" Location="Kernel/System/Email/MultiSMTP/SMTPS.pm"/>
-        <File Permission="644" Location="Kernel/System/Email/MultiSMTP/SMTPTLS.pm"/>
         <File Permission="644" Location="doc/en/MultiSMTP.pod"/>
     </Filelist>
     <DatabaseInstall Type="post">
-        <TableCreate Name="ps_multi_smtp">
-            <Column Name="id" Required="true" AutoIncrement="true" Type="INTEGER" PrimaryKey="true"/>
-            <Column Name="type" Required="true" Type="VARCHAR" Size="250"/>
-            <Column Name="host" Required="true" Type="VARCHAR" Size="250"/>
-            <Column Name="user" Required="true" Type="VARCHAR" Size="200"/>
-            <Column Name="password" Required="true" Type="VARCHAR" Size="250"/>
-            <Column Name="port" Required="true" Type="VARCHAR" Size="250"/>
-            <Column Name="encrypted" Required="true" Type="SMALLINT"/>
-            <Column Name="create_time" Required="true" Type="DATE"/>
-            <Column Name="create_by" Required="true" Type="INTEGER"/>
-            <Column Name="valid_id" Required="true" Type="SMALLINT"/>
-            <Column Name="change_time" Required="true" Type="DATE"/>
-            <Column Name="change_by" Required="true" Type="INTEGER"/>
+        <TableCreate Type="post" Name="ps_multi_smtp">
+            <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="INTEGER"></Column>
+            <Column Name="type" Required="true" Size="250" Type="VARCHAR"></Column>
+            <Column Name="host" Required="true" Size="250" Type="VARCHAR"></Column>
+            <Column Name="user" Required="true" Size="200" Type="VARCHAR"></Column>
+            <Column Name="password" Required="true" Size="250" Type="VARCHAR"></Column>
+            <Column Name="port" Required="true" Size="250" Type="VARCHAR"></Column>
+            <Column Name="encrypted" Required="true" Type="SMALLINT"></Column>
+            <Column Name="create_time" Required="true" Type="DATE"></Column>
+            <Column Name="create_by" Required="true" Type="INTEGER"></Column>
+            <Column Name="valid_id" Required="true" Type="SMALLINT"></Column>
+            <Column Name="change_time" Required="true" Type="DATE"></Column>
+            <Column Name="change_by" Required="true" Type="INTEGER"></Column>
             <ForeignKey ForeignTable="system_user">
-                <Reference Local="create_by" Foreign="id" />
-                <Reference Local="change_by" Foreign="id" />
+                <Reference Foreign="id" Local="create_by">
+                </Reference>
+                <Reference Foreign="id" Local="change_by">
+                </Reference>
             </ForeignKey>
             <ForeignKey ForeignTable="valid">
-                <Reference Local="valid_id" Foreign="id" />
+                <Reference Foreign="id" Local="valid_id">
+                </Reference>
             </ForeignKey>
         </TableCreate>
-        <TableCreate Name="ps_multi_smtp_address">
-            <Column Name="id" Required="true" AutoIncrement="true" Type="INTEGER" PrimaryKey="true"/>
-            <Column Name="smtp_id" Required="true" Type="INTEGER"/>
-            <Column Name="address" Required="true" Type="VARCHAR" Size="250"/>
+        <TableCreate Type="post" Name="ps_multi_smtp_address">
+            <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="INTEGER"></Column>
+            <Column Name="smtp_id" Required="true" Type="INTEGER"></Column>
+            <Column Name="address" Required="true" Size="250" Type="VARCHAR"></Column>
         </TableCreate>
     </DatabaseInstall>
     <DatabaseUninstall>
-        <TableDrop Name="ps_multi_smtp"/>
-        <TableDrop Name="ps_multi_smtp_address"/>
+        <TableDrop Type="post" Name="ps_multi_smtp">
+        </TableDrop>
+        <TableDrop Type="post" Name="ps_multi_smtp_address">
+        </TableDrop>
     </DatabaseUninstall>
 </otrs_package>

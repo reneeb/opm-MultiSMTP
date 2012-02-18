@@ -1,6 +1,11 @@
 # --
 # Kernel/Modules/AdminMultiSMTP.pm - provides admin notification translations
 # Copyright (C) 2011 Perl-Services.de, http://perl-services.de/
+# Extensions Copyright (C) 2006-2012 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Frank(dot)Oberender(at)cape(dash)it(dot)de
+#
 # --
 # $Id: AdminMultiSMTP.pm,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
 # --
@@ -83,7 +88,7 @@ sub Run {
 
         # challenge token check for write action
         $Self->{LayoutObject}->ChallengeTokenCheck();
- 
+
         # server side validation
         my %Errors;
         if (
@@ -208,27 +213,36 @@ sub _MaskSMTPForm {
     }
 
     $Param{Port} ||= 25;
-
+use Data::Dumper;
+print STDERR "Emails: ".Dumper($Param{Emails});
+print STDERR "SMTP: ".Dumper($SMTP{Emails});
     my %SMTPAddresses;
     my @Selected = @{ $Param{Emails} || [] } ? @{ $Param{Emails} } : @{ $SMTP{Emails} || [] };
+print STDERR "Selected: ".Dumper(\@Selected);
     $SMTPAddresses{$_} = 1 for @Selected;
-    
+
     my %SystemAddresses = $Self->{SMTPObject}->SystemAddressList(
         %SMTPAddresses,
     );
-    
+
     $Param{EmailsSelect} = $Self->{LayoutObject}->BuildSelection(
         Data        => \%SystemAddresses,
         Name        => 'Emails',
         Size        => 5,
         Multiple    => 1,
-        SelectedIDs => \@Selected,
+# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
+        #SelectedIDs => \@Selected,
+        SelectedID => \@Selected,
+# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
         HTMLQuote   => 1,
     );
 
 
     $Param{TypeSelect} = $Self->{LayoutObject}->BuildSelection(
-        Data       => { 'SMTP' => 'SMTP', 'SMTPS' => 'SMTP/S', 'SMTPTLS' => 'SMTPTLS' },
+# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
+        #Data       => { 'SMTP' => 'SMTP', 'SMTPS' => 'SMTP/S', 'SMTPTLS' => 'SMTPTLS' },
+        Data       => { 'SMTP' => 'SMTP', 'SMTPS' => 'SMTP/S' },
+# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
         Name       => 'Type',
         Size       => 1,
         SelectedID => $Param{Type} || $SMTP{Type},
@@ -249,7 +263,7 @@ sub _MaskSMTPForm {
     if ( $Self->{Subaction} ne 'Edit' && $Self->{Subaction} ne 'Add' ) {
 
         my %SMTPList = $Self->{SMTPObject}->SMTPList();
-  
+
         if ( !%SMTPList ) {
             $Self->{LayoutObject}->Block(
                 Name => 'NoSMTPFound',
