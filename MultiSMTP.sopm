@@ -50,7 +50,7 @@
             <Column Name="address" Required="true" Type="VARCHAR" Size="250"/>
         </TableCreate>
     </DatabaseInstall>
-    <DatabaseUninstall>
+    <DatabaseUninstall Type="post">
         <TableDrop Name="ps_multi_smtp"/>
         <TableDrop Name="ps_multi_smtp_address"/>
     </DatabaseUninstall>
