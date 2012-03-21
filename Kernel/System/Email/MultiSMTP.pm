@@ -23,14 +23,8 @@ use Kernel::System::EmailParser;
 use Kernel::System::MultiSMTP;
 use Kernel::System::Email::SMTP;
 use Kernel::System::Email::SMTPS;
-# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
-#use Kernel::System::Email::SMTPTLS;
-# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
 use Kernel::System::Email::MultiSMTP::SMTP;
 use Kernel::System::Email::MultiSMTP::SMTPS;
-# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
-#use Kernel::System::Email::MultiSMTP::SMTPTLS;
-# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
 
 
 use vars qw($VERSION);
@@ -50,13 +44,6 @@ sub new {
 
     # create needed object
     $Self->{MSMTPObject}  = Kernel::System::MultiSMTP->new( %Param );# MultiSMTP for OTRS-Framwork 2.4.x
-# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
-    #$Self->{ParserObject} = Kernel::System::EmailParser->new(
-        #%{$Self},
-        #Mode  => 'Standalone',
-        #Debug => 0,
-    #);
-# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
 
     return $Self;
 }
@@ -82,21 +69,15 @@ sub Send {
         # use standard SMTP module as fallback
         my $Module  = $Self->{ConfigObject}->Get('MultiSMTP::Fallback');
         $SMTPObject = $Module->new( %{$Self} );
-        $SMTPObject->Send( %Param );
-        return;
+        my $Success = $SMTPObject->Send( %Param );
+        return $Success;
     }
 
-# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
-    #my $PlainFrom = $Self->{ParserObject}->GetEmailAddress(
-        #Email => $Param{From},
-    #);
     my $PlainFrom = '';
     for my $EmailSplit ( Mail::Address->parse( $Param{From} ) ) {
         $PlainFrom = $EmailSplit->address();
     }
     $PlainFrom = '' if $PlainFrom !~ /@/;
-
-# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
 
     my %SMTP = $Self->{MSMTPObject}->SMTPGetForAddress(
         Address => $PlainFrom,
@@ -107,8 +88,8 @@ sub Send {
         # use standard SMTP module as fallback
         my $Module  = $Self->{ConfigObject}->Get('MultiSMTP::Fallback');
         $SMTPObject = $Module->new( %{$Self} );
-        $SMTPObject->Send( %Param );
-        return;
+        my $Success = $SMTPObject->Send( %Param );
+        return $Success;
     }
 
     $SMTP{Password} = $SMTP{PasswordDecrypted};
@@ -127,10 +108,10 @@ sub Send {
     );
 
     return if !$SMTPObject;
+    
+    my $Success = $SMTPObject->Send( %Param );
 
-    $SMTPObject->Send( %Param );
-
-    return 1;
+    return $Success;
 }
 
 1;
