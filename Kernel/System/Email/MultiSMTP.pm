@@ -19,12 +19,13 @@ package Kernel::System::Email::MultiSMTP;
 use strict;
 use warnings;
 
-use Kernel::System::EmailParser;
 use Kernel::System::MultiSMTP;
 use Kernel::System::Email::SMTP;
 use Kernel::System::Email::SMTPS;
 use Kernel::System::Email::MultiSMTP::SMTP;
 use Kernel::System::Email::MultiSMTP::SMTPS;
+
+use Mail::Address;
 
 
 use vars qw($VERSION);
@@ -42,8 +43,10 @@ sub new {
         die "Got no $_" if ( !$Self->{$_} );
     }
 
+    $Self->{Debug} = $Self->{ConfigObject}->Get( 'MultiSMTP::Debug' );
+
     # create needed object
-    $Self->{MSMTPObject}  = Kernel::System::MultiSMTP->new( %Param );# MultiSMTP for OTRS-Framwork 2.4.x
+    $Self->{MSMTPObject}  = Kernel::System::MultiSMTP->new( %Param );
 
     return $Self;
 }
@@ -66,6 +69,13 @@ sub Send {
     my $SMTPObject;
     if ( !$Param{From} ) {
 
+        if ( $Self->{Debug} ) {
+            $Self->{LogObject}->Log(
+                Priority => 'notice',
+                Message  => 'No "From" found - using fallback (1)!',
+            );
+        }
+
         # use standard SMTP module as fallback
         my $Module  = $Self->{ConfigObject}->Get('MultiSMTP::Fallback');
         $SMTPObject = $Module->new( %{$Self} );
@@ -79,11 +89,25 @@ sub Send {
     }
     $PlainFrom = '' if $PlainFrom !~ /@/;
 
+    if ( $Self->{Debug} ) {
+        $Self->{LogObject}->Log(
+            Priority => 'notice',
+            Message  => "Plain From: $PlainFrom",
+        );
+    }
+
     my %SMTP = $Self->{MSMTPObject}->SMTPGetForAddress(
         Address => $PlainFrom,
     );
 
     if ( !%SMTP ) {
+
+        if ( $Self->{Debug} ) {
+            $Self->{LogObject}->Log(
+                Priority => 'notice',
+                Message  => "No SMTP configuration found for 'from' address ($PlainFrom)",
+            );
+        }
 
         # use standard SMTP module as fallback
         my $Module  = $Self->{ConfigObject}->Get('MultiSMTP::Fallback');
@@ -97,10 +121,12 @@ sub Send {
     my $Module  = 'Kernel::System::Email::MultiSMTP::' . $SMTP{Type};
     $SMTPObject = $Module->new( %{$Self}, %SMTP );
 
-    $Self->{LogObject}->Log(
-        Priority => 'notice',
-        Message  => "Use MultiSMTP $Module",
-    );
+    if ( $Self->{Debug} ) {
+        $Self->{LogObject}->Log(
+            Priority => 'notice',
+            Message  => "Use MultiSMTP $Module",
+        );
+    }
 
     $Self->{LogObject}->Log(
         Priority => 'notice',
