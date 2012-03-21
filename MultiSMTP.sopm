@@ -21,7 +21,7 @@
         <File Permission="644" Location="doc/en/MultiSMTP.pod"/>
     </Filelist>
     <DatabaseInstall Type="post">
-        <TableCreate Type="post" Name="ps_multi_smtp">
+        <TableCreate Name="ps_multi_smtp">
             <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="INTEGER"></Column>
             <Column Name="type" Required="true" Size="250" Type="VARCHAR"></Column>
             <Column Name="host" Required="true" Size="250" Type="VARCHAR"></Column>
@@ -45,16 +45,14 @@
                 </Reference>
             </ForeignKey>
         </TableCreate>
-        <TableCreate Type="post" Name="ps_multi_smtp_address">
+        <TableCreate Name="ps_multi_smtp_address">
             <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="INTEGER"></Column>
             <Column Name="smtp_id" Required="true" Type="INTEGER"></Column>
             <Column Name="address" Required="true" Size="250" Type="VARCHAR"></Column>
         </TableCreate>
     </DatabaseInstall>
-    <DatabaseUninstall>
-        <TableDrop Type="post" Name="ps_multi_smtp">
-        </TableDrop>
-        <TableDrop Type="post" Name="ps_multi_smtp_address">
-        </TableDrop>
+    <DatabaseUninstall Type="post">
+        <TableDrop Name="ps_multi_smtp" />
+        <TableDrop Name="ps_multi_smtp_address" />
     </DatabaseUninstall>
 </otrs_package>
