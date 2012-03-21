@@ -71,8 +71,8 @@ sub Send {
         # use standard SMTP module as fallback
         my $Module  = $Self->{ConfigObject}->Get('MultiSMTP::Fallback');
         $SMTPObject = $Module->new( %{$Self} );
-        $SMTPObject->Send( %Param );
-        return;
+        my $Success = $SMTPObject->Send( %Param );
+        return $Success;
     }
 
     my $PlainFrom = $Self->{ParserObject}->GetEmailAddress(
@@ -88,8 +88,8 @@ sub Send {
         # use standard SMTP module as fallback
         my $Module  = $Self->{ConfigObject}->Get('MultiSMTP::Fallback');
         $SMTPObject = $Module->new( %{$Self} );
-        $SMTPObject->Send( %Param );
-        return;
+        my $Success = $SMTPObject->Send( %Param );
+        return $Success;
     }
 
     $SMTP{Password} = $SMTP{PasswordDecrypted};
@@ -109,9 +109,9 @@ sub Send {
 
     return if !$SMTPObject;
     
-    $SMTPObject->Send( %Param );
+    my $Success = $SMTPObject->Send( %Param );
 
-    return 1;
+    return $Success;
 }
 
 1;
