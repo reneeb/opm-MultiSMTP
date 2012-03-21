@@ -213,12 +213,8 @@ sub _MaskSMTPForm {
     }
 
     $Param{Port} ||= 25;
-#use Data::Dumper;
-#print STDERR "Emails: ".Dumper($Param{Emails});
-#print STDERR "SMTP: ".Dumper($SMTP{Emails});
     my %SMTPAddresses;
     my @Selected = @{ $Param{Emails} || [] } ? @{ $Param{Emails} } : @{ $SMTP{Emails} || [] };
-#print STDERR "Selected: ".Dumper(\@Selected);
     $SMTPAddresses{$_} = 1 for @Selected;
 
     my %SystemAddresses = $Self->{SMTPObject}->SystemAddressList(
@@ -230,19 +226,13 @@ sub _MaskSMTPForm {
         Name        => 'Emails',
         Size        => 5,
         Multiple    => 1,
-# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
-        #SelectedIDs => \@Selected,
         SelectedID => \@Selected,
-# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
         HTMLQuote   => 1,
     );
 
 
     $Param{TypeSelect} = $Self->{LayoutObject}->BuildSelection(
-# MultiSMTP-capeIT for OTRS-Framwork 2.4.x
-        #Data       => { 'SMTP' => 'SMTP', 'SMTPS' => 'SMTP/S', 'SMTPTLS' => 'SMTPTLS' },
         Data       => { 'SMTP' => 'SMTP', 'SMTPS' => 'SMTP/S' },
-# EO MultiSMTP-capeIT for OTRS-Framwork 2.4.x
         Name       => 'Type',
         Size       => 1,
         SelectedID => $Param{Type} || $SMTP{Type},
