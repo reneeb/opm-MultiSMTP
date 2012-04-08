@@ -4,6 +4,7 @@
     <Name>MultiSMTP</Name>
     <Version>0.0.4</Version>
     <Framework>3.0.x</Framework>
+    <Framework>3.1.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
     <URL>http://perl-services.de/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
