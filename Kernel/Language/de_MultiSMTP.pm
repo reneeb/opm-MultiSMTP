@@ -1,6 +1,6 @@
 # --
 # Kernel/Language/de_MultiSMTP.pm - the german translation of MultiSMTP
-# Copyright (C) 2011 Perl-Services.de, http://perl-services.de/
+# Copyright (C) 2011-2012 Perl-Services.de, http://perl-services.de/
 # --
 # $Id: de_MultiSMTP.pm,v 1.3 2011/07/13 10:45:32 rb Exp $
 # --
