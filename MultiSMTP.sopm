@@ -31,6 +31,7 @@
             <Column Name="user" Required="true" Type="VARCHAR" Size="200"/>
             <Column Name="password" Required="true" Type="VARCHAR" Size="250"/>
             <Column Name="port" Required="true" Type="VARCHAR" Size="250"/>
+            <Column Name="comments" Required="false" Type="VARCHAR" Size="250"/>
             <Column Name="encrypted" Required="true" Type="SMALLINT"/>
             <Column Name="create_time" Required="true" Type="DATE"/>
             <Column Name="create_by" Required="true" Type="INTEGER"/>
@@ -51,6 +52,11 @@
             <Column Name="address" Required="true" Type="VARCHAR" Size="250"/>
         </TableCreate>
     </DatabaseInstall>
+    <DatabaseUpgrade>
+        <TableAlter Name="ps_multi_smtp" Version="3.1.1">
+            <ColumnAdd Name="comments" Required="false" Type="VARCHAR" Size="250" />
+        </TableAlter>
+    </DatabaseUpgrade>
     <DatabaseUninstall>
         <TableDrop Name="ps_multi_smtp"/>
         <TableDrop Name="ps_multi_smtp_address"/>

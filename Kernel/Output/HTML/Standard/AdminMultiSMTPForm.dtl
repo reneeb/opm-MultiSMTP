@@ -139,6 +139,15 @@
                         </div>
                         <div class="Clear"></div>
 
+                        <label for="Comments">
+                            $Text{"Comment"}:
+                        </label>
+                        <div class="Field">
+                            <input type="text" id="Comments" name="Comments" value="$QData{"Comments"}" class="W75pc" maxlength="250"/>
+                        </div>
+                        <div class="Clear"></div>
+
+
                         <div class="Field">
                             <button class="Primary" type="submit" value="$Text{"Save"}">$Text{"Save"}</button>
                             $Text{"or"}

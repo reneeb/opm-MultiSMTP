@@ -113,6 +113,8 @@ to add a news
         User     => 'SMTPUser',
         Password => 'secret',
         Type     => 'SMTP', # or SMTP/S
+        Comments => 'A comment about this entry',
+        Port     => 25,
         Emails   => [ 'test@test.tld', 'otrs@test.tld' ],
         ValidID  => 1,
         UserID   => 123,
@@ -152,7 +154,7 @@ sub SMTPAdd {
     return if !$Self->{DBObject}->Do(
         SQL => 'INSERT INTO ps_multi_smtp '
             . '(host, user, password, encrypted, type, create_time, create_by, '
-            . ' valid_id, change_time, change_by, port) '
+            . ' valid_id, change_time, change_by, port, comments) '
             . 'VALUES (?, ?, ?, ?, ?, current_timestamp, ?, ?, current_timestamp, ?, ?)',
         Bind => [
             \$Param{Host},
@@ -164,6 +166,7 @@ sub SMTPAdd {
             \$Param{ValidID},
             \$Param{UserID},
             \$Param{Port},
+            \$Param{Comments},
         ],
     );
 
@@ -209,6 +212,7 @@ to update news
         Password => 'secret',
         Type     => 'SMTP', # or SMTP/S
         Port     => 25,
+        Comments => 'A comment',
         Emails   => [ 'test@test.tld', 'otrs@test.tld' ],
         ValidID  => 1,
         UserID   => 123,
@@ -247,7 +251,8 @@ sub SMTPUpdate {
     # insert new news
     return if !$Self->{DBObject}->Do(
         SQL => 'UPDATE ps_multi_smtp SET host = ?, user = ?, password = ?, type = ?, port = ?, '
-            . 'encrypted = ?, valid_id = ?, change_time = current_timestamp, change_by = ? '
+            . 'encrypted = ?, valid_id = ?, change_time = current_timestamp, change_by = ?, '
+            . 'comments = ? '
             . 'WHERE id = ?',
         Bind => [
             \$Param{Host},
@@ -258,6 +263,7 @@ sub SMTPUpdate {
             \$Self->{UseEncryption},
             \$Param{ValidID},
             \$Param{UserID},
+            \$Param{Comments},
             \$Param{ID},
         ],
     );
@@ -293,6 +299,7 @@ This returns something like:
         User       => 'SMTPUser',
         Password   => 'encrypted',
         PasswordDecrypted   => 'secret',
+        Comments   => 'A comment',
         Type       => 'SMTP', # or SMTP/S
         Emails     => [ 'test@test.tld', 'otrs@test.tld' ],
         CreateTime => '2010-04-07 15:41:15',
@@ -318,7 +325,7 @@ sub SMTPGet {
     # sql
     return if !$Self->{DBObject}->Prepare(
         SQL => 'SELECT ps_multi_smtp.id, host, user, password, type, address, encrypted, '
-            . 'change_time, change_by, create_time, create_by, valid_id, port '
+            . 'change_time, change_by, create_time, create_by, valid_id, port, comments '
             . 'FROM ps_multi_smtp INNER JOIN ps_multi_smtp_address ON ps_multi_smtp.id = smtp_id '
             . 'WHERE ps_multi_smtp.id = ?',
         Bind  => [ \$Param{ID} ],
@@ -338,6 +345,7 @@ sub SMTPGet {
         $SMTP{CreateBy}   = $Data[10];
         $SMTP{ValidID}    = $Data[11];
         $SMTP{Port}       = $Data[12];
+        $SMTP{Comments}   = $Data[13];
 
         push @{ $SMTP{Emails} }, $Data[5];
     }
@@ -462,7 +470,7 @@ sub SMTPGetForAddress {
 
     return if !$Self->{DBObject}->Prepare(
         SQL => 'SELECT ps_multi_smtp.id, host, user, password, type, address, encrypted, '
-            . 'change_time, change_by, create_time, create_by, valid_id, port '
+            . 'change_time, change_by, create_time, create_by, valid_id, port, comments '
             . 'FROM ps_multi_smtp INNER JOIN ps_multi_smtp_address ON ps_multi_smtp.id = smtp_id '
             . 'WHERE address = ?',
         Bind  => [ \$Param{Address} ],
@@ -485,6 +493,7 @@ sub SMTPGetForAddress {
             CreateBy   => $Data[10],
             ValidID    => $Data[11],
             Port       => $Data[12],
+            Comments   => $Data[13],
         );
     }
 
