@@ -1,6 +1,6 @@
 # --
 # AgentMultiSMTPForm.dtl - provides HTML form for AdminPerlServicesInvoiceStates
-# Copyright (C) 2001-2010 OTRS AG, http://otrs.org/
+# Copyright (C) 2012 Perl-Services.de, http://perl-services.de
 # --
 # $Id: AdminMultiSMTPForm.dtl,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
 # --
@@ -59,7 +59,7 @@
                             $Text{"User"}:
                         </label>
                         <div class="Field">
-                            <input type="text" id="User" name="User" value="$QData{"User"}" class="W75pc Validate_Required $QData{"UserInvalid"}" maxlength="120"/>,
+                            <input type="text" id="User" name="User" value="$QData{"User"}" class="W75pc Validate_Required $QData{"UserInvalid"}" maxlength="120"/>
                             <div id="UserError" class="TooltipErrorMessage">
                                 <p>$Text{"User is mandatory."}</p>
                             </div>
@@ -74,7 +74,7 @@
                             $Text{"Port"}:
                         </label>
                         <div class="Field">
-                            <input type="text" id="Port" name="Port" value="$QData{"Port"}" class="W75pc Validate_Required $QData{"PortInvalid"}" maxlength="120"/>,
+                            <input type="text" id="Port" name="Port" value="$QData{"Port"}" class="W75pc Validate_Required $QData{"PortInvalid"}" maxlength="120"/>
                             <div id="PortError" class="TooltipErrorMessage">
                                 <p>$Text{"Port is mandatory."}</p>
                             </div>
@@ -89,7 +89,7 @@
                             $Text{"Password"}:
                         </label>
                         <div class="Field">
-                            <input type="password" id="PasswordDecrypted" name="PasswordDecrypted" value="$QData{"PasswordDecrypted"}" class="W75pc Validate_Required $QData{"PasswordInvalid"}" maxlength="120"/>,
+                            <input type="password" id="PasswordDecrypted" name="PasswordDecrypted" value="$QData{"PasswordDecrypted"}" class="W75pc Validate_Required $QData{"PasswordInvalid"}" maxlength="120"/>
                             <div id="PasswordDecryptedError" class="TooltipErrorMessage">
                                 <p>$Text{"Password is mandatory."}</p>
                             </div>
