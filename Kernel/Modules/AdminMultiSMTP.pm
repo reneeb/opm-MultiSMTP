@@ -1,6 +1,6 @@
 # --
 # Kernel/Modules/AdminMultiSMTP.pm - provides admin notification translations
-# Copyright (C) 2011 Perl-Services.de, http://perl-services.de/
+# Copyright (C) 2011 - 2012 Perl-Services.de, http://perl-services.de/
 # --
 # $Id: AdminMultiSMTP.pm,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
 # --

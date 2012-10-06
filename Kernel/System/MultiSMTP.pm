@@ -1,6 +1,6 @@
 # --
 # Kernel/System/MultiSMTP.pm - All SMTP related functions should be here eventually
-# Copyright (C) 2001-2010 OTRS AG, http://otrs.org/
+# Copyright (C) 2011-2012 Perl-Services.de
 # --
 # $Id: MultiSMTP.pm,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
 # --
