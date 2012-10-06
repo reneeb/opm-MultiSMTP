@@ -31,6 +31,13 @@ sub Data {
     $Lang->{'Add SMTP'}             = 'SMTP hinzufügen';
     $Lang->{'SMTP settings'}        = 'SMTP-Einstellungen';
     $Lang->{'Manage SMTP settings'} = 'SMTP-Einstellungen verwalten';
+    $Lang->{'Add/Change SMTP'}      = 'SMTP hinzufügen/bearbeiten';
+    $Lang->{'Type is mandatory'}    = 'Typ wird benötigt';
+    $Lang->{'A host is required'}   = 'Ein Hostname wird benötigt';
+    $Lang->{'User is mandatory'}    = 'Ein Benutzername wird benötigt';
+    $Lang->{'Port is mandatory'}    = 'Eine Port-Angabe wird benötigt';
+    $Lang->{'Email is mandatory'}   = 'E-Mail-Adressen werden benötigt';
+    
 
     return 1;
 }
