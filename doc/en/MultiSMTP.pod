@@ -23,6 +23,6 @@ did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =head2 Fernholz IT GmbH
 
-Fernholz IT GmbH (L<http://www.fernholz-it.de>) sponsored the "anonymous SMTP" feature. With that feature you can add SMTP servers where no authentication is needed.
+Fernholz IT GmbH (L<http://www.fernholz-it.eu>) sponsored the "anonymous SMTP" feature. With that feature you can add SMTP servers where no authentication is needed.
 
 =cut
