@@ -155,7 +155,7 @@ sub SMTPAdd {
         SQL => 'INSERT INTO ps_multi_smtp '
             . '(host, user, password, encrypted, type, create_time, create_by, '
             . ' valid_id, change_time, change_by, port, comments) '
-            . 'VALUES (?, ?, ?, ?, ?, current_timestamp, ?, ?, current_timestamp, ?, ?)',
+            . 'VALUES (?, ?, ?, ?, ?, current_timestamp, ?, ?, current_timestamp, ?, ?, ?)',
         Bind => [
             \$Param{Host},
             \$Param{User},
