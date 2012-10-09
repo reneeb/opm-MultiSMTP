@@ -125,8 +125,18 @@ to add a news
 sub SMTPAdd {
     my ( $Self, %Param ) = @_;
 
+    my @NeededFields = qw(User Password Emails Type ValidID UserID Port Host);
+
+    # remove user and password from needed fields when this is an anonymous account
+    if ( $Param{Anonymous} ) {
+        $Param{User} = '';
+        $Param{Password} = '';
+
+        splice @NeededFields, 0, 2;
+    }
+
     # check needed stuff
-    for my $Needed (qw(Host User Password Emails Type ValidID UserID Port)) {
+    for my $Needed (@NeededFields) {
         if ( !$Param{$Needed} ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',
@@ -223,8 +233,18 @@ to update news
 sub SMTPUpdate {
     my ( $Self, %Param ) = @_;
 
+    my @NeededFields = qw(User Password Emails Type ValidID UserID Port Host);
+
+    # remove user and password from needed fields when this is an anonymous account
+    if ( $Param{Anonymous} ) {
+        $Param{User} = '';
+        $Param{Password} = '';
+
+        splice @NeededFields, 0, 2;
+    }
+
     # check needed stuff
-    for my $Needed (qw(ID Host User Password Type Emails ValidID UserID Port)) {
+    for my $Needed (@NeededFields) {
         if ( !$Param{$Needed} ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',

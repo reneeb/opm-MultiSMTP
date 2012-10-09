@@ -39,6 +39,13 @@
                     <input type="hidden" name="ID" value="$QData{"ID"}"/>
 
                     <fieldset class="TableLike">
+                        <label for="Anonymous">
+                            $Text{"Anonymous SMTP"}
+                        </label>
+                        <div class="Field">
+                            <input type="checkbox" id="Anonymous" name="Anonymous" value="1" $Data{"AnonymousChecked"}/>
+                        </div>
+
                         <label for="Host" class="Mandatory">
                             <span class="Marker">*</span>
                             $Text{"Host"}:
@@ -50,21 +57,6 @@
                             </div>
                             <div id="HostServerError" class="TooltipErrorMessage">
                                 <p>$Text{"A host is required."}</p>
-                            </div>
-                        </div>
-                        <div class="Clear"></div>
-
-                        <label for="User" class="Mandatory">
-                            <span class="Marker">*</span>
-                            $Text{"User"}:
-                        </label>
-                        <div class="Field">
-                            <input type="text" id="User" name="User" value="$QData{"User"}" class="W75pc Validate_Required $QData{"UserInvalid"}" maxlength="120"/>
-                            <div id="UserError" class="TooltipErrorMessage">
-                                <p>$Text{"User is mandatory."}</p>
-                            </div>
-                            <div id="UserServerError" class="TooltipErrorMessage">
-                                <p>$Text{"User is mandatory."}</p>
                             </div>
                         </div>
                         <div class="Clear"></div>
@@ -84,8 +76,23 @@
                         </div>
                         <div class="Clear"></div>
 
-                        <label for="PasswordDecrypted" class="Mandatory">
-                            <span class="Marker">*</span>
+                        <label for="User" id="UserLabel" class="Mandatory">
+                            <span id="UserMarker" class="Marker">*</span>
+                            $Text{"User"}:
+                        </label>
+                        <div class="Field">
+                            <input type="text" id="User" name="User" value="$QData{"User"}" class="W75pc Validate_Required $QData{"UserInvalid"}" maxlength="120"/>
+                            <div id="UserError" class="TooltipErrorMessage">
+                                <p>$Text{"User is mandatory."}</p>
+                            </div>
+                            <div id="UserServerError" class="TooltipErrorMessage">
+                                <p>$Text{"User is mandatory."}</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="PasswordDecrypted" id="PasswordLabel" class="Mandatory">
+                            <span id="PasswordMarker" class="Marker">*</span>
                             $Text{"Password"}:
                         </label>
                         <div class="Field">
@@ -161,3 +168,37 @@
     </div>
     <div class="Clear"></div>
 </div>
+<!--dtl:js_on_document_complete-->
+<script type="text/javascript">
+  $Data{"AnonymousCall"}
+
+  $('#Anonymous').click( function(){ anonymous() } );
+
+  function anonymous() {
+
+        /* user/password is not necessary and delete values */
+        if ( $('#Anonymous').is(':checked') ) {
+          $('#UserMarker').removeClass("Marker");
+          $('#UserMarker').html('');
+          $('#UserLabel').removeClass("Mandatory");
+          $('#User').val('');
+          $('#PasswordMarker').removeClass("Marker");
+          $('#PasswordMarker').html('');
+          $('#PasswordLabel').removeClass("Mandatory");
+          $('#PasswordDecrypted').val('');
+          $('#PasswordDecrypted').removeClass('Validate_Required');
+          $('#User').removeClass('Validate_Required');
+      }
+      else {  /* make user/pwd mandatory */
+          $('#UserMarker').addClass("Marker");
+          $('#UserMarker').html('*');
+          $('#UserLabel').addClass("Mandatory");
+          $('#PasswordMarker').addClass("Marker");
+          $('#PasswordMarker').html('*');
+          $('#PasswordLabel').addClass("Mandatory");
+          $('#PasswordDecrypted').addClass('Validate_Required');
+          $('#User').addClass('Validate_Required');
+      }
+   }
+</script>
+<!--dtl:js_on_document_complete-->

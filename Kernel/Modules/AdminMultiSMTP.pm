@@ -48,10 +48,15 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    my @Params = (qw(ID Host User PasswordDecrypted Type ValidID UserID Port Comments));
+    my @Params = (qw(ID Host User PasswordDecrypted Type ValidID UserID Port Comments Anonymous));
     my %GetParam;
     for my $Needed (@Params) {
         $GetParam{$Needed} = $Self->{ParamObject}->GetParam( Param => $Needed ) || '';
+    }
+
+    if ( $GetParam{Anonymous} ) {
+        $GetParam{User}              = '';
+        $GetParam{PasswordDecrypted} = '';
     }
 
     my @Mails = $Self->{ParamObject}->GetArray( Param => 'Emails' );
@@ -95,7 +100,11 @@ sub Run {
             $Errors{ValidIDInvalid} = 'ServerError';
         }
 
+        PARAM:
         for my $Param (qw(ID Host User PasswordDecrypted Type ValidID Port)) {
+
+            next PARAM if $GetParam{Anonymous} and ( $Param eq 'PasswordDecrypted' || $Param eq 'User' );
+
             if ( !$GetParam{$Param} ) {
                 $Errors{ $Param . 'Invalid' } = 'ServerError';
             }
@@ -133,7 +142,7 @@ sub Run {
     }
 
     # ------------------------------------------------------------ #
-    # insert invoice state
+    # insert smtp settings
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'Save' ) {
 
@@ -150,7 +159,11 @@ sub Run {
             $Errors{ValidIDInvalid} = 'ServerError';
         }
 
+        PARAM:
         for my $Param (qw(ValidID User PasswordDecrypted Host Type Port)) {
+
+            next PARAM if $GetParam{Anonymous} and ( $Param eq 'PasswordDecrypted' || $Param eq 'User' );
+
             if ( !$GetParam{$Param} ) {
                 $Errors{ $Param . 'Invalid' } = 'ServerError';
             }
@@ -213,6 +226,11 @@ sub _MaskSMTPForm {
 
         for my $Key ( keys %SMTP ) {
             $Param{$Key} = $SMTP{$Key} if !$Param{$Key};
+        }
+
+        if ( !$Param{User} && !$Param{PasswordDecrypted} ) {
+            $Param{AnonymousChecked} = 'checked="checked"';
+            $Param{AnonymousCall}    = 'anonymous();';
         }
     }
 
