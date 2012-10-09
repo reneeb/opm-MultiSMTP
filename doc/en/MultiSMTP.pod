@@ -8,10 +8,21 @@ A standard OTRS installation is not able to use different SMTP servers for each 
 
 So each sender address needs its own SMTP server - and this is provided with this package.
 
-After installation, there is a new item in the Email block in the admin area. That is to manage the address -> SMTP server mapping. You can configure the settings for each address given in the system addresses. And you can define the type of SMTP connection (plain SMTP or SMTP/S). The user's password can be stored in an encrypted way - if you want to use this feature, you have to install the Perl modules Crypt::CBC and Crypt::DES.
+After installation, there is a new item in the Email block in the admin area. That is to manage the address -> SMTP server mapping. You can configure the settings for each address given in the system addresses. And you can define the type of SMTP connection (plain SMTP, SMTPTLS or SMTP/S). The user's password can be stored in an encrypted way - if you want to use this feature, you have to install the Perl modules C<Crypt::CBC> and C<Crypt::DES>.
 
-When a mail is sent, the package searches for the SMTP settings that belong to the sender address and if it can't find anything, it uses the SMTP settings from SysConfig (that is used by the standard SMTP mechanism).
+When a mail is sent, the package searches for the SMTP settings that belong to the sender address and if it can't find anything, it uses the SMTP settings from I<SysConfig> (that is used by the standard SMTP mechanism).
 
 =head1 AUTHOR AND LICENSE
+
+This package was written by Renee Baecker E<lt>otrs@perl-services.deE<gt>.
+
+The package is licensed unter AGPL. If you
+did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
+
+=head1 ACKNOWLEDGEMENT
+
+=head2 Fernholz IT GmbH
+
+Fernholz IT GmbH (L<http://www.fernholz-it.de>) sponsored the "anonymous SMTP" feature. With that feature you can add SMTP servers where no authentication is needed.
 
 =cut
