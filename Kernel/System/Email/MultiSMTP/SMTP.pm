@@ -31,11 +31,6 @@ sub new {
         die "Got no $_" if ( !$Self->{$_} );
     }
 
-    # check for needed params
-    for (qw(Host User Password)) {
-        die "Got no $_" if ( !$Param{$_} );    
-    }
-
     # debug
     $Self->{Debug} = $Param{Debug} || 0;
     if ( $Self->{Debug} > 2 ) {

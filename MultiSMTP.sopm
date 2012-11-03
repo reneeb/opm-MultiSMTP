@@ -2,7 +2,7 @@
 <otrs_package version="1.0">
     <CVS>$Id: MultiSMTP.sopm,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $</CVS>
     <Name>MultiSMTP</Name>
-    <Version>3.0.2</Version>
+    <Version>3.0.1</Version>
     <Framework>3.0.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
     <URL>http://perl-services.de/</URL>
@@ -30,6 +30,7 @@
             <Column Name="user" Required="true" Type="VARCHAR" Size="200"/>
             <Column Name="password" Required="true" Type="VARCHAR" Size="250"/>
             <Column Name="port" Required="true" Type="VARCHAR" Size="250"/>
+            <Column Name="comments" Required="false" Type="VARCHAR" Size="250"/>
             <Column Name="encrypted" Required="true" Type="SMALLINT"/>
             <Column Name="create_time" Required="true" Type="DATE"/>
             <Column Name="create_by" Required="true" Type="INTEGER"/>
@@ -50,7 +51,12 @@
             <Column Name="address" Required="true" Type="VARCHAR" Size="250"/>
         </TableCreate>
     </DatabaseInstall>
-    <DatabaseUninstall Type="post">
+    <DatabaseUpgrade>
+        <TableAlter Name="ps_multi_smtp" Version="3.1.1">
+            <ColumnAdd Name="comments" Required="false" Type="VARCHAR" Size="250" />
+        </TableAlter>
+    </DatabaseUpgrade>
+    <DatabaseUninstall>
         <TableDrop Name="ps_multi_smtp"/>
         <TableDrop Name="ps_multi_smtp_address"/>
     </DatabaseUninstall>
