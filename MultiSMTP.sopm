@@ -4,7 +4,6 @@
     <Name>MultiSMTP</Name>
     <Version>3.0.2</Version>
     <Framework>3.0.x</Framework>
-    <Framework>3.1.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
     <URL>http://perl-services.de/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
@@ -53,7 +52,7 @@
         </TableCreate>
     </DatabaseInstall>
     <DatabaseUpgrade>
-        <TableAlter Name="ps_multi_smtp" Version="3.1.1">
+        <TableAlter Name="ps_multi_smtp" Version="3.0.3">
             <ColumnAdd Name="comments" Required="false" Type="VARCHAR" Size="250" />
         </TableAlter>
     </DatabaseUpgrade>
