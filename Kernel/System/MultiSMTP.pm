@@ -163,7 +163,7 @@ sub SMTPAdd {
     # insert new smtp
     return if !$Self->{DBObject}->Do(
         SQL => 'INSERT INTO ps_multi_smtp '
-            . '(host, user, password, encrypted, type, create_time, create_by, '
+            . '(host, userlogin, password, encrypted, type, create_time, create_by, '
             . ' valid_id, change_time, change_by, port, comments) '
             . 'VALUES (?, ?, ?, ?, ?, current_timestamp, ?, ?, current_timestamp, ?, ?, ?)',
         Bind => [
@@ -182,7 +182,7 @@ sub SMTPAdd {
 
     # get new invoice id
     return if !$Self->{DBObject}->Prepare(
-        SQL   => 'SELECT MAX(id) FROM ps_multi_smtp WHERE host = ? AND user = ?',
+        SQL   => 'SELECT MAX(id) FROM ps_multi_smtp WHERE host = ? AND userlogin = ?',
         Bind  => [ \$Param{Host}, \$Param{User} ],
         Limit => 1,
     );
@@ -270,7 +270,7 @@ sub SMTPUpdate {
 
     # insert new news
     return if !$Self->{DBObject}->Do(
-        SQL => 'UPDATE ps_multi_smtp SET host = ?, user = ?, password = ?, type = ?, port = ?, '
+        SQL => 'UPDATE ps_multi_smtp SET host = ?, userlogin = ?, password = ?, type = ?, port = ?, '
             . 'encrypted = ?, valid_id = ?, change_time = current_timestamp, change_by = ?, '
             . 'comments = ? '
             . 'WHERE id = ?',
@@ -344,7 +344,7 @@ sub SMTPGet {
 
     # sql
     return if !$Self->{DBObject}->Prepare(
-        SQL => 'SELECT ps_multi_smtp.id, host, user, password, type, address, encrypted, '
+        SQL => 'SELECT ps_multi_smtp.id, host, userlogin, password, type, address, encrypted, '
             . 'change_time, change_by, create_time, create_by, valid_id, port, comments '
             . 'FROM ps_multi_smtp INNER JOIN ps_multi_smtp_address ON ps_multi_smtp.id = smtp_id '
             . 'WHERE ps_multi_smtp.id = ?',
@@ -489,7 +489,7 @@ sub SMTPGetForAddress {
     }
 
     return if !$Self->{DBObject}->Prepare(
-        SQL => 'SELECT ps_multi_smtp.id, host, user, password, type, address, encrypted, '
+        SQL => 'SELECT ps_multi_smtp.id, host, userlogin, password, type, address, encrypted, '
             . 'change_time, change_by, create_time, create_by, valid_id, port, comments '
             . 'FROM ps_multi_smtp INNER JOIN ps_multi_smtp_address ON ps_multi_smtp.id = smtp_id '
             . 'WHERE address = ?',
