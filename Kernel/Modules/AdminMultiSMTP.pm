@@ -1,6 +1,6 @@
 # --
 # Kernel/Modules/AdminMultiSMTP.pm - provides admin notification translations
-# Copyright (C) 2011 Perl-Services.de, http://perl-services.de/
+# Copyright (C) 2011 - 2012 Perl-Services.de, http://perl-services.de/
 # --
 # $Id: AdminMultiSMTP.pm,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
 # --
@@ -48,13 +48,19 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    my @Params = (qw(ID Host User PasswordDecrypted Type ValidID UserID Port));
+    my @Params = (qw(ID Host User PasswordDecrypted Type ValidID UserID Port Comments Anonymous));
     my %GetParam;
     for my $Needed (@Params) {
         $GetParam{$Needed} = $Self->{ParamObject}->GetParam( Param => $Needed ) || '';
     }
 
-    $GetParam{Emails} = [ $Self->{ParamObject}->GetArray( Param => 'Emails' ) ];
+    if ( $GetParam{Anonymous} ) {
+        $GetParam{User}              = '';
+        $GetParam{PasswordDecrypted} = '';
+    }
+
+    my @Mails = $Self->{ParamObject}->GetArray( Param => 'Emails' );
+    $GetParam{Emails} = \@Mails if @Mails;
 
     # ------------------------------------------------------------ #
     # get data 2 form
@@ -94,10 +100,18 @@ sub Run {
             $Errors{ValidIDInvalid} = 'ServerError';
         }
 
-        for my $Param (qw(ID Host User PasswordDecrypted Type Emails ValidID Port)) {
+        PARAM:
+        for my $Param (qw(ID Host User PasswordDecrypted Type ValidID Port)) {
+
+            next PARAM if $GetParam{Anonymous} and ( $Param eq 'PasswordDecrypted' || $Param eq 'User' );
+
             if ( !$GetParam{$Param} ) {
                 $Errors{ $Param . 'Invalid' } = 'ServerError';
             }
+        }
+
+        if ( !$GetParam{Emails} || !@{ $GetParam{Emails} } ) {
+              $Errors{EmailsInvalid} = 'ServerError';
         }
 
         if ( %Errors ) {
@@ -128,7 +142,7 @@ sub Run {
     }
 
     # ------------------------------------------------------------ #
-    # insert invoice state
+    # insert smtp settings
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'Save' ) {
 
@@ -145,10 +159,18 @@ sub Run {
             $Errors{ValidIDInvalid} = 'ServerError';
         }
 
-        for my $Param (qw(ValidID User PasswordDecrypted Host Type Emails Port)) {
+        PARAM:
+        for my $Param (qw(ValidID User PasswordDecrypted Host Type Port)) {
+
+            next PARAM if $GetParam{Anonymous} and ( $Param eq 'PasswordDecrypted' || $Param eq 'User' );
+
             if ( !$GetParam{$Param} ) {
                 $Errors{ $Param . 'Invalid' } = 'ServerError';
             }
+        }
+
+        if ( !$GetParam{Emails} || !@{ $GetParam{Emails} } ) {
+              $Errors{EmailsInvalid} = 'ServerError';
         }
 
         if ( %Errors ) {
@@ -205,6 +227,11 @@ sub _MaskSMTPForm {
         for my $Key ( keys %SMTP ) {
             $Param{$Key} = $SMTP{$Key} if !$Param{$Key};
         }
+
+        if ( !$Param{User} && !$Param{PasswordDecrypted} ) {
+            $Param{AnonymousChecked} = 'checked="checked"';
+            $Param{AnonymousCall}    = 'anonymous();';
+        }
     }
 
     $Param{Port} ||= 25;
@@ -212,7 +239,7 @@ sub _MaskSMTPForm {
     my %SMTPAddresses;
     my @Selected = @{ $Param{Emails} || [] } ? @{ $Param{Emails} } : @{ $SMTP{Emails} || [] };
     $SMTPAddresses{$_} = 1 for @Selected;
-    
+
     my %SystemAddresses = $Self->{SMTPObject}->SystemAddressList(
         %SMTPAddresses,
     );
@@ -221,8 +248,9 @@ sub _MaskSMTPForm {
         Data        => \%SystemAddresses,
         Name        => 'Emails',
         Size        => 5,
+        Class       => 'Validate_Required ' . $Param{EmailsInvalid},
         Multiple    => 1,
-        SelectedIDs => \@Selected,
+        SelectedID  => \@Selected,
         HTMLQuote   => 1,
     );
 

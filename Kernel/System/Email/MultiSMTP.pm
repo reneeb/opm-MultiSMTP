@@ -1,6 +1,6 @@
 # --
 # Kernel/System/Email/MultiSMTP.pm - the global email send module
-# Copyright (C) 2001-2010 OTRS AG, http://otrs.org/
+# Copyright (C) 2012 Perl-Services.de, http://perl-services.de
 # --
 # $Id: MultiSMTP.pm,v 1.29 2010/01/12 15:55:38 martin Exp $
 # --
@@ -116,16 +116,15 @@ sub Send {
     }
 
     $SMTP{Password} = $SMTP{PasswordDecrypted};
+    $SMTP{Type} =~ s/\W//g;
 
     my $Module  = 'Kernel::System::Email::MultiSMTP::' . $SMTP{Type};
     $SMTPObject = $Module->new( %{$Self}, %SMTP );
 
-    if ( $Self->{Debug} ) {
-        $Self->{LogObject}->Log(
-            Priority => 'notice',
-            Message  => "Use MultiSMTP $Module",
-        );
-    }
+    $Self->{LogObject}->Log(
+        Priority => 'error',
+        Message  => "Use MultiSMTP $Module",
+    );
 
     $Self->{LogObject}->Log(
         Priority => 'notice',
