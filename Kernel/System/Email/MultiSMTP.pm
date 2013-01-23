@@ -47,6 +47,8 @@ sub new {
         Debug => 0,
     );
 
+    $Self->{Debug} = $Self->{ConfigObject}->Get( 'MultiSMTP::Debug' );
+
     return $Self;
 }
 
@@ -98,15 +100,17 @@ sub Send {
     my $Module  = 'Kernel::System::Email::MultiSMTP::' . $SMTP{Type};
     $SMTPObject = $Module->new( %{$Self}, %SMTP );
 
-    $Self->{LogObject}->Log(
-        Priority => 'error',
-        Message  => "Use MultiSMTP $Module",
-    );
+    if ( $Self->{Debug} ) {
+        $Self->{LogObject}->Log(
+            Priority => 'notice',
+            Message  => "Use MultiSMTP $Module",
+        );
 
-    $Self->{LogObject}->Log(
-        Priority => 'notice',
-        Message  => sprintf "Use SMTP %s/%s (%s)", $SMTP{Host}, $SMTP{User}, $SMTP{ID},
-    );
+        $Self->{LogObject}->Log(
+            Priority => 'notice',
+            Message  => sprintf "Use SMTP %s/%s (%s)", $SMTP{Host}, $SMTP{User}, $SMTP{ID},
+        );
+    }
 
     return if !$SMTPObject;
     
