@@ -243,12 +243,25 @@ sub _MaskSMTPForm {
     my %SystemAddresses = $Self->{SMTPObject}->SystemAddressList(
         %SMTPAddresses,
     );
+
+    # add AdminEmail
+    # add NotificationSenderEmail
+    # add PostMaster::PreFilterModule::NewTicketReject::Sender
+    CONFIGKEY:
+    for my $ConfigKey ( qw/AdminEmail NotificationSenderEmail PostMaster::PreFilterModule::NewTicketReject::Sender/ ) {
+        my $Mail = $Self->{ConfigObject}->Get( $ConfigKey );
+
+        next CONFIGKEY if !$Mail;
+        next CONFIGKEY if $SystemAddresses{$Mail};
+
+        $SystemAddresses{$Mail} = $Mail . ' (' . $ConfigKey . ')';
+    }
     
     $Param{EmailsSelect} = $Self->{LayoutObject}->BuildSelection(
         Data        => \%SystemAddresses,
         Name        => 'Emails',
         Size        => 5,
-        Class       => 'Validate_Required ' . $Param{EmailsInvalid},
+        Class       => 'Validate_Required ' . ( $Param{EmailsInvalid} || '' ),
         Multiple    => 1,
         SelectedID  => \@Selected,
         HTMLQuote   => 1,
