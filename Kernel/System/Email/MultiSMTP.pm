@@ -67,6 +67,11 @@ sub Send {
         }
     }
 
+    # try to parse the sender address from header
+    if ( !$Param{From} ) {
+        ($Param{From}) = ${ $Param{Header} } =~ m{^ From: \s+ ([^\n]+) }xms;
+    }
+
     my $SMTPObject;
     if ( !$Param{From} ) {
 
@@ -84,6 +89,13 @@ sub Send {
     my %SMTP = $Self->{MSMTPObject}->SMTPGetForAddress(
         Address => $PlainFrom,
     );
+
+    if ( $Self->{Debug} ) {
+        $Self->{LogObject}->Log(
+            Priority => 'notice',
+            Message  => 'From: ' . $PlainFrom . ' // SMTP: ' . $SMTP{ID},
+        );
+    }
 
     if ( !%SMTP ) {
 
