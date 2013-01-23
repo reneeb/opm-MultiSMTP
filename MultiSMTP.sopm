@@ -2,9 +2,10 @@
 <otrs_package version="1.0">
     <CVS>$Id: MultiSMTP.sopm,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $</CVS>
     <Name>MultiSMTP</Name>
-    <Version>3.1.4</Version>
+    <Version>3.2.2</Version>
     <Framework>3.0.x</Framework>
     <Framework>3.1.x</Framework>
+    <Framework>3.2.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
     <URL>http://perl-services.de/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
@@ -28,8 +29,8 @@
             <Column Name="id" Required="true" AutoIncrement="true" Type="INTEGER" PrimaryKey="true"/>
             <Column Name="type" Required="true" Type="VARCHAR" Size="250"/>
             <Column Name="host" Required="true" Type="VARCHAR" Size="250"/>
-            <Column Name="user" Required="true" Type="VARCHAR" Size="200"/>
-            <Column Name="password" Required="true" Type="VARCHAR" Size="250"/>
+            <Column Name="smtp_user" Required="true" Type="VARCHAR" Size="200"/>
+            <Column Name="smtp_password" Required="true" Type="VARCHAR" Size="250"/>
             <Column Name="port" Required="true" Type="VARCHAR" Size="250"/>
             <Column Name="comments" Required="false" Type="VARCHAR" Size="250"/>
             <Column Name="encrypted" Required="true" Type="SMALLINT"/>
@@ -38,7 +39,7 @@
             <Column Name="valid_id" Required="true" Type="SMALLINT"/>
             <Column Name="change_time" Required="true" Type="DATE"/>
             <Column Name="change_by" Required="true" Type="INTEGER"/>
-            <ForeignKey ForeignTable="system_user">
+            <ForeignKey ForeignTable="users">
                 <Reference Local="create_by" Foreign="id" />
                 <Reference Local="change_by" Foreign="id" />
             </ForeignKey>
@@ -52,12 +53,16 @@
             <Column Name="address" Required="true" Type="VARCHAR" Size="250"/>
         </TableCreate>
     </DatabaseInstall>
-    <DatabaseUpgrade>
+    <DatabaseUpgrade Type="post">
         <TableAlter Name="ps_multi_smtp" Version="3.1.1">
             <ColumnAdd Name="comments" Required="false" Type="VARCHAR" Size="250" />
         </TableAlter>
+        <TableAlter Name="ps_multi_smtp" Version="3.2.2">
+            <ColumnChange NameOld="user" NameNew="smtp_user" Required="true" Type="VARCHAR" Size="200" />
+            <ColumnChange NameOld="password" NameNew="smtp_password" Required="true" Type="VARCHAR" Size="250" />
+        </TableAlter>
     </DatabaseUpgrade>
-    <DatabaseUninstall>
+    <DatabaseUninstall Type="post">
         <TableDrop Name="ps_multi_smtp"/>
         <TableDrop Name="ps_multi_smtp_address"/>
     </DatabaseUninstall>
