@@ -53,7 +53,7 @@
         </TableCreate>
     </DatabaseInstall>
     <DatabaseUpgrade>
-        <TableAlter Name="ps_multi_smtp" Version="3.1.1">
+        <TableAlter Name="ps_multi_smtp" Version="3.0.3">
             <ColumnAdd Name="comments" Required="false" Type="VARCHAR" Size="250" />
         </TableAlter>
     </DatabaseUpgrade>
