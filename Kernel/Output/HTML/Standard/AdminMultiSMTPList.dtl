@@ -1,6 +1,6 @@
 # --
 # AdminMultiSMTPList.dtl - provides HTML form for AdminMultiSMTPList
-# Copyright (C) 2010-2011 einraumwerk, http://einraumwerk.de/
+# Copyright (C) 2011-2012 Perl-Services.de, http://perl-services.de/
 # --
 # $Id: AdminMultiSMTPList.dtl,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
 # --
@@ -44,13 +44,14 @@
                             <th>$Text{"Valid"}</th>
                             <th>$Text{"Date"}</th>
                             <th>$Text{"Creator"}</th>
+                            <th>$Text{"Comment"}</th>
                             <th>$Text{"Action"}</th>
                         </tr>
                     </thead>
                     <tbody>
 <!-- dtl:block:NoSMTPFound -->
                         <tr>
-                            <td colspan="10">$Text{"No matches found."}</td>
+                            <td colspan="11">$Text{"No matches found."}</td>
                         </tr>
 <!-- dtl:block:NoSMTPFound -->
 <!-- dtl:block:SMTPRow -->
@@ -83,6 +84,9 @@
                             </td>
                             <td>
                                 $QData{"Creator"}
+                            </td>
+                            <td>
+                                $QData{"Comments"}
                             </td>
                             <td>
                                 <a href="$Env{"Baselink"}Action=AdminMultiSMTP;Subaction=Edit;ID=$LQData{"ID"}">
