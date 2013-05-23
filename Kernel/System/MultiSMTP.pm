@@ -97,9 +97,9 @@ sub new {
         $Self->{UseEncryption} = 1;
     }
 
-    $Self->{EncryptionKey}   = $Self->{ConfigObject}->Get( 'MultiSMTP::EncryptionKey' ) || 'Key';
-    $Self->{EncryptionSalt}  = $Self->{ConfigObject}->Get( 'MultiSMTP::Salt' ) || 'Salt';
-    $Self->{EnryptionModule} = 'Crypt::DES';
+    $Self->{EncryptionKey}    = $Self->{ConfigObject}->Get( 'MultiSMTP::EncryptionKey' ) || 'Key';
+    $Self->{EncryptionSalt}   = $Self->{ConfigObject}->Get( 'MultiSMTP::Salt' )          || 'Salt';
+    $Self->{EncryptionModule} = 'Crypt::DES';
     
     return $Self;
 }
@@ -157,7 +157,7 @@ sub SMTPAdd {
             -salt   => $Self->{EncryptionSalt},
         );
 
-        $Param{Password} = $Cipher->encrypt( $Param{Password} );
+        $Param{Password} = $Cipher->encrypt_hex( $Param{Password} );
     }
 
     # insert new smtp
@@ -265,7 +265,7 @@ sub SMTPUpdate {
             -salt   => $Self->{EncryptionSalt},
         );
 
-        $Param{Password} = $Cipher->encrypt( $Param{Password} );
+        $Param{Password} = $Cipher->encrypt_hex( $Param{Password} );
     }
 
     # insert new news
@@ -382,7 +382,7 @@ sub SMTPGet {
                 -salt   => $Self->{EncryptionSalt},
             );
 
-            $SMTP{PasswordDecrypted} = $Cipher->decrypt( $SMTP{Password} );
+            $SMTP{PasswordDecrypted} = $Cipher->decrypt_hex( $SMTP{Password} );
         }
         else {
             $SMTP{PasswordDecrypted} = $SMTP{Password};
@@ -529,7 +529,7 @@ sub SMTPGetForAddress {
                 -salt   => $Self->{EncryptionSalt},
             );
 
-            $SMTP{PasswordDecrypted} = $Cipher->decrypt( $SMTP{Password} );
+            $SMTP{PasswordDecrypted} = $Cipher->decrypt_hex( $SMTP{Password} );
         }
         else {
             $SMTP{PasswordDecrypted} = $SMTP{Password};
