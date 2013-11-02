@@ -1,8 +1,6 @@
 # --
 # Kernel/System/Email/MultiSMTP.pm - the global email send module
-# Copyright (C) 2012 Perl-Services.de, http://perl-services.de
-# --
-# $Id: MultiSMTP.pm,v 1.29 2010/01/12 15:55:38 martin Exp $
+# Copyright (C) 2013 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -23,10 +21,6 @@ use Kernel::System::Email::MultiSMTP::SMTP;
 use Kernel::System::Email::MultiSMTP::SMTPS;
 use Kernel::System::Email::MultiSMTP::SMTPTLS;
 
-
-use vars qw($VERSION);
-$VERSION = qw($Revision: 1.29 $) [1];
-
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -35,8 +29,8 @@ sub new {
     bless( $Self, $Type );
 
     # check all needed objects
-    for (qw(ConfigObject LogObject EncodeObject MainObject DBObject TimeObject)) {
-        die "Got no $_" if ( !$Self->{$_} );
+    for my $Needed (qw(ConfigObject LogObject EncodeObject MainObject DBObject TimeObject)) {
+        die "Got no $Needed" if ( !$Self->{$Needed} );
     }
 
     # create needed object
