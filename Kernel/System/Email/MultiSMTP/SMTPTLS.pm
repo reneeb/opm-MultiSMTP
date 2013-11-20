@@ -14,7 +14,7 @@ use warnings;
 
 use Net::SSLGlue::SMTP;
 
-use base qw(Kernel::System::Email::SMTP);
+use base qw(Kernel::System::Email::MultiSMTP::SMTP);
 
 sub _Connect {
     my ( $Self, %Param ) = @_;
