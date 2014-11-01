@@ -1,0 +1,107 @@
+# --
+# AdminMultiSMTPList.tt - provides HTML form for AdminMultiSMTPList
+# Copyright (C) 2011-2012 Perl-Services.de, http://perl-services.de/
+# --
+# $Id: AdminMultiSMTPList.dtl,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
+    <h1>[% Translate("SMTP Management") | html %]</h1>
+    <div class="SidebarColumn">
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Actions") | html %]</h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Add" class="CallForAction"><span>[% Translate("Add SMTP") | html %]</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="ContentColumn">
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("List") | html %]</h2>
+            </div>
+            <div class="Content">
+                <table class="DataTable" id="SMTP">
+                    <thead>
+                        <tr>
+                            <th>[% Translate("ID") | html %]</th>
+                            <th>[% Translate("Host") | html %]</th>
+                            <th>[% Translate("User") | html %]</th>
+                            <th>[% Translate("Port") | html %]</th>
+                            <th>[% Translate("Emails") | html %]</th>
+                            <th>[% Translate("Type") | html %]</th>
+                            <th>[% Translate("Valid") | html %]</th>
+                            <th>[% Translate("Date") | html %]</th>
+                            <th>[% Translate("Creator") | html %]</th>
+                            <th>[% Translate("Comment") | html %]</th>
+                            <th>[% Translate("Action") | html %]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+[% RenderBlockStart("NoSMTPFound") %]
+                        <tr>
+                            <td colspan="11">[% Translate("No matches found.") | html %]</td>
+                        </tr>
+[% RenderBlockEnd("NoSMTPFound") %]
+[% RenderBlockStart("SMTPRow") %]
+                        <tr>
+                            <td>
+                                <a href="[% Env("Baselink") %]Action=AdminMultiSMTP;Subaction=Edit;ID=[% Data.ID | uri %]">
+                                [% Data.ID | html %]
+                                </a>
+                            </td>
+                            <td>
+                                [% Data.Host | html %]
+                            </td>
+                            <td>
+                                [% Data.User | html %]
+                            </td>
+                            <td>
+                                [% Data.Port | html %]
+                            </td>
+                            <td>
+                                [% Data.EmailString | html %]
+                            </td>
+                            <td>
+                                [% Data.Type | html %]
+                            </td>
+                            <td>
+                                [% Translate(Data.Valid) | html %]
+                            </td>
+                            <td>
+                                [% Data.CreateTime | html %]
+                            </td>
+                            <td>
+                                [% Data.Creator | html %]
+                            </td>
+                            <td>
+                                [% Data.Comments | html %]
+                            </td>
+                            <td>
+                                <a href="[% Env("Baselink") %]Action=AdminMultiSMTP;Subaction=Edit;ID=[% Data.ID | uri %]">
+                                [% Translate("edit") | html %]
+                                </a> |
+                                <a href="[% Env("Baselink") %]Action=AdminMultiSMTP;Subaction=Delete;ID=[% Data.ID | uri %]">
+                                [% Translate("delete") | html %]
+                                </a>
+                            </td>
+                        </tr>
+[% RenderBlockEnd("SMTPRow") %]
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="Clear"></div>
+</div>

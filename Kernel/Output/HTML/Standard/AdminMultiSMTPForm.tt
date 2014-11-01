@@ -1,5 +1,5 @@
 # --
-# AgentMultiSMTPForm.dtl - provides HTML form for AdminPerlServicesInvoiceStates
+# AgentMultiSMTPForm.tt - provides HTML form for AdminPerlServicesInvoiceStates
 # Copyright (C) 2012 Perl-Services.de, http://perl-services.de
 # --
 # $Id: AdminMultiSMTPForm.dtl,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
@@ -10,16 +10,16 @@
 # --
 
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
-    <h1>$Text{"SMTP Management"}</h1>
+    <h1>[% Translate("SMTP Management") | html %]</h1>
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>$Text{"Actions"}</h2>
+                <h2>[% Translate("Actions") | html %]</h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
                     <li>
-                        <a href="$Env{"Baselink"}Action=$Env{"Action"}" class="CallForAction"><span>$Text{"Go to overview"}</span></a>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction"><span>[% Translate("Go to overview") | html %]</span></a>
                     </li>
                 </ul>
             </div>
@@ -29,109 +29,109 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>$Text{"Add/Change SMTP"}</h2>
+                <h2>[% Translate("Add/Change SMTP") | html %]</h2>
             </div>
             <div class="Content">
-                <form action="$Env{"CGIHandle"}" method="post" class="Validate">
+                <form action="[% Env("CGIHandle") %]" method="post" class="Validate">
 
-                    <input type="hidden" name="Action" value="$Env{"Action"}"/>
-                    <input type="hidden" name="Subaction" value="$QData{"Subaction"}"/>
-                    <input type="hidden" name="ID" value="$QData{"ID"}"/>
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="[% Data.Subaction | html %]"/>
+                    <input type="hidden" name="ID" value="[% Data.ID | html %]"/>
 
                     <fieldset class="TableLike">
                         <label for="Anonymous">
-                            $Text{"Anonymous SMTP"}
+                            [% Translate("Anonymous SMTP") | html %]
                         </label>
                         <div class="Field">
-                            <input type="checkbox" id="Anonymous" name="Anonymous" value="1" $Data{"AnonymousChecked"}/>
+                            <input type="checkbox" id="Anonymous" name="Anonymous" value="1" [% Data.AnonymousChecked %]/>
                         </div>
 
                         <label for="Host" class="Mandatory">
                             <span class="Marker">*</span>
-                            $Text{"Host"}:
+                            [% Translate("Host") | html %]:
                         </label>
                         <div class="Field">
-                            <input type="text" id="Host" name="Host" value="$QData{"Host"}" class="W75pc Validate_Required $QData{"HostInvalid"}"/>
+                            <input type="text" id="Host" name="Host" value="[% Data.Host | html %]" class="W75pc Validate_Required [% Data.HostInvalid | html %]"/>
                             <div id="HostError" class="TooltipErrorMessage">
-                                <p>$Text{"A host is required."}</p>
+                                <p>[% Translate("A host is required.") | html %]</p>
                             </div>
                             <div id="HostServerError" class="TooltipErrorMessage">
-                                <p>$Text{"A host is required."}</p>
+                                <p>[% Translate("A host is required.") | html %]</p>
                             </div>
                         </div>
                         <div class="Clear"></div>
 
                         <label for="Port" class="Mandatory">
                             <span class="Marker">*</span>
-                            $Text{"Port"}:
+                            [% Translate("Port") | html %]:
                         </label>
                         <div class="Field">
-                            <input type="text" id="Port" name="Port" value="$QData{"Port"}" class="W75pc Validate_Required $QData{"PortInvalid"}" maxlength="120"/>
+                            <input type="text" id="Port" name="Port" value="[% Data.Port | html %]" class="W75pc Validate_Required [% Data.PortInvalid | html %]" maxlength="120"/>
                             <div id="PortError" class="TooltipErrorMessage">
-                                <p>$Text{"Port is mandatory."}</p>
+                                <p>[% Translate("Port is mandatory.") | html %]</p>
                             </div>
                             <div id="PortServerError" class="TooltipErrorMessage">
-                                <p>$Text{"Port is mandatory."}</p>
+                                <p>[% Translate("Port is mandatory.") | html %]</p>
                             </div>
                         </div>
                         <div class="Clear"></div>
 
                         <label for="User" id="UserLabel" class="Mandatory">
                             <span id="UserMarker" class="Marker">*</span>
-                            $Text{"User"}:
+                            [% Translate("User") | html %]:
                         </label>
                         <div class="Field">
-                            <input type="text" id="User" name="User" value="$QData{"User"}" class="W75pc Validate_Required $QData{"UserInvalid"}" maxlength="120"/>
+                            <input type="text" id="User" name="User" value="[% Data.User | html %]" class="W75pc Validate_Required [% Data.UserInvalid | html %]" maxlength="120"/>
                             <div id="UserError" class="TooltipErrorMessage">
-                                <p>$Text{"User is mandatory."}</p>
+                                <p>[% Translate("User is mandatory.") | html %]</p>
                             </div>
                             <div id="UserServerError" class="TooltipErrorMessage">
-                                <p>$Text{"User is mandatory."}</p>
+                                <p>[% Translate("User is mandatory.") | html %]</p>
                             </div>
                         </div>
                         <div class="Clear"></div>
 
                         <label for="PasswordDecrypted" id="PasswordLabel" class="Mandatory">
                             <span id="PasswordMarker" class="Marker">*</span>
-                            $Text{"Password"}:
+                            [% Translate("Password") | html %]:
                         </label>
                         <div class="Field">
-                            <input type="password" id="PasswordDecrypted" name="PasswordDecrypted" value="$QData{"PasswordDecrypted"}" class="W75pc Validate_Required $QData{"PasswordInvalid"}" maxlength="120"/>
+                            <input type="password" id="PasswordDecrypted" name="PasswordDecrypted" value="[% Data.PasswordDecrypted | html %]" class="W75pc Validate_Required [% Data.PasswordInvalid | html %]" maxlength="120"/>
                             <div id="PasswordDecryptedError" class="TooltipErrorMessage">
-                                <p>$Text{"Password is mandatory."}</p>
+                                <p>[% Translate("Password is mandatory.") | html %]</p>
                             </div>
                             <div id="PasswordDecryptedServerError" class="TooltipErrorMessage">
-                                <p>$Text{"Password is mandatory."}</p>
+                                <p>[% Translate("Password is mandatory.") | html %]</p>
                             </div>
                         </div>
                         <div class="Clear"></div>
 
                         <label for="Emails" class="Mandatory">
                             <span class="Marker">*</span>
-                            $Text{"Emails"}:
+                            [% Translate("Emails") | html %]:
                         </label>
                         <div class="Field">
-                            $Data{"EmailsSelect"}
+                            [% Data.EmailsSelect %]
                             <div id="UserError" class="TooltipErrorMessage">
-                                <p>$Text{"Email is mandatory."}</p>
+                                <p>[% Translate("Email is mandatory.") | html %]</p>
                             </div>
                             <div id="UserServerError" class="TooltipErrorMessage">
-                                <p>$Text{"Email is mandatory."}</p>
+                                <p>[% Translate("Email is mandatory.") | html %]</p>
                             </div>
                         </div>
                         <div class="Clear"></div>
 
                         <label for="Type" class="Mandatory">
                             <span class="Marker">*</span>
-                            $Text{"Type"}:
+                            [% Translate("Type") | html %]:
                         </label>
                         <div class="Field">
-                            $Data{"TypeSelect"}
+                            [% Data.TypeSelect %]
                             <div id="UserError" class="TooltipErrorMessage">
-                                <p>$Text{"Type is mandatory."}</p>
+                                <p>[% Translate("Type is mandatory.") | html %]</p>
                             </div>
                             <div id="UserServerError" class="TooltipErrorMessage">
-                                <p>$Text{"Type is mandatory."}</p>
+                                <p>[% Translate("Type is mandatory.") | html %]</p>
                             </div>
                         </div>
                         <div class="Clear"></div>
@@ -139,26 +139,26 @@
 
                         <label for="ValidID" class="Mandatory">
                             <span class="Marker">*</span>
-                            $Text{"Valid"}:
+                            [% Translate("Valid") | html %]:
                         </label>
                         <div class="Field">
-                            $Data{"ValidSelect"}
+                            [% Data.ValidSelect %]
                         </div>
                         <div class="Clear"></div>
 
                         <label for="Comments">
-                            $Text{"Comment"}:
+                            [% Translate("Comment") | html %]:
                         </label>
                         <div class="Field">
-                            <input type="text" id="Comments" name="Comments" value="$QData{"Comments"}" class="W75pc" maxlength="250"/>
+                            <input type="text" id="Comments" name="Comments" value="[% Data.Comments | html %]" class="W75pc" maxlength="250"/>
                         </div>
                         <div class="Clear"></div>
 
 
                         <div class="Field">
-                            <button class="Primary" type="submit" value="$Text{"Save"}">$Text{"Save"}</button>
-                            $Text{"or"}
-                            <a href="$Env{"Baselink"}Action=$Env{"Action"}">$Text{"Cancel"}</a>
+                            <button class="Primary" type="submit" value="[% Translate("Save") | html %]">[% Translate("Save") | html %]</button>
+                            [% Translate("or") | html %]
+                            <a href="[% Env("Baselink") %]Action=[% Env("Action") %]">[% Translate("Cancel") | html %]</a>
                         </div>
                         <div class="Clear"></div>
                     </fieldset>
@@ -168,9 +168,9 @@
     </div>
     <div class="Clear"></div>
 </div>
-<!--dtl:js_on_document_complete-->
+[% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">
-  $Data{"AnonymousCall"}
+  [% Data.AnonymousCall %]
 
   $('#Anonymous').click( function(){ anonymous() } );
 
@@ -201,4 +201,4 @@
       }
    }
 </script>
-<!--dtl:js_on_document_complete-->
+[% END %]
