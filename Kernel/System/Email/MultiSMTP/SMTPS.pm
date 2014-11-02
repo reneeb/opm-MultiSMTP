@@ -1,6 +1,7 @@
 # --
-# Kernel/System/Email/MultiSMTP/SMTPS.pm - mail send backend for SMTP/SSL
-# Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
+# Kernel/System/Email/MultiSMTP/SMTPS.pm - email send backend for SMTP/SSL
+# Copyright (C) 2001-2014 OTRS AG, http://otrs.com/
+# Changes Copyright (C) 2011-2014 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -16,13 +17,18 @@ use Net::SSLGlue::SMTP;
 
 use base qw(Kernel::System::Email::MultiSMTP::SMTP);
 
+our @ObjectDependencies = (
+    'Kernel::System::Log',
+);
+
 sub _Connect {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
     for (qw(MailHost FQDN)) {
         if ( !$Param{$_} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $_!" );
+            $Kernel::OM->Get('Kernel::System::Log')
+                ->Log( Priority => 'error', Message => "Need $_!" );
             return;
         }
     }
@@ -37,6 +43,7 @@ sub _Connect {
         SSL             => 1,
         SSL_verify_mode => 0,
     );
+
     return $SMTP;
 }
 
