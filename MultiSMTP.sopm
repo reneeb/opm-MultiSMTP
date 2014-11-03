@@ -13,8 +13,8 @@
         <File Permission="644" Location="Kernel/Config/Files/MultiSMTP.xml" />
         <File Permission="644" Location="Kernel/Language/de_MultiSMTP.pm" />
         <File Permission="644" Location="Kernel/Modules/AdminMultiSMTP.pm" />
-        <File Permission="644" Location="Kernel/Output/HTML/Standard/AdminMultiSMTPForm.dtl" />
-        <File Permission="644" Location="Kernel/Output/HTML/Standard/AdminMultiSMTPList.dtl" />
+        <File Permission="644" Location="Kernel/Output/HTML/Standard/AdminMultiSMTPForm.tt" />
+        <File Permission="644" Location="Kernel/Output/HTML/Standard/AdminMultiSMTPList.tt" />
         <File Permission="644" Location="Kernel/System/Email/MultiSMTP.pm" />
         <File Permission="644" Location="Kernel/System/Email/MultiSMTP/SMTP.pm" />
         <File Permission="644" Location="Kernel/System/Email/MultiSMTP/SMTPS.pm" />
