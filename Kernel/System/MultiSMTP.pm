@@ -1,8 +1,6 @@
 # --
 # Kernel/System/MultiSMTP.pm - All SMTP related functions should be here eventually
-# Copyright (C) 2011-2013 Perl-Services.de
-# --
-# $Id: MultiSMTP.pm,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
+# Copyright (C) 2011-2014 Perl-Services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -14,11 +12,18 @@ package Kernel::System::MultiSMTP;
 use strict;
 use warnings;
 
-use Kernel::System::User;
-use Kernel::System::Valid;
+our $VERSION = 0.3;
 
-use vars qw($VERSION);
-$VERSION = qw($Revision: 1.1.1.1 $) [1];
+our @ObjectDependencies = (
+    'Kernel::Config',
+    'Kernel::System::DB',
+    'Kernel::System::Encode',
+    'Kernel::System::Log',
+    'Kernel::System::Main',
+    'Kernel::System::Time',
+    'Kernel::System::User',
+    'Kernel::System::Valid',
+);
 
 =head1 NAME
 
@@ -34,40 +39,6 @@ Kernel::System::MultiSMTP - backend for product news
 
 create an object
 
-    use Kernel::Config;
-    use Kernel::System::Encode;
-    use Kernel::System::Log;
-    use Kernel::System::Main;
-    use Kernel::System::DB;
-    use Kernel::System::MultiSMTP;
-
-    my $ConfigObject = Kernel::Config->new();
-    my $EncodeObject = Kernel::System::Encode->new(
-        ConfigObject => $ConfigObject,
-    );
-    my $LogObject = Kernel::System::Log->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $MainObject = Kernel::System::Main->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-    );
-    my $DBObject = Kernel::System::DB->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-        MainObject   => $MainObject,
-    );
-    my $SMTPObject = Kernel::System::MultiSMTP->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        DBObject     => $DBObject,
-        MainObject   => $MainObject,
-        EncodeObject => $EncodeObject,
-    );
-
 =cut
 
 sub new {
@@ -76,15 +47,6 @@ sub new {
     # allocate new hash for object
     my $Self = {};
     bless( $Self, $Type );
-
-    # check needed objects
-    for my $Object (qw(DBObject ConfigObject MainObject LogObject EncodeObject TimeObject)) {
-        $Self->{$Object} = $Param{$Object} || die "Got no $Object!";
-    }
-
-    # create needed objects
-    $Self->{UserObject}  = Kernel::System::User->new( %{$Self} );
-    $Self->{ValidObject} = Kernel::System::Valid->new( %{$Self} );
 
     my $HasCBC = 1;
     eval{ require Crypt::CBC; 1; } or $HasCBC = 0;
@@ -97,8 +59,10 @@ sub new {
         $Self->{UseEncryption} = 1;
     }
 
-    $Self->{EncryptionKey}    = $Self->{ConfigObject}->Get( 'MultiSMTP::EncryptionKey' ) || 'Key';
-    $Self->{EncryptionSalt}   = $Self->{ConfigObject}->Get( 'MultiSMTP::Salt' )          || 'Salt';
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    $Self->{EncryptionKey}    = $ConfigObject->Get( 'MultiSMTP::EncryptionKey' ) || 'Key';
+    $Self->{EncryptionSalt}   = $ConfigObject->Get( 'MultiSMTP::Salt' )          || 'Salt';
     $Self->{EncryptionModule} = 'Crypt::DES';
     
     return $Self;
@@ -127,6 +91,8 @@ sub SMTPAdd {
 
     my @NeededFields = qw(User Password Emails Type ValidID UserID Port Host);
 
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
+
     # remove user and password from needed fields when this is an anonymous account
     if ( $Param{Anonymous} ) {
         $Param{User} = '';
@@ -138,7 +104,7 @@ sub SMTPAdd {
     # check needed stuff
     for my $Needed (@NeededFields) {
         if ( !$Param{$Needed} ) {
-            $Self->{LogObject}->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Need $Needed!",
             );
@@ -161,7 +127,7 @@ sub SMTPAdd {
     }
 
     # insert new smtp
-    return if !$Self->{DBObject}->Do(
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL => 'INSERT INTO ps_multi_smtp '
             . '(host, smtp_user, smtp_password, encrypted, type, create_time, create_by, '
             . ' valid_id, change_time, change_by, port, comments) '
@@ -181,19 +147,19 @@ sub SMTPAdd {
     );
 
     # get new invoice id
-    return if !$Self->{DBObject}->Prepare(
+    return if !$Kernel::OM->Get('DBObject')->Prepare(
         SQL   => 'SELECT MAX(id) FROM ps_multi_smtp WHERE host = ? AND smtp_user = ?',
         Bind  => [ \$Param{Host}, \$Param{User} ],
         Limit => 1,
     );
 
     my $ID;
-    while ( my @Row = $Self->{DBObject}->FetchrowArray() ) {
+    while ( my @Row = $DBObject->FetchrowArray() ) {
         $ID = $Row[0];
     }
 
     # log notice
-    $Self->{LogObject}->Log(
+    $LogObject->Log(
         Priority => 'notice',
         Message  => "SMTP '$ID' created successfully ($Param{UserID})!",
     );
@@ -201,7 +167,7 @@ sub SMTPAdd {
     # add mail addresses
     my $SQLMails = 'INSERT INTO ps_multi_smtp_address (smtp_id, address) VALUES (?,?)';
     for my $Address ( @{ $Param{Emails} } ) {
-        $Self->{DBObject}->Do(
+        $Kernel::OM->Get('DBObject')->Do(
             SQL => $SQLMails,
             Bind => [ \$ID, \$Address ],
         );
@@ -233,6 +199,9 @@ to update news
 sub SMTPUpdate {
     my ( $Self, %Param ) = @_;
 
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
+    my $DBObject  = $Kernel::OM->Get('Kernel::System::DB');
+
     my @NeededFields = qw(User Password Emails Type ValidID UserID Port Host);
 
     # remove user and password from needed fields when this is an anonymous account
@@ -246,7 +215,7 @@ sub SMTPUpdate {
     # check needed stuff
     for my $Needed (@NeededFields) {
         if ( !$Param{$Needed} ) {
-            $Self->{LogObject}->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Need $Needed!",
             );
@@ -269,7 +238,7 @@ sub SMTPUpdate {
     }
 
     # insert new news
-    return if !$Self->{DBObject}->Do(
+    return if !$DBObject->Do(
         SQL => 'UPDATE ps_multi_smtp SET host = ?, smtp_user = ?, smtp_password = ?, type = ?, port = ?, '
             . 'encrypted = ?, valid_id = ?, change_time = current_timestamp, change_by = ?, '
             . 'comments = ? '
@@ -288,7 +257,7 @@ sub SMTPUpdate {
         ],
     );
 
-    $Self->{DBObject}->Do(
+    $DBObject->Do(
         SQL  => 'DELETE FROM ps_multi_smtp_address WHERE smtp_id = ?',
         Bind => [ \$Param{ID} ],
     );
@@ -296,7 +265,7 @@ sub SMTPUpdate {
     # add mail addresses
     my $SQLMails = 'INSERT INTO ps_multi_smtp_address (smtp_id, address) VALUES (?,?)';
     for my $Address ( @{ $Param{Emails} } ) {
-        $Self->{DBObject}->Do(
+        $DBObject->Do(
             SQL => $SQLMails,
             Bind => [ \$Param{ID}, \$Address ],
         );
@@ -333,9 +302,12 @@ This returns something like:
 sub SMTPGet {
     my ( $Self, %Param ) = @_;
 
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
+    my $DBObject  = $Kernel::OM->Get('Kernel::System::DB');
+
     # check needed stuff
     if ( !$Param{ID} ) {
-        $Self->{LogObject}->Log(
+        $LogObject->Log(
             Priority => 'error',
             Message  => 'Need ID!',
         );
@@ -343,7 +315,7 @@ sub SMTPGet {
     }
 
     # sql
-    return if !$Self->{DBObject}->Prepare(
+    return if !$DBObject->Prepare(
         SQL => 'SELECT ps_multi_smtp.id, host, smtp_user, smtp_password, type, address, encrypted, '
             . 'change_time, change_by, create_time, create_by, valid_id, port, comments '
             . 'FROM ps_multi_smtp INNER JOIN ps_multi_smtp_address ON ps_multi_smtp.id = smtp_id '
@@ -352,7 +324,7 @@ sub SMTPGet {
     );
 
     my %SMTP;
-    while ( my @Data = $Self->{DBObject}->FetchrowArray() ) {
+    while ( my @Data = $DBObject->FetchrowArray() ) {
         $SMTP{ID}         = $Data[0];
         $SMTP{Host}       = $Data[1];
         $SMTP{User}       = $Data[2];
@@ -370,10 +342,13 @@ sub SMTPGet {
         push @{ $SMTP{Emails} }, $Data[5];
     }
 
+    my $UserObject  = $Kernel::OM->Get('Kernel::System::User');
+    my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
+
     if ( %SMTP ) {
-        $SMTP{Valid}   = $Self->{ValidObject}->ValidLookup( ValidID => $SMTP{ValidID} );
-        $SMTP{Creator} = $Self->{UserObject}->UserLookup( UserID => $SMTP{CreateBy} );
-        $SMTP{Changer} = $Self->{UserObject}->UserLookup( UserID => $SMTP{ChangeBy} );
+        $SMTP{Valid}   = $ValidObject->ValidLookup( ValidID => $SMTP{ValidID} );
+        $SMTP{Creator} = $UserObject->UserLookup( UserID => $SMTP{CreateBy} );
+        $SMTP{Changer} = $UserObject->UserLookup( UserID => $SMTP{ChangeBy} );
 
         if ( $SMTP{Encrypted} ) {
             my $Cipher = Crypt::CBC->new(
@@ -405,21 +380,25 @@ deletes a news entry. Returns 1 if it was successful, undef otherwise.
 sub SMTPDelete {
     my ( $Self, %Param ) = @_;
 
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
+    my $DBObject  = $Kernel::OM->Get('Kernel::System::DB');
+
     # check needed stuff
     if ( !$Param{ID} ) {
-        $Self->{LogObject}->Log(
+        $LogObject->Log(
             Priority => 'error',
             Message  => 'Need ID!',
         );
+
         return;
     }
 
-    $Self->{DBObject}->Do(
+    $DBObject->Do(
         SQL  => 'DELETE FROM ps_multi_smtp_address WHERE smtp_id = ?',
         Bind => [ \$Param{ID} ],
     );
 
-    return $Self->{DBObject}->Do(
+    return $DBObject->Do(
         SQL  => 'DELETE FROM ps_multi_smtp WHERE id = ?',
         Bind => [ \$Param{ID} ],
     );
@@ -444,23 +423,26 @@ the result looks like
 sub SMTPList {
     my ( $Self, %Param ) = @_;
 
+    my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
+    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
+
     my $Where = '';
     my @Bind;
 
     if ( $Param{Valid} ) {
-        my $ValidID = $Self->{ValidObject}->ValidLookup( Valid => 'valid' );
+        my $ValidID = $ValidObject->ValidLookup( Valid => 'valid' );
         $Where = 'WHERE valid_id = ?';
         @Bind  = ( \$ValidID );
     }
 
     # sql
-    return if !$Self->{DBObject}->Prepare(
+    return if !$DBObject->Prepare(
         SQL  => "SELECT id, host FROM ps_multi_smtp $Where",
         Bind => \@Bind,
     );
 
     my %SMTP;
-    while ( my @Data = $Self->{DBObject}->FetchrowArray() ) {
+    while ( my @Data = $DBObject->FetchrowArray() ) {
         $SMTP{ $Data[0] } = $Data[1];
     }
 
@@ -478,9 +460,14 @@ sub SMTPList {
 sub SMTPGetForAddress {
     my ( $Self, %Param ) = @_;
 
+    my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
+    my $LogObject   = $Kernel::OM->Get('Kernel::System::Log');
+    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
+    my $UserObject  = $Kernel::OM->Get('Kernel::System::User');
+
     for my $Needed (qw(Address)) {
         if ( !$Param{$Needed} ) {
-            $Self->{LogObject}->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Need $Needed!",
             );
@@ -488,7 +475,7 @@ sub SMTPGetForAddress {
         }
     }
 
-    return if !$Self->{DBObject}->Prepare(
+    return if !$DBObject->Prepare(
         SQL => 'SELECT ps_multi_smtp.id, host, smtp_user, smtp_password, type, address, encrypted, '
             . 'change_time, change_by, create_time, create_by, valid_id, port, comments '
             . 'FROM ps_multi_smtp INNER JOIN ps_multi_smtp_address ON ps_multi_smtp.id = smtp_id '
@@ -498,7 +485,7 @@ sub SMTPGetForAddress {
     );
 
     my %SMTP;
-    while ( my @Data = $Self->{DBObject}->FetchrowArray() ) {
+    while ( my @Data = $DBObject->FetchrowArray() ) {
         %SMTP = (
             ID         => $Data[0],
             Host       => $Data[1], 
@@ -518,9 +505,9 @@ sub SMTPGetForAddress {
     }
 
     if ( %SMTP ) {
-        $SMTP{Valid}   = $Self->{ValidObject}->ValidLookup( ValidID => $SMTP{ValidID} );
-        $SMTP{Creator} = $Self->{UserObject}->UserLookup( UserID => $SMTP{CreateBy} );
-        $SMTP{Changer} = $Self->{UserObject}->UserLookup( UserID => $SMTP{ChangeBy} );
+        $SMTP{Valid}   = $ValidObject->ValidLookup( ValidID => $SMTP{ValidID} );
+        $SMTP{Creator} = $UserObject->UserLookup( UserID => $SMTP{CreateBy} );
+        $SMTP{Changer} = $UserObject->UserLookup( UserID => $SMTP{ChangeBy} );
 
         if ( $SMTP{Encrypted} ) {
             my $Cipher = Crypt::CBC->new(
@@ -550,14 +537,16 @@ returns a list of all system addresses that are not already mapped to a SMTP.
 sub SystemAddressList {
     my ( $Self, %Param ) = @_;
 
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
     my $SQL = 'SELECT value0, value1 FROM system_address';
 
-    return if !$Self->{DBObject}->Prepare(
+    return if !$DBObject->Prepare(
         SQL => $SQL,
     );
 
     my @Addresses;
-    while ( my @Row = $Self->{DBObject}->FetchrowArray() ) {
+    while ( my @Row = $DBObject->FetchrowArray() ) {
         push @Addresses, { address => $Row[0], name => $Row[1] };
     }
 
@@ -583,8 +572,3 @@ did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =cut
 
-=head1 VERSION
-
-$Revision: 1.1.1.1 $ $Date: 2011/04/15 07:49:58 $
-
-=cut
