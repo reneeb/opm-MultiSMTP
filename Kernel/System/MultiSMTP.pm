@@ -92,6 +92,7 @@ sub SMTPAdd {
     my @NeededFields = qw(User Password Emails Type ValidID UserID Port Host);
 
     my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
+    my $DBObject  = $Kernel::OM->Get('Kernel::System::DB');
 
     # remove user and password from needed fields when this is an anonymous account
     if ( $Param{Anonymous} ) {
@@ -127,7 +128,7 @@ sub SMTPAdd {
     }
 
     # insert new smtp
-    return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+    return if !$DBObject->Do(
         SQL => 'INSERT INTO ps_multi_smtp '
             . '(host, smtp_user, smtp_password, encrypted, type, create_time, create_by, '
             . ' valid_id, change_time, change_by, port, comments) '
@@ -147,7 +148,7 @@ sub SMTPAdd {
     );
 
     # get new invoice id
-    return if !$Kernel::OM->Get('DBObject')->Prepare(
+    return if !$DBObject->Prepare(
         SQL   => 'SELECT MAX(id) FROM ps_multi_smtp WHERE host = ? AND smtp_user = ?',
         Bind  => [ \$Param{Host}, \$Param{User} ],
         Limit => 1,
@@ -167,7 +168,7 @@ sub SMTPAdd {
     # add mail addresses
     my $SQLMails = 'INSERT INTO ps_multi_smtp_address (smtp_id, address) VALUES (?,?)';
     for my $Address ( @{ $Param{Emails} } ) {
-        $Kernel::OM->Get('DBObject')->Do(
+        $DBObject->Do(
             SQL => $SQLMails,
             Bind => [ \$ID, \$Address ],
         );
