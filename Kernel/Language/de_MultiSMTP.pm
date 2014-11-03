@@ -1,8 +1,6 @@
 # --
 # Kernel/Language/de_MultiSMTP.pm - the german translation of MultiSMTP
-# Copyright (C) 2011-2012 Perl-Services.de, http://perl-services.de/
-# --
-# $Id: de_MultiSMTP.pm,v 1.3 2011/07/13 10:45:32 rb Exp $
+# Copyright (C) 2011-2014 Perl-Services.de, http://perl-services.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -16,8 +14,7 @@ use warnings;
 
 use utf8;
 
-use vars qw($VERSION);
-$VERSION = qw($Revision: 1.3 $) [1];
+our $VERSION = 0.02;
 
 sub Data {
     my $Self = shift;
