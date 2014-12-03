@@ -1,6 +1,6 @@
 # --
 # Kernel/System/Email/MultiSMTP.pm - the global email send module
-# Copyright (C) 2013 Perl-Services.de, http://perl-services.de
+# Copyright (C) 2013 - 2014 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -13,13 +13,15 @@ use strict;
 use warnings;
 
 use Kernel::System::EmailParser;
-use Kernel::System::MultiSMTP;
-use Kernel::System::Email::SMTP;
-use Kernel::System::Email::SMTPS;
-use Kernel::System::Email::SMTPTLS;
-use Kernel::System::Email::MultiSMTP::SMTP;
-use Kernel::System::Email::MultiSMTP::SMTPS;
-use Kernel::System::Email::MultiSMTP::SMTPTLS;
+our @ObjectDependencies = qw(
+    Kernel::System::MultiSMTP
+    Kernel::System::Email::SMTP
+    Kernel::System::Email::SMTPS
+    Kernel::System::Email::SMTPTLS
+    Kernel::System::Email::MultiSMTP::SMTP
+    Kernel::System::Email::MultiSMTP::SMTPS
+    Kernel::System::Email::MultiSMTP::SMTPTLS
+);
 
 sub new {
     my ( $Type, %Param ) = @_;
@@ -28,20 +30,8 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    # check all needed objects
-    for my $Needed (qw(ConfigObject LogObject EncodeObject MainObject DBObject TimeObject)) {
-        die "Got no $Needed" if ( !$Self->{$Needed} );
-    }
-
-    # create needed object
-    $Self->{MSMTPObject}  = Kernel::System::MultiSMTP->new( %Param );
-    $Self->{ParserObject} = Kernel::System::EmailParser->new(
-        %{$Self},
-        Mode  => 'Standalone',
-        Debug => 0,
-    );
-
-    $Self->{Debug} = $Self->{ConfigObject}->Get( 'MultiSMTP::Debug' );
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    $Self->{Debug}   = $ConfigObject->Get( 'MultiSMTP::Debug' );
 
     return $Self;
 }
@@ -53,10 +43,17 @@ sub Check {
 sub Send {
     my ( $Self, %Param ) = @_;
 
+    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $MSMTPObject  = $Kernel::OM->Get('Kernel::System::MultiSMTP');
+
     # check needed stuff
-    for (qw(Header Body ToArray)) {
-        if ( !$Param{$_} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $_!" );
+    for my $Needed (qw(Header Body ToArray)) {
+        if ( !$Param{$Needed} ) {
+            $LogObject->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!",
+            );
             return;
         }
     }
@@ -66,26 +63,38 @@ sub Send {
         ($Param{From}) = ${ $Param{Header} } =~ m{^ From: \s+ ([^\n]+) }xms;
     }
 
+    if ( $Self->{Debug} ) {
+        $LogObject->Log(
+            Priority => 'notice',
+            Message  => 'From: ' . $Param{From},
+        );
+    }
+
     my $SMTPObject;
     if ( !$Param{From} ) {
 
         # use standard SMTP module as fallback
-        my $Module  = $Self->{ConfigObject}->Get('MultiSMTP::Fallback');
+        my $Module  = $ConfigObject->Get('MultiSMTP::Fallback');
         $SMTPObject = $Module->new( %{$Self} );
         my $Success = $SMTPObject->Send( %Param );
         return $Success;
     }
 
-    my $PlainFrom = $Self->{ParserObject}->GetEmailAddress(
+    my $ParserObject = Kernel::System::EmailParser->new(
+        Mode  => 'Standalone',
+        Debug => 0,
+    );
+
+    my $PlainFrom = $ParserObject->GetEmailAddress(
         Email => $Param{From},
     );
 
-    my %SMTP = $Self->{MSMTPObject}->SMTPGetForAddress(
+    my %SMTP = $MSMTPObject->SMTPGetForAddress(
         Address => $PlainFrom,
     );
 
     if ( $Self->{Debug} ) {
-        $Self->{LogObject}->Log(
+        $LogObject->Log(
             Priority => 'notice',
             Message  => 'From: ' . $PlainFrom . ' // SMTP: ' . $SMTP{ID},
         );
@@ -94,7 +103,7 @@ sub Send {
     if ( !%SMTP ) {
 
         # use standard SMTP module as fallback
-        my $Module  = $Self->{ConfigObject}->Get('MultiSMTP::Fallback');
+        my $Module  = $ConfigObject->Get('MultiSMTP::Fallback');
         $SMTPObject = $Module->new( %{$Self} );
         my $Success = $SMTPObject->Send( %Param );
         return $Success;
@@ -103,16 +112,20 @@ sub Send {
     $SMTP{Password} = $SMTP{PasswordDecrypted};
     $SMTP{Type} =~ s/\W//g;
 
-    my $Module  = 'Kernel::System::Email::MultiSMTP::' . $SMTP{Type};
-    $SMTPObject = $Module->new( %{$Self}, %SMTP );
+    my $Module = 'Kernel::System::Email::MultiSMTP::' . $SMTP{Type};
+    $Kernel::OM->ObjectParamAdd(
+        $Module => \%SMTP,
+    );
+
+    $SMTPObject  = $Kernel::OM->Get($Module);
 
     if ( $Self->{Debug} ) {
-        $Self->{LogObject}->Log(
+        $LogObject->Log(
             Priority => 'notice',
             Message  => "Use MultiSMTP $Module",
         );
 
-        $Self->{LogObject}->Log(
+        $LogObject->Log(
             Priority => 'notice',
             Message  => sprintf "Use SMTP %s/%s (%s)", $SMTP{Host}, $SMTP{User}, $SMTP{ID},
         );
