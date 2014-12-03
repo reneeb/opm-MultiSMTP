@@ -184,7 +184,7 @@ sub Send {
     $EncodeObject->EncodeOutput( $Param{Header} );
 
     # encode utf8 body strings
-    $Self->{EncodeObject}->EncodeOutput( $Param{Body} );
+    $EncodeObject->EncodeOutput( $Param{Body} );
 
     # send data
     if ( !$SMTP->data( ${ $Param{Header} }, "\n", ${ $Param{Body} } ) ) {
