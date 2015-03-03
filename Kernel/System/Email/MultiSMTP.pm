@@ -75,7 +75,7 @@ sub Send {
 
         # use standard SMTP module as fallback
         my $Module  = $ConfigObject->Get('MultiSMTP::Fallback');
-        $SMTPObject = $Module->new( %{$Self} );
+        $SMTPObject = $Kernel::OM->Get( $Module );
         my $Success = $SMTPObject->Send( %Param );
         return $Success;
     }
@@ -96,7 +96,7 @@ sub Send {
     if ( $Self->{Debug} ) {
         $LogObject->Log(
             Priority => 'notice',
-            Message  => 'From: ' . $PlainFrom . ' // SMTP: ' . $SMTP{ID},
+            Message  => 'From: ' . ( $PlainFrom // '' ) . ' // SMTP: ' . ( $SMTP{ID} // '' ),
         );
     }
 
@@ -104,7 +104,7 @@ sub Send {
 
         # use standard SMTP module as fallback
         my $Module  = $ConfigObject->Get('MultiSMTP::Fallback');
-        $SMTPObject = $Module->new( %{$Self} );
+        $SMTPObject = $Kernel::OM->Get( $Module );
         my $Success = $SMTPObject->Send( %Param );
         return $Success;
     }
