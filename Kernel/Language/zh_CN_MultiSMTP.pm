@@ -16,7 +16,7 @@ use utf8;
 
 sub Data {
     my $Self = shift;
-
+    $Self->{Translation}->{'Creator'}              = '创建者';
     $Self->{Translation}->{'Add SMTP'}             = '增加 SMTP';
     $Self->{Translation}->{'SMTP settings'}        = 'SMTP 配置';
     $Self->{Translation}->{'Manage SMTP settings'} = '管理发送邮件服务器';
