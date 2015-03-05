@@ -11,32 +11,21 @@ package Kernel::Language::de_MultiSMTP;
 
 use strict;
 use warnings;
-
 use utf8;
-
-our $VERSION = 0.02;
 
 sub Data {
     my $Self = shift;
 
-    my $Lang = $Self->{Translation};
-
-    return if ref $Lang ne 'HASH';
-
-    $Lang->{Creator} = 'Ersteller';
-
-    $Lang->{'Add SMTP'}             = 'SMTP hinzufügen';
-    $Lang->{'SMTP settings'}        = 'SMTP-Einstellungen';
-    $Lang->{'Manage SMTP settings'} = 'SMTP-Einstellungen verwalten';
-    $Lang->{'Add/Change SMTP'}      = 'SMTP hinzufügen/bearbeiten';
-    $Lang->{'Type is mandatory'}    = 'Typ wird benötigt';
-    $Lang->{'A host is required'}   = 'Ein Hostname wird benötigt';
-    $Lang->{'User is mandatory'}    = 'Ein Benutzername wird benötigt';
-    $Lang->{'Port is mandatory'}    = 'Eine Port-Angabe wird benötigt';
-    $Lang->{'Email is mandatory'}   = 'E-Mail-Adressen werden benötigt';
+    $Self->{Translation}->{'Add SMTP'}             = 'SMTP hinzufügen';
+    $Self->{Translation}->{'SMTP settings'}        = 'SMTP-Einstellungen';
+    $Self->{Translation}->{'Manage SMTP settings'} = 'SMTP-Einstellungen verwalten';
+    $Self->{Translation}->{'Add/Change SMTP'}      = 'SMTP hinzufügen/bearbeiten';
+    $Self->{Translation}->{'Type is mandatory'}    = 'Typ wird benötigt';
+    $Self->{Translation}->{'A host is required'}   = 'Ein Hostname wird benötigt';
+    $Self->{Translation}->{'User is mandatory'}    = 'Ein Benutzername wird benötigt';
+    $Self->{Translation}->{'Port is mandatory'}    = 'Eine Port-Angabe wird benötigt';
+    $Self->{Translation}->{'Email is mandatory'}   = 'E-Mail-Adressen werden benötigt';
     
-
-    return 1;
 }
 
 1;
