@@ -28,6 +28,8 @@ sub Data {
     $Self->{Translation}->{'Email is mandatory'}   = '邮件地址';
     $Self->{Translation}->{'SMTP Management'}      = '邮件服务器管理';
     $Self->{Translation}->{'Emails'}               = '邮件地址';
+    $Self->{Translation}->{'edit'}                 = '编辑';
+    $Self->{Translation}->{'delete'}               = '删除';
 
 
 }
