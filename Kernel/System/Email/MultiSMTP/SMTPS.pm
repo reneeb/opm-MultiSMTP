@@ -1,7 +1,7 @@
 # --
 # Kernel/System/Email/MultiSMTP/SMTPS.pm - email send backend for SMTP/SSL
-# Copyright (C) 2001-2014 OTRS AG, http://otrs.com/
-# Changes Copyright (C) 2011-2014 Perl-Services.de, http://perl-services.de
+# Copyright (C) 2001-2015 OTRS AG, http://otrs.com/
+# Changes Copyright (C) 2011-2015 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -27,8 +27,10 @@ sub _Connect {
     # check needed stuff
     for (qw(MailHost FQDN)) {
         if ( !$Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')
-                ->Log( Priority => 'error', Message => "Need $_!" );
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $_!"
+            );
             return;
         }
     }

@@ -12,7 +12,7 @@
                 <Title>SMTP settings</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
-                    <Module>Kernel::Output::HTML::NavBarModuleAdmin</Module>
+                    <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
                     <Name Translatable="1">SMTP settings</Name>
                     <Description Translatable="1">Manage SMTP settings.</Description>
                     <Block>Email</Block>
