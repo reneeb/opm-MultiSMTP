@@ -44,6 +44,7 @@ sub Send {
     my ( $Self, %Param ) = @_;
 
     my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
+    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $MSMTPObject  = $Kernel::OM->Get('Kernel::System::MultiSMTP');
 
@@ -58,14 +59,32 @@ sub Send {
         }
     }
 
+    if ( $Self->{Debug} ) {
+        $LogObject->Log(
+            Priority => 'debug',
+            Message  => 'Header: ' . ${ $Param{Header} },
+        );
+
+        $LogObject->Log(
+            Priority => 'debug',
+            Message  => 'ToArray: ' . $MainObject->Dump( $Param{ToArray} ),
+        );
+    }
+
     # try to parse the sender address from header
     if ( !$Param{From} ) {
-        ($Param{From}) = ${ $Param{Header} } =~ m{^ From: \s+ ([^\n]+) }xms;
+        ($Param{From}) = ${ $Param{Header} } =~ m{
+            ^ From: \s+
+                (
+                    (?:[^\n]+ )
+                    (?: \n ^ \s+ [^\n]+ )*
+                )
+        }xms;
     }
 
     if ( $Self->{Debug} ) {
         $LogObject->Log(
-            Priority => 'notice',
+            Priority => 'debug',
             Message  => 'From: ' . $Param{From},
         );
     }
@@ -95,7 +114,7 @@ sub Send {
 
     if ( $Self->{Debug} ) {
         $LogObject->Log(
-            Priority => 'notice',
+            Priority => 'debug',
             Message  => 'From: ' . ( $PlainFrom // '' ) . ' // SMTP: ' . ( $SMTP{ID} // '' ),
         );
     }
@@ -119,14 +138,28 @@ sub Send {
 
     $SMTPObject  = $Kernel::OM->Get($Module);
 
+    if ($SMTPObject->{User} ne $SMTP{User}) {
+        if ( $Self->{Debug} ) {
+            $LogObject->Log(
+                Priority => 'debug',
+                Message  => "Set new SMTP-Server Information",
+            );
+        }
+        
+        $SMTPObject->{MailHost} = $SMTP{Host};
+        $SMTPObject->{SMTPPort} = $SMTP{Port};
+        $SMTPObject->{User}     = $SMTP{User};
+        $SMTPObject->{Password} = $SMTP{Password};
+    }
+
     if ( $Self->{Debug} ) {
         $LogObject->Log(
-            Priority => 'notice',
+            Priority => 'debug',
             Message  => "Use MultiSMTP $Module",
         );
 
         $LogObject->Log(
-            Priority => 'notice',
+            Priority => 'debug',
             Message  => sprintf "Use SMTP %s/%s (%s)", $SMTP{Host}, $SMTP{User}, $SMTP{ID},
         );
     }
