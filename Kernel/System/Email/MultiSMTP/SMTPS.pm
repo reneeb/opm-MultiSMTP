@@ -1,7 +1,6 @@
 # --
-# Kernel/System/Email/MultiSMTP/SMTPS.pm - email send backend for SMTP/SSL
-# Copyright (C) 2001-2015 OTRS AG, http://otrs.com/
-# Changes Copyright (C) 2011-2015 Perl-Services.de, http://perl-services.de
+# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Changes Copyright (C) 2011-2016 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
