@@ -29,4 +29,8 @@ Fernholz IT GmbH (L<http://www.fernholz-it.eu>) sponsored the "anonymous SMTP" f
 
 NeverMin (L<https://github.com/NeverMin>) added the Chinese translation.
 
+=head2 Niroc
+
+Niroc analyzed a problem that occured when different accounts were used.
+
 =cut
