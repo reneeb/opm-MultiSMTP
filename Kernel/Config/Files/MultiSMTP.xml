@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<otrs_config version="1.0" init="Application">
-    <CVS>$Id: MultiSMTP.xml,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $</CVS>
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="Config">
     <ConfigItem Name="Frontend::Module###AdminMultiSMTP" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the invoice states interface.</Description>
         <Group>MultiSMTP</Group>
@@ -8,7 +7,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description>Manage SMTP settings.</Description>
+                <Description Translatable="1">Manage SMTP settings.</Description>
                 <Title>SMTP settings</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -55,8 +54,9 @@
         <SubGroup>Core</SubGroup>
         <Setting>
             <Option SelectedID="0">
-                <Item Key="0">No</Item>
-                <Item Key="1">Yes</Item>
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Debug MultiSMTP</Item>
+                <Item Key="2" Translatable="1">Debug MultiSMTP and Net::SMTP</Item>
             </Option>
         </Setting>
     </ConfigItem>

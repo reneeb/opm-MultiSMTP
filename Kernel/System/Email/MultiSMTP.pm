@@ -1,6 +1,6 @@
 # --
 # Kernel/System/Email/MultiSMTP.pm - the global email send module
-# Copyright (C) 2013 - 2014 Perl-Services.de, http://perl-services.de
+# Copyright (C) 2013 - 2016 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -130,6 +130,15 @@ sub Send {
 
     $SMTP{Password} = $SMTP{PasswordDecrypted};
     $SMTP{Type} =~ s/\W//g;
+
+    if ( $Self->{Debug} && $Self->{Debug} == 2 ) {
+        $LogObject->Log(
+            Priority => 'debug',
+            Message  => 'SMTP debugging enabled',
+        );
+
+        $SMTP{Debug} = 3;
+    }
 
     my $Module = 'Kernel::System::Email::MultiSMTP::' . $SMTP{Type};
     $Kernel::OM->ObjectParamAdd(
