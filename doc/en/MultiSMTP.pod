@@ -33,4 +33,8 @@ NeverMin (L<https://github.com/NeverMin>) added the Chinese translation.
 
 Niroc analyzed a problem that occured when different accounts were used.
 
+=head2 Balazs Ur
+
+Balazs Ur (L<http://otrs-megoldasok.hu/>) added the Hungarian translation.
+
 =cut

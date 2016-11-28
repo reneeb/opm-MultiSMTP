@@ -2,16 +2,18 @@
 <otrs_package version="1.0">
     <!-- GENERATED WITH OTRS::OPM::Maker::Command::sopm (1.35) -->
     <Name>MultiSMTP</Name>
-    <Version>5.0.3</Version>
+    <Version>5.0.4</Version>
     <Framework>5.0.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
     <URL>http://www.perl-services.de</URL>
     <Description Lang="de">Ein Modul, mit dem man mehrere SMTP-Server für OTRS nutzen kann.</Description>
     <Description Lang="en">A module that allows OTRS to use several SMTP servers.</Description>
+    <Description Lang="hu">Egy modul, amely lehetővé teszi az OTRS-nek több SMTP-kiszolgáló használatát.</Description>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
     <Filelist>
         <File Permission="644" Location="Kernel/Config/Files/MultiSMTP.xml" />
         <File Permission="644" Location="Kernel/Language/de_MultiSMTP.pm" />
+        <File Permission="644" Location="Kernel/Language/hu_MultiSMTP.pm" />
         <File Permission="644" Location="Kernel/Language/zh_CN_MultiSMTP.pm" />
         <File Permission="644" Location="Kernel/Modules/AdminMultiSMTP.pm" />
         <File Permission="644" Location="Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPForm.tt" />
@@ -23,6 +25,7 @@
         <File Permission="644" Location="Kernel/System/MultiSMTP.pm" />
         <File Permission="644" Location="doc/MultiSMTP.json" />
         <File Permission="644" Location="doc/en/MultiSMTP.pod" />
+        <File Permission="644" Location="doc/hu/MultiSMTP.pod" />
     </Filelist>
     <DatabaseInstall Type="post">
         <TableCreate Name="ps_multi_smtp">

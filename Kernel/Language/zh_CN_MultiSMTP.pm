@@ -16,22 +16,55 @@ use utf8;
 
 sub Data {
     my $Self = shift;
-    $Self->{Translation}->{'Creator'}              = '创建者';
-    $Self->{Translation}->{'Add SMTP'}             = '增加 SMTP';
-    $Self->{Translation}->{'SMTP settings'}        = 'SMTP 配置';
-    $Self->{Translation}->{'Manage SMTP settings'} = '管理发送邮件服务器';
-    $Self->{Translation}->{'Add/Change SMTP'}      = '增加或修改发送邮件服务器';
-    $Self->{Translation}->{'Type is mandatory'}    = '类型';
-    $Self->{Translation}->{'A host is required'}   = '邮件服务器地址是必须的';
-    $Self->{Translation}->{'User is mandatory'}    = '用户名';
-    $Self->{Translation}->{'Port is mandatory'}    = '端口';
-    $Self->{Translation}->{'Email is mandatory'}   = '邮件地址';
-    $Self->{Translation}->{'SMTP Management'}      = '邮件服务器管理';
-    $Self->{Translation}->{'Emails'}               = '邮件地址';
-    $Self->{Translation}->{'edit'}                 = '编辑';
-    $Self->{Translation}->{'delete'}               = '删除';
 
+    my $Lang = $Self->{Translation} || {};
 
+    # Kernel/Config/Files/MultiSMTP.xml
+    $Lang->{'Frontend module registration for the MultiSMTP interface.'} = '';
+    $Lang->{'Manage SMTP settings.'} = '管理发送邮件服务器';
+    $Lang->{'SMTP settings'} = 'SMTP 配置';
+    $Lang->{'The salt for password encryption. It has to have exactly 8 bytes!'} = '';
+    $Lang->{'The key for password encryption.'} = '';
+    $Lang->{'The fallback mechanism when MultiSMTP fails.'} = '';
+    $Lang->{'Enable debugging mode of MultiSMTP.'} = '';
+    $Lang->{'None'} = '';
+    $Lang->{'Debug MultiSMTP'} = '';
+    $Lang->{'Debug MultiSMTP and Net::SMTP'} = '';
+
+    # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPForm.tt
+    $Lang->{'SMTP Management'} = '邮件服务器管理';
+    $Lang->{'Actions'} = '';
+    $Lang->{'Go to overview'} = '';
+    $Lang->{'Add/Change SMTP'} = '增加或修改发送邮件服务器';
+    $Lang->{'Anonymous SMTP'} = '';
+    $Lang->{'Host'} = '';
+    $Lang->{'A host is required.'} = '邮件服务器地址是必须的';
+    $Lang->{'Port'} = '';
+    $Lang->{'Port is mandatory.'} = '端口';
+    $Lang->{'User'} = '';
+    $Lang->{'User is mandatory.'} = '用户名';
+    $Lang->{'Password'} = '';
+    $Lang->{'Password is mandatory.'} = '';
+    $Lang->{'Emails'} = '邮件地址';
+    $Lang->{'Email is mandatory.'} = '邮件地址';
+    $Lang->{'Type'} = '';
+    $Lang->{'Type is mandatory.'} = '类型';
+    $Lang->{'Validity'} = '';
+    $Lang->{'Comment'} = '';
+    $Lang->{'Save'} = '';
+    $Lang->{'or'} = '';
+    $Lang->{'Cancel'} = '';
+
+    # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPList.tt
+    $Lang->{'Add SMTP'} = '增加 SMTP';
+    $Lang->{'List'} = '';
+    $Lang->{'ID'} = '';
+    $Lang->{'Date'} = '';
+    $Lang->{'Creator'} = '创建者';
+    $Lang->{'Action'} = '';
+    $Lang->{'No matches found.'} = '';
+    $Lang->{'edit'} = '编辑';
+    $Lang->{'delete'} = '删除';
 }
 
 1;

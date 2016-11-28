@@ -1,6 +1,6 @@
 {
     "name": "MultiSMTP",
-    "version": "5.0.3",
+    "version": "5.0.4",
     "framework": [
         "5.0.x"
     ],
@@ -11,7 +11,8 @@
     "license": "GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007",
     "description" : {
         "en": "A module that allows OTRS to use several SMTP servers.",
-        "de": "Ein Modul, mit dem man mehrere SMTP-Server für OTRS nutzen kann."
+        "de": "Ein Modul, mit dem man mehrere SMTP-Server für OTRS nutzen kann.",
+        "hu": "Egy modul, amely lehetővé teszi az OTRS-nek több SMTP-kiszolgáló használatát."
     },
     "database" : [
        {
