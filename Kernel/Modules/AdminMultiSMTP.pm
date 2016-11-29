@@ -257,7 +257,7 @@ sub _MaskSMTPForm {
         Data        => \%SystemAddresses,
         Name        => 'Emails',
         Size        => 5,
-        Class       => 'Validate_Required ' . ( $Param{EmailsInvalid} || '' ),
+        Class       => 'Modernize Validate_Required ' . ( $Param{EmailsInvalid} || '' ),
         Multiple    => 1,
         SelectedID  => \@Selected,
         HTMLQuote   => 1,
@@ -265,11 +265,16 @@ sub _MaskSMTPForm {
 
 
     $Param{TypeSelect} = $LayoutObject->BuildSelection(
-        Data       => { 'SMTP' => 'SMTP', 'SMTPS' => 'SMTP/S', 'SMTPTLS' => 'SMTPTLS' },
+        Data       => {
+            'SMTP'    => 'SMTP',
+            'SMTPS'   => 'SMTP/S',
+            'SMTPTLS' => 'SMTPTLS',
+        },
         Name       => 'Type',
         Size       => 1,
         SelectedID => $Param{Type} || $SMTP{Type},
         HTMLQuote  => 1,
+        Class      => 'Modernize',
     );
 
 
@@ -281,6 +286,7 @@ sub _MaskSMTPForm {
         Size       => 1,
         SelectedID => $Param{ValidID} || $ValidID || 1,
         HTMLQuote  => 1,
+        Class      => 'Modernize',
     );
 
     if ( $Self->{Subaction} ne 'Edit' && $Self->{Subaction} ne 'Add' ) {

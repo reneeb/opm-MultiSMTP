@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_config version="1.0" init="Config">
     <ConfigItem Name="Frontend::Module###AdminMultiSMTP" Required="0" Valid="1">
-        <Description Translatable="1">Frontend module registration for the invoice states interface.</Description>
+        <Description Translatable="1">Frontend module registration for the MultiSMTP interface.</Description>
         <Group>MultiSMTP</Group>
         <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
                 <Description Translatable="1">Manage SMTP settings.</Description>
-                <Title>SMTP settings</Title>
+                <Title Translatable="1">SMTP settings</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
@@ -37,7 +37,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="MultiSMTP::Fallback" Required="1" Valid="1">
-        <Description Translatable="1">The fallback mechanism when multi smtp fails.</Description>
+        <Description Translatable="1">The fallback mechanism when MultiSMTP fails.</Description>
         <Group>MultiSMTP</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -54,7 +54,7 @@
         <SubGroup>Core</SubGroup>
         <Setting>
             <Option SelectedID="0">
-                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="0" Translatable="1">None</Item>
                 <Item Key="1" Translatable="1">Debug MultiSMTP</Item>
                 <Item Key="2" Translatable="1">Debug MultiSMTP and Net::SMTP</Item>
             </Option>

@@ -1,0 +1,63 @@
+=encoding utf-8
+
+=head1 NÉV
+
+MultiSMTP - felkészíti az OTRS keretrendszert több SMTP-kiszolgáló használatára
+
+=head1 LEÍRÁS
+
+Egy szabványos OTRS telepítés nem képes különböző SMTP-kiszolgálók 
+használatára az egyes küldőcímeknél. Ez problémákhoz vezethet, ugyanis több 
+címzett kiszolgálója megtagadja a levelek kézbesítését, mivel a fordított 
+keresés nem a küldőcím gépnevét adja vissza.
+
+Ezért minden egyes küldőcímnek saját SMTP-kiszolgálóra van szüksége - és ezzel 
+a csomaggal ez biztosítható.
+
+A telepítés után egy új elem jelenik meg az adminisztrációs területen lévő 
+e-mail blokkban. Ezzel lehet kezelni a cím -> SMTP-kiszolgáló leképezést. 
+Beállíthatja az adatokat a rendszercímeknél megadott minden egyes címhez, és 
+meghatározhatja az SMTP-kapcsolatok típusát (egyszerű SMTP, SMTPTLS vagy 
+SMTP/S). A felhasználó jelszava tárolható titkosított módon is. Ha használni 
+szeretné ezt a funkciót, akkor telepítenie kell a C<Crypt::CBC> és a 
+C<Crypt::DES> Perl-modulokat.
+
+Amikor egy levél elküldésre kerül, akkor a csomag megkeresi azt az 
+SMTP-beállítást, amely a küldőcímhez tartozik, és ha nem talál semmit, akkor 
+a I<rendszerbeállításokban> lévő SMTP-beállításokat használja (amelyet a 
+szabványos SMTP mechanizmus használ).
+
+=head1 SZERZŐ ÉS LICENC
+
+Ezt a csomagot Renée Bäcker E<lt>otrs@perl-services.deE<gt> készítette.
+
+A csomag az AGPL feltételi szerint licencelt. Ha nem kapta meg ezt a fájlt, 
+akkor nézze meg a L<http://www.gnu.org/licenses/agpl.txt> címen.
+
+=head1 KÖSZÖNETNYILVÁNÍTÁS
+
+=head2 Fernholz IT GmbH
+
+A Fernholz IT GmbH (L<http://www.fernholz-it.eu>) támogatta a „névtelen SMTP” 
+funkciót. Ezzel a funkcióval olyan SMTP-kiszolgálókat adhat hozzá, ahol nincs 
+szükség hitelesítésre.
+
+=head2 NeverMin
+
+NeverMin (L<https://github.com/NeverMin>) adta hozzá a kínai fordítást.
+
+=head2 Niroc
+
+Niroc elemezte azt a problémát, amely akkor fordult elő, amikor különböző 
+fiókokat használtak.
+
+=head2 Úr Balázs
+
+Úr Balázs (L<http://otrs-megoldasok.hu/>) adta hozzá a magyar fordítást.
+
+=cut
+
+=head1 MAGYAR FORDÍTÁS
+
+A magyar fordítást az OTRS-megoldások csapata készítette.
+Copyright (C) 2016 Úr Balázs, L<http://otrs-megoldasok.hu>
