@@ -488,12 +488,19 @@ sub SMTPGetForAddress {
         }
     }
 
+    my $ValidWhere = '';
+    my @ValidBind;
+    if ( $Param{Valid} ) {
+        $ValidWhere = ' AND valid_id = ?';
+        push @ValidBind, \"1";
+    }
+
     return if !$Self->{DBObject}->Prepare(
         SQL => 'SELECT ps_multi_smtp.id, host, smtp_user, smtp_password, type, address, encrypted, '
             . 'change_time, change_by, create_time, create_by, valid_id, port, comments '
             . 'FROM ps_multi_smtp INNER JOIN ps_multi_smtp_address ON ps_multi_smtp.id = smtp_id '
-            . 'WHERE address = ?',
-        Bind  => [ \$Param{Address} ],
+            . 'WHERE address = ?' . $ValidWhere,
+        Bind  => [ \$Param{Address}, @ValidBind ],
         Limit => 1,
     );
 
