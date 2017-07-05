@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
-    <!-- GENERATED WITH OTRS::OPM::Maker::Command::sopm (1.28) -->
+    <!-- GENERATED WITH OTRS::OPM::Maker::Command::sopm (1.37) -->
     <Name>MultiSMTP</Name>
-    <Version>4.0.4</Version>
+    <Version>4.0.5</Version>
     <Framework>4.0.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
     <URL>http://www.perl-services.de</URL>
@@ -63,7 +63,7 @@
         </TableAlter>
     </DatabaseUpgrade>
     <DatabaseUninstall Type="pre">
-        <TableDrop Name="ps_multi_smtp" />
         <TableDrop Name="ps_multi_smtp_address" />
+        <TableDrop Name="ps_multi_smtp" />
     </DatabaseUninstall>
 </otrs_package>

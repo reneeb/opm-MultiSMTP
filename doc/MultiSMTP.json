@@ -1,6 +1,6 @@
 {
     "name": "MultiSMTP",
-    "version": "4.0.4",
+    "version": "4.0.5",
     "framework": [
         "4.0.x"
     ],
@@ -56,7 +56,7 @@
             "columns": [
                 { "name": "id", "required": "true", "type": "INTEGER", "auto_increment":"true", "primary_key": "true" },
                 { "name": "smtp_id", "required": "true", "type": "INTEGER" },
-                { "name": "address", "required":"true", "type": "VARCHAR", "size": 250 },
+                { "name": "address", "required":"true", "type": "VARCHAR", "size": 250 }
             ]
         },
         {
