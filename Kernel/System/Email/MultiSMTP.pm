@@ -110,6 +110,7 @@ sub Send {
 
     my %SMTP = $MSMTPObject->SMTPGetForAddress(
         Address => $PlainFrom,
+        Valid   => 1,
     );
 
     if ( $Self->{Debug} ) {
