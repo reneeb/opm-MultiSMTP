@@ -1,6 +1,6 @@
 {
     "name": "MultiSMTP",
-    "version": "5.0.5",
+    "version": "5.0.6",
     "framework": [
         "5.0.x"
     ],
