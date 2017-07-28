@@ -1,6 +1,5 @@
 # --
-# Kernel/System/Email/MultiSMTP.pm - the global email send module
-# Copyright (C) 2013 - 2016 Perl-Services.de, http://perl-services.de
+# Copyright (C) 2013 - 2017 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -71,8 +70,10 @@ sub Send {
         );
     }
 
+    my $UseSenderFromMail = $ConfigObject->Get('MultiSMTP::UseSenderFromMail');
+
     # try to parse the sender address from header
-    if ( !$Param{From} ) {
+    if ( !$Param{From} || $UseSenderFromMail ) {
         ($Param{From}) = ${ $Param{Header} } =~ m{
             ^ From: \s+
                 (
