@@ -37,13 +37,7 @@ sub Data {
     $Lang->{'SMTP Management'} = 'SMTP kezelés';
     $Lang->{'Add/Change SMTP'} = 'SMTP hozzáadása vagy megváltoztatása';
     $Lang->{'Anonymous SMTP'} = 'Névtelen SMTP';
-    $Lang->{'A host is required.'} = 'Egy gép szükséges.';
-    $Lang->{'Port is mandatory.'} = 'A port kötelező.';
-    $Lang->{'User is mandatory.'} = 'A felhasználó kötelező.';
-    $Lang->{'Password is mandatory.'} = 'A jelszó kötelező.';
     $Lang->{'Emails'} = 'E-mailek';
-    $Lang->{'Email is mandatory.'} = 'Az e-mail kötelező.';
-    $Lang->{'Type is mandatory.'} = 'A típus kötelező.';
 
     # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPList.tt
     $Lang->{'Add SMTP'} = 'SMTP hozzáadása';

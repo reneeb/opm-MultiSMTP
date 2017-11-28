@@ -34,13 +34,7 @@ sub Data {
         'SMTP Management' => 'Управление SMTP',
         'Add/Change SMTP' => 'Добавить/изменить SMTP',
         'Anonymous SMTP' => 'Анонимный SMTP',
-        'A host is required.' => 'Хост обязателен для заполнения.',
-        'Port is mandatory.' => 'Порт обязателен для заполнения.',
-        'User is mandatory.' => 'Пользователь обязателен для заполнения',
-        'Password is mandatory.' => 'Пароль обязателен для заполнения',
         'Emails' => 'Электронные почтовые адреса',
-        'Email is mandatory.' => 'Электронные почтовые адреса обязателны для заполнения.',
-        'Type is mandatory.' => 'Тип обязателен для заполнения.',
 
         # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPList.tt
         'Add SMTP' => 'Добавить SMTP',

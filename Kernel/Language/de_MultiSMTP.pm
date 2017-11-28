@@ -34,13 +34,7 @@ sub Data {
     $Lang->{'SMTP Management'} = '';
     $Lang->{'Add/Change SMTP'} = 'SMTP hinzufügen/bearbeiten';
     $Lang->{'Anonymous SMTP'} = '';
-    $Lang->{'A host is required.'} = 'Ein Hostname wird benötigt.';
-    $Lang->{'Port is mandatory.'} = 'Eine Port-Angabe wird benötigt.';
-    $Lang->{'User is mandatory.'} = 'Ein Benutzername wird benötigt.';
-    $Lang->{'Password is mandatory.'} = '';
     $Lang->{'Emails'} = 'E-Mails';
-    $Lang->{'Email is mandatory.'} = 'E-Mail-Adressen werden benötigt.';
-    $Lang->{'Type is mandatory.'} = 'Typ wird benötigt.';
 
     # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPList.tt
     $Lang->{'Add SMTP'} = 'SMTP hinzufügen';

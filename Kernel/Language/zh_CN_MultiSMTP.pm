@@ -34,13 +34,7 @@ sub Data {
     $Lang->{'SMTP Management'} = '邮件服务器管理';
     $Lang->{'Add/Change SMTP'} = '增加或修改发送邮件服务器';
     $Lang->{'Anonymous SMTP'} = '';
-    $Lang->{'A host is required.'} = '邮件服务器地址是必须的';
-    $Lang->{'Port is mandatory.'} = '端口';
-    $Lang->{'User is mandatory.'} = '用户名';
-    $Lang->{'Password is mandatory.'} = '';
     $Lang->{'Emails'} = '邮件地址';
-    $Lang->{'Email is mandatory.'} = '邮件地址';
-    $Lang->{'Type is mandatory.'} = '类型';
 
     # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPList.tt
     $Lang->{'Add SMTP'} = '增加 SMTP';
