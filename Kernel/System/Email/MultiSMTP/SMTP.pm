@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # Changes Copyright (C) 2011-2016 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -36,9 +36,9 @@ sub new {
         $Self->{SMTPDebug} = 1;
     }
 
-# ---
-# PS
-# ---
+    # ---
+    # PS
+    # ---
     # smtp timeout in sec
     $Self->{SMTPTimeout} = 30;
 
@@ -49,7 +49,7 @@ sub new {
     $Self->{SMTPPort} = $Param{Port};
     $Self->{User}     = $Param{User};
     $Self->{Password} = $Param{Password};
-# ---
+    # ---
 
     return $Self;
 }
@@ -60,17 +60,17 @@ sub Check {
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-# ---
-# PS
-# ---
-#    # get config data
-#    $Self->{FQDN}     = $ConfigObject->Get('FQDN');
-#    $Self->{MailHost} = $ConfigObject->Get('SendmailModule::Host')
-#        || die "No SendmailModule::Host found in Kernel/Config.pm";
-#    $Self->{SMTPPort} = $ConfigObject->Get('SendmailModule::Port');
-#    $Self->{User}     = $ConfigObject->Get('SendmailModule::AuthUser');
-#    $Self->{Password} = $ConfigObject->Get('SendmailModule::AuthPassword');
-# ---
+    # ---
+    # PS
+    # ---
+    #    # get config data
+    #    $Self->{FQDN}     = $ConfigObject->Get('FQDN');
+    #    $Self->{MailHost} = $ConfigObject->Get('SendmailModule::Host')
+    #        || die "No SendmailModule::Host found in Kernel/Config.pm";
+    #    $Self->{SMTPPort} = $ConfigObject->Get('SendmailModule::Port');
+    #    $Self->{User}     = $ConfigObject->Get('SendmailModule::AuthUser');
+    #    $Self->{Password} = $ConfigObject->Get('SendmailModule::AuthPassword');
+    # ---
 
     # try it 3 times to connect with the SMTP server
     # (M$ Exchange Server 2007 have sometimes problems on port 25)
@@ -108,7 +108,7 @@ sub Check {
             return (
                 Successful => 0,
                 Message =>
-                    "SMTP authentication failed: $Error! Enable Net::SMTP debug for more info!"
+                "SMTP authentication failed: $Error! Enable Net::SMTP debug for more info!"
             );
         }
     }
@@ -155,7 +155,7 @@ sub Send {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message =>
-                "Can't use from '$Param{From}': $Error! Enable Net::SMTP debug for more info!",
+            "Can't use from '$Param{From}': $Error! Enable Net::SMTP debug for more info!",
         );
         $SMTP->quit();
         return;
@@ -185,8 +185,32 @@ sub Send {
     # encode utf8 body strings
     $EncodeObject->EncodeOutput( $Param{Body} );
 
-    # send data
-    if ( !$SMTP->data( ${ $Param{Header} }, "\n", ${ $Param{Body} } ) ) {
+    # Send email data by chunks because when in SSL mode, each SSL
+    # frame has a maximum of 16kB (Bug #12957).
+    # We send always the first 4000 characters until '$Data' is empty.
+    # If any error occur while sending data to the smtp server an exception
+    # is thrown and '$DataSent' will be undefined.
+    my $DataSent = eval {
+        my $Data      = ${ $Param{Header} } . "\n" . ${ $Param{Body} };
+        my $ChunkSize = 4000;
+
+        $SMTP->data() || die "error starting data sending";
+
+        while ( my $DataLength = length $Data ) {
+            my $TmpChunkSize = ( $ChunkSize > $DataLength ) ? $DataLength : $ChunkSize;
+            my $Chunk = substr $Data, 0, $TmpChunkSize;
+
+            $SMTP->datasend($Chunk) || die "error sending data chunk";
+
+            $Data = substr $Data, $TmpChunkSize;
+        }
+
+        $SMTP->dataend() || die "error ending data sending";
+
+        return 1;
+    };
+
+    if ( !$DataSent ) {
         my $Error = $SMTP->code() . $SMTP->message();
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
@@ -221,10 +245,14 @@ sub _Connect {
         }
     }
 
+    # Remove a possible port from the FQDN value
+    my $FQDN = $Param{FQDN};
+    $FQDN =~ s{:\d+}{}smx;
+
     # set up connection connection
     my $SMTP = Net::SMTP->new(
         $Param{MailHost},
-        Hello   => $Param{FQDN},
+        Hello   => $FQDN,
         Port    => $Param{SMTPPort} || 25,
         Timeout => 30,
         Debug   => $Param{SMTPDebug},
