@@ -1,6 +1,6 @@
 # --
 # Kernel/System/MultiSMTP.pm - All SMTP related functions should be here eventually
-# Copyright (C) 2011-2014 Perl-Services.de
+# Copyright (C) 2011-2017 Perl-Services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you

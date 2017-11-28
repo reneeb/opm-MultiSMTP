@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="2.0" init="Config">
+    <Setting Name="Frontend::Module###AdminMultiSMTP" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the MultiSMTP interface.</Description>
+        <Navigation>Frontend::Admin::ModuleRegistration</Navigation>
+        <Value>
+            <Item ValueType="FrontendRegistration">
+                <Hash>
+                    <Item Key="Group">
+                        <Array>
+                            <Item>admin</Item>
+                        </Array>
+                    </Item>
+                    <Item Key="GroupRo">
+                        <Array>
+                        </Array>
+                    </Item>
+                    <Item Key="Title" Translatable="1">SMTP settings</Item>
+                    <Item Key="NavBarName">Admin</Item>
+                    <Item Key="Description" Translatable="1">Manage SMTP settings.</Item>
+                </Hash>
+            </Item>
+        </Value>
+    </Setting>
+    <Setting Name="Frontend::NavigationModule###AdminMultiSMTP" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the MultiSMTP interface.</Description>
+        <Navigation>Frontend::Admin::ModuleRegistration::AdminOverview</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="Group">
+                    <Array>
+                        <Item>admin</Item>
+                    </Array>
+                </Item>
+                <Item Key="GroupRo">
+                    <Array>
+                    </Array>
+                </Item>
+                <Item Key="Module">Kernel::Output::HTML::NavBar::ModuleAdmin</Item>
+                <Item Key="Name" Translatable="1">SMTP settings</Item>
+                <Item Key="Block">Communication</Item>
+                <Item Key="Description" Translatable="1">Manage SMTP settings.</Item>
+                <Item Key="IconBig"></Item>
+                <Item Key="IconSmall"></Item>
+            </Hash>
+        </Value>
+    </Setting>
+    <Setting Name="MultiSMTP::Salt" Required="1" Valid="1">
+        <Description Translatable="1">The salt for password encryption. It has to have exactly 8 bytes!</Description>
+        <Navigation>MultiSMTP::Encryption</Navigation>
+        <Value>
+            <Item ValueType="String" ValueRegex="">SaltSalt</Item>
+        </Value>
+    </Setting>
+    <Setting Name="MultiSMTP::EncryptionKey" Required="1" Valid="1">
+        <Description Translatable="1">The key for password encryption.</Description>
+        <Navigation>MultiSMTP::Encryption</Navigation>
+        <Value>
+            <Item ValueType="String" ValueRegex="">EncryptionKey</Item>
+        </Value>
+    </Setting>
+    <Setting Name="MultiSMTP::Fallback" Required="1" Valid="1">
+        <Description Translatable="1">The fallback mechanism when MultiSMTP fails.</Description>
+        <Navigation>MultiSMTP::Core</Navigation>
+        <Value>
+            <Item ValueType="PerlModule" ValueFilter="Kernel/System/Email/SMTP*.pm">Kernel::System::Email::SMTP</Item>
+        </Value>
+    </Setting>
+    <Setting Name="MultiSMTP::Debug" Required="1" Valid="1">
+        <Description Translatable="1">Enable debugging mode of MultiSMTP.</Description>
+        <Navigation>MultiSMTP::Core</Navigation>
+        <Value>
+            <Item ValueType="Select" SelectedID="0">
+                <Item ValueType="Option" Value="0" Translatable="1">None4</Item>
+                <Item ValueType="Option" Value="1" Translatable="1">Debug MultiSMTP</Item>
+                <Item ValueType="Option" Value="2" Translatable="1">Debug MultiSMTP and Net::SMTP</Item>
+            </Item>
+        </Value>
+    </Setting>
+    <Setting Name="MultiSMTP::UseSenderFromMail" Required="1" Valid="1">
+        <Description Translatable="1">Always use 'From' given in the mail.</Description>
+        <Navigation>MultiSMTP::Core</Navigation>
+        <Value>
+            <Item ValueType="Select" SelectedID="0">
+                <Item ValueType="Option" Value="0" Translatable="1">No</Item>
+                <Item ValueType="Option" Value="1" Translatable="1">Yes</Item>
+            </Item>
+        </Value>
+    </Setting>
+</otrs_config>
