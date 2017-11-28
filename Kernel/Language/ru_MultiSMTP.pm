@@ -17,30 +17,32 @@ use utf8;
 sub Data {
     my $Self = shift;
 
+    my $Lang = $Self->{Translation} || {};
+
     # Kernel/Config/Files/MultiSMTP.xml
-    $Self->{Translation}->{'Frontend module registration for the MultiSMTP interface.'} = 'Регистрация модуля MultiSMTP.';
-    $Self->{Translation}->{'Manage SMTP settings.'} = 'Менеджер SMTP настроек.';
-    $Self->{Translation}->{'SMTP settings'} = 'SMTP настройки';
-    $Self->{Translation}->{'The salt for password encryption. It has to have exactly 8 bytes!'} = 'Соль для шифрования паролей. Он должен иметь ровно 8 байтов!';
-    $Self->{Translation}->{'The key for password encryption.'} = 'Ключ для шифрования паролей.';
-    $Self->{Translation}->{'The fallback mechanism when MultiSMTP fails.'} = 'Механизм возврата при сбое MultiSMTP.';
-    $Self->{Translation}->{'Enable debugging mode of MultiSMTP.'} = 'Включить режим отладки MultiSMTP.';
-    $Self->{Translation}->{'Debug MultiSMTP'} = 'Отладка MultiSMTP';
-    $Self->{Translation}->{'Debug MultiSMTP and Net::SMTP'} = 'Отладка MultiSMTP и Net::SMTP';
+    $Lang->{'Frontend module registration for the MultiSMTP interface.'} = 'Регистрация модуля MultiSMTP.';
+    $Lang->{'Manage SMTP settings.'} = 'Менеджер SMTP настроек.';
+    $Lang->{'SMTP settings'} = 'SMTP настройки';
+    $Lang->{'The salt for password encryption. It has to have exactly 8 bytes!'} = 'Соль для шифрования паролей. Он должен иметь ровно 8 байтов!';
+    $Lang->{'The key for password encryption.'} = 'Ключ для шифрования паролей.';
+    $Lang->{'The fallback mechanism when MultiSMTP fails.'} = 'Механизм возврата при сбое MultiSMTP.';
+    $Lang->{'Enable debugging mode of MultiSMTP.'} = 'Включить режим отладки MultiSMTP.';
+    $Lang->{'Debug MultiSMTP'} = 'Отладка MultiSMTP';
+    $Lang->{'Debug MultiSMTP and Net::SMTP'} = 'Отладка MultiSMTP и Net::SMTP';
 
     # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPForm.tt
-    $Self->{Translation}->{'SMTP Management'} = 'Управление SMTP';
-    $Self->{Translation}->{'Add/Change SMTP'} = 'Добавить/изменить SMTP';
-    $Self->{Translation}->{'Anonymous SMTP'} = 'Анонимный SMTP';
-    $Self->{Translation}->{'Emails'} = 'Электронные почтовые адреса';
+    $Lang->{'SMTP Management'} = 'Управление SMTP';
+    $Lang->{'Add/Change SMTP'} = 'Добавить/изменить SMTP';
+    $Lang->{'Anonymous SMTP'} = 'Анонимный SMTP';
+    $Lang->{'Emails'} = 'Электронные почтовые адреса';
 
     # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPList.tt
-    $Self->{Translation}->{'Add SMTP'} = 'Добавить SMTP';
-    $Self->{Translation}->{'ID'} = 'ID';
-    $Self->{Translation}->{'Creator'} = 'Создатель';
-    $Self->{Translation}->{'No matches found.'} = 'Совпадений не найдено.';
-    $Self->{Translation}->{'edit'} = 'редактировать';
-    $Self->{Translation}->{'delete'} = 'удалить';
+    $Lang->{'Add SMTP'} = 'Добавить SMTP';
+    $Lang->{'ID'} = 'ID';
+    $Lang->{'Creator'} = 'Создатель';
+    $Lang->{'No matches found.'} = 'Совпадений не найдено.';
+    $Lang->{'edit'} = 'редактировать';
+    $Lang->{'delete'} = 'удалить';
 }
 
 1;
