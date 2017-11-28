@@ -1,6 +1,6 @@
 # --
 # Kernel/Language/ru_MultiSMTP.pm - the Russian translation of MultiSMTP
-# Copyright (C) 2011 - 2016 Perl-Services.de, http://perl-services.de/
+# Copyright (C) 2011-2017 Perl-Services.de, http://perl-services.de/
 # Copyright (C) 2017 WestDevTeam, http://westdev.by/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
