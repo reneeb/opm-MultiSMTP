@@ -48,3 +48,9 @@ Niroc проанализировал проблему, возникшую при
 Balazs Ur (L<http://otrs-megoldasok.hu/>) добавил Венгерский язык.
 
 =cut
+
+=head2 Ilya Shadryn
+
+Ilya Shadryn (L<https://github.com/WestDragon>) добавил Русский язык и совместимость с otrs 6.
+
+=cut

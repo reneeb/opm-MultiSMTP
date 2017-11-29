@@ -38,3 +38,10 @@ Niroc analyzed a problem that occured when different accounts were used.
 Balazs Ur (L<http://otrs-megoldasok.hu/>) added the Hungarian translation.
 
 =cut
+
+=head2 Ilya Shadryn
+
+Ilya Shadryn (L<https://github.com/WestDragon>) added the Russian translation and add capability otrs 6.
+
+=cut
+
