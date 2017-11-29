@@ -1,6 +1,7 @@
 # --
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
-# Changes Copyright (C) 2011-2016 Perl-Services.de, http://perl-services.de
+# Changes Copyright (C) 2011-2017 Perl-Services.de, http://perl-services.de
+# Changes Copyright (C) 2017 WestDevTeam, http://westdev.by
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -14,7 +15,7 @@ use warnings;
 
 use Net::SMTP;
 
-use base qw(Kernel::System::Email::MultiSMTP::SMTP);
+use parent 'Kernel::System::Email::MultiSMTP::SMTP';
 
 our @ObjectDependencies = (
     'Kernel::System::Log',
