@@ -16,7 +16,7 @@ When a mail is sent, the package searches for the SMTP settings that belong to t
 
 This package was written by Renee Baecker E<lt>otrs@perl-services.deE<gt>.
 
-The package is licensed unter AGPL. If you
+The package is licensed under AGPL. If you
 did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =head1 ACKNOWLEDGEMENT
@@ -38,3 +38,10 @@ Niroc analyzed a problem that occured when different accounts were used.
 Balazs Ur (L<http://otrs-megoldasok.hu/>) added the Hungarian translation.
 
 =cut
+
+=head2 Ilya Shadryn
+
+Ilya Shadryn (L<https://github.com/WestDragon>) added the Russian translation and add capability otrs 6.
+
+=cut
+

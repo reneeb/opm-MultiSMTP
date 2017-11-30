@@ -1,7 +1,7 @@
 # --
 # Kernel/Language/zh_CN_MultiSMTP.pm - the Chinese translation of MultiSMTP
-# Copyright (C) 2011-2014 never.min@gmail.com
-# Copyright (C) 2011-2014 Perl-Services.de, http://perl-services.de/
+# Copyright (C) 2011-2017 never.min@gmail.com
+# Copyright (C) 2011-2017 Perl-Services.de, http://perl-services.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -27,41 +27,19 @@ sub Data {
     $Lang->{'The key for password encryption.'} = '';
     $Lang->{'The fallback mechanism when MultiSMTP fails.'} = '';
     $Lang->{'Enable debugging mode of MultiSMTP.'} = '';
-    $Lang->{'None'} = '';
     $Lang->{'Debug MultiSMTP'} = '';
     $Lang->{'Debug MultiSMTP and Net::SMTP'} = '';
 
     # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPForm.tt
     $Lang->{'SMTP Management'} = '邮件服务器管理';
-    $Lang->{'Actions'} = '';
-    $Lang->{'Go to overview'} = '';
     $Lang->{'Add/Change SMTP'} = '增加或修改发送邮件服务器';
     $Lang->{'Anonymous SMTP'} = '';
-    $Lang->{'Host'} = '';
-    $Lang->{'A host is required.'} = '邮件服务器地址是必须的';
-    $Lang->{'Port'} = '';
-    $Lang->{'Port is mandatory.'} = '端口';
-    $Lang->{'User'} = '';
-    $Lang->{'User is mandatory.'} = '用户名';
-    $Lang->{'Password'} = '';
-    $Lang->{'Password is mandatory.'} = '';
     $Lang->{'Emails'} = '邮件地址';
-    $Lang->{'Email is mandatory.'} = '邮件地址';
-    $Lang->{'Type'} = '';
-    $Lang->{'Type is mandatory.'} = '类型';
-    $Lang->{'Validity'} = '';
-    $Lang->{'Comment'} = '';
-    $Lang->{'Save'} = '';
-    $Lang->{'or'} = '';
-    $Lang->{'Cancel'} = '';
 
     # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPList.tt
     $Lang->{'Add SMTP'} = '增加 SMTP';
-    $Lang->{'List'} = '';
     $Lang->{'ID'} = '';
-    $Lang->{'Date'} = '';
     $Lang->{'Creator'} = '创建者';
-    $Lang->{'Action'} = '';
     $Lang->{'No matches found.'} = '';
     $Lang->{'edit'} = '编辑';
     $Lang->{'delete'} = '删除';

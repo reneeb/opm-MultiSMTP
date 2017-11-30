@@ -1,8 +1,8 @@
 {
     "name": "MultiSMTP",
-    "version": "5.0.6",
+    "version": "6.0.0",
     "framework": [
-        "5.0.x"
+        "6.0.x"
     ],
     "vendor": {
         "name":  "Perl-Services.de",
@@ -12,7 +12,8 @@
     "description" : {
         "en": "A module that allows OTRS to use several SMTP servers.",
         "de": "Ein Modul, mit dem man mehrere SMTP-Server für OTRS nutzen kann.",
-        "hu": "Egy modul, amely lehetővé teszi az OTRS-nek több SMTP-kiszolgáló használatát."
+        "hu": "Egy modul, amely lehetővé teszi az OTRS-nek több SMTP-kiszolgáló használatát.",
+        "ru": "Модуль, который позволяет OTRS использовать несколько SMTP-серверов."
     },
     "database" : [
        {

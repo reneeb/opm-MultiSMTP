@@ -1,6 +1,7 @@
 # --
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # Changes Copyright (C) 2011-2016 Perl-Services.de, http://perl-services.de
+# Changes Copyright (C) 2017 WestDevTeam, http://westdev.by
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -14,11 +15,14 @@ use warnings;
 
 use Net::SMTP;
 
+use parent 'Kernel::System::Email::SMTP';
+
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::DB',
     'Kernel::System::Encode',
     'Kernel::System::Log',
+    'Kernel::System::CommunicationLog',
 );
 
 sub new {
@@ -36,12 +40,9 @@ sub new {
         $Self->{SMTPDebug} = 1;
     }
 
-# ---
-# PS
-# ---
-    # smtp timeout in sec
-    $Self->{SMTPTimeout} = 30;
-
+    # ---
+    # PS
+    # ---
     # get config data
     $Self->{FQDN}     = $Kernel::OM->Get('Kernel::Config')->Get('FQDN');
 
@@ -49,7 +50,7 @@ sub new {
     $Self->{SMTPPort} = $Param{Port};
     $Self->{User}     = $Param{User};
     $Self->{Password} = $Param{Password};
-# ---
+    # ---
 
     return $Self;
 }
@@ -57,36 +58,96 @@ sub new {
 sub Check {
     my ( $Self, %Param ) = @_;
 
+    $Param{CommunicationLogObject}->ObjectLogStart(
+        ObjectLogType => 'Connection',
+    );
+
+    my $Return = sub {
+        my %LocalParam = @_;
+        $Param{CommunicationLogObject}->ObjectLogStop(
+            ObjectLogType => 'Connection',
+            Status        => $LocalParam{Success} ? 'Successful' : 'Failed',
+        );
+
+        return %LocalParam;
+    };
+
+    my $ReturnSuccess = sub { return $Return->( @_, Success => 1, ); };
+    my $ReturnError   = sub { return $Return->( @_, Success => 0, ); };
+
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-# ---
-# PS
-# ---
-#    # get config data
-#    $Self->{FQDN}     = $ConfigObject->Get('FQDN');
-#    $Self->{MailHost} = $ConfigObject->Get('SendmailModule::Host')
-#        || die "No SendmailModule::Host found in Kernel/Config.pm";
-#    $Self->{SMTPPort} = $ConfigObject->Get('SendmailModule::Port');
-#    $Self->{User}     = $ConfigObject->Get('SendmailModule::AuthUser');
-#    $Self->{Password} = $ConfigObject->Get('SendmailModule::AuthPassword');
-# ---
+    # ---
+    # PS
+    # ---
+    #    # get config data
+    #    $Self->{FQDN}     = $ConfigObject->Get('FQDN');
+    #    $Self->{MailHost} = $ConfigObject->Get('SendmailModule::Host')
+    #        || die "No SendmailModule::Host found in Kernel/Config.pm";
+    #    $Self->{SMTPPort} = $ConfigObject->Get('SendmailModule::Port');
+    #    $Self->{User}     = $ConfigObject->Get('SendmailModule::AuthUser');
+    #    $Self->{Password} = $ConfigObject->Get('SendmailModule::AuthPassword');
+    # ---
 
-    # try it 3 times to connect with the SMTP server
-    # (M$ Exchange Server 2007 have sometimes problems on port 25)
+    $Param{CommunicationLogObject}->ObjectLog(
+        ObjectLogType => 'Connection',
+        Priority      => 'Debug',
+        Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{Type},
+        Value         => 'Testing connection to SMTP service (3 attempts max.).',
+    );
+
+    # 3 possible attempts to connect to the SMTP server.
+    # (MS Exchange Servers have sometimes problems on port 25)
     my $SMTP;
+
+    my $TryConnectMessage = sprintf
+        "%%s: Trying to connect to '%s%s' on %s with SMTP type '%s'.",
+        $Self->{MailHost},
+        ( $Self->{SMTPPort} ? ':' . $Self->{SMTPPort} : '' ),
+        $Self->{FQDN},
+        $Self->{Type},
+    ;
+
     TRY:
     for my $Try ( 1 .. 3 ) {
 
-        # connect to mail server
-        $SMTP = $Self->_Connect(
-            MailHost  => $Self->{MailHost},
-            FQDN      => $Self->{FQDN},
-            SMTPPort  => $Self->{SMTPPort},
-            SMTPDebug => $Self->{SMTPDebug},
+        $Param{CommunicationLogObject}->ObjectLog(
+            ObjectLogType => 'Connection',
+            Priority      => 'Debug',
+            Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{Type},
+            Value         => sprintf( $TryConnectMessage, $Try, ),
         );
 
+        # connect to mail server
+        eval {
+            $SMTP = $Self->_Connect(
+                MailHost  => $Self->{MailHost},
+                FQDN      => $Self->{FQDN},
+                SMTPPort  => $Self->{SMTPPort},
+                SMTPDebug => $Self->{SMTPDebug},
+            );
+            return 1;
+        } || do {
+            my $Error = $@;
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => sprintf(
+                    "SMTP, connection try %s, unexpected error captured: %s",
+                    $Try,
+                    $Error,
+                ),
+            );
+        };
+
         last TRY if $SMTP;
+
+        $Param{CommunicationLogObject}->ObjectLog(
+            ObjectLogType => 'Connection',
+            Priority      => 'Debug',
+            Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{Type},
+            Value         => "$Try: Connection could not be established. Waiting for 0.3 seconds.",
+        );
 
         # sleep 0,3 seconds;
         select( undef, undef, undef, 0.3 );    ## no critic
@@ -94,142 +155,58 @@ sub Check {
 
     # return if no connect was possible
     if ( !$SMTP ) {
-        return (
-            Successful => 0,
-            Message    => "Can't connect to $Self->{MailHost}: $!!",
+
+        $Param{CommunicationLogObject}->ObjectLog(
+            ObjectLogType => 'Connection',
+            Priority      => 'Error',
+            Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{Type},
+            Value         => "Could not connect to host '$Self->{MailHost}'. ErrorMessage: $!",
+        );
+
+        return $ReturnError->(
+            ErrorMessage => "Can't connect to $Self->{MailHost}: $!!",
         );
     }
+
+    # Enclose SMTP in a wrapper to handle unexpected exceptions
+    $SMTP = $Self->_GetSMTPSafeWrapper(
+        SMTP => $SMTP,
+    );
 
     # use smtp auth if configured
     if ( $Self->{User} && $Self->{Password} ) {
-        if ( !$SMTP->auth( $Self->{User}, $Self->{Password} ) ) {
-            my $Error = $SMTP->code() . $SMTP->message();
-            $SMTP->quit();
-            return (
-                Successful => 0,
-                Message =>
-                    "SMTP authentication failed: $Error! Enable Net::SMTP debug for more info!"
+
+        $Param{CommunicationLogObject}->ObjectLog(
+            ObjectLogType => 'Connection',
+            Priority      => 'Debug',
+            Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{Type},
+            Value         => "Using SMTP authentication with user '$Self->{User}' and (hidden) password.",
+        );
+
+        if ( !$SMTP->( 'auth', $Self->{User}, $Self->{Password} ) ) {
+
+            my $Code  = $SMTP->( 'code', );
+            my $Error = $Code . ', ' . $SMTP->( 'message', );
+
+            $SMTP->( 'quit', );
+
+            $Param{CommunicationLogObject}->ObjectLog(
+                ObjectLogType => 'Connection',
+                Priority      => 'Error',
+                Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{Type},
+                Value         => "SMTP authentication failed (SMTP code: $Code, ErrorMessage: $Error).",
+            );
+
+            return $ReturnError->(
+                ErrorMessage => "SMTP authentication failed: $Error!",
+                Code         => $Code,
             );
         }
     }
 
-    return (
-        Successful => 1,
-        SMTP       => $SMTP,
+    return $ReturnSuccess->(
+        SMTP => $SMTP,
     );
-}
-
-sub Send {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for (qw(Header Body ToArray)) {
-        if ( !$Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $_!",
-            );
-            return;
-        }
-    }
-    if ( !$Param{From} ) {
-        $Param{From} = '';
-    }
-
-    # check mail configuration - is there a working smtp host?
-    my %Result = $Self->Check();
-    if ( !$Result{Successful} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => $Result{Message},
-        );
-        return;
-    }
-
-    # set/get SMTP handle
-    my $SMTP = $Result{SMTP};
-
-    # set from, return it from was not accepted
-    if ( !$SMTP->mail( $Param{From} ) ) {
-        my $Error = $SMTP->code() . $SMTP->message();
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message =>
-                "Can't use from '$Param{From}': $Error! Enable Net::SMTP debug for more info!",
-        );
-        $SMTP->quit();
-        return;
-    }
-
-    # get recipients
-    my $ToString = '';
-    for my $To ( @{ $Param{ToArray} } ) {
-        $ToString .= $To . ',';
-        if ( !$SMTP->to($To) ) {
-            my $Error = $SMTP->code() . $SMTP->message();
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Can't send to '$To': $Error! Enable Net::SMTP debug for more info!",
-            );
-            $SMTP->quit();
-            return;
-        }
-    }
-
-    # get encode object
-    my $EncodeObject = $Kernel::OM->Get('Kernel::System::Encode');
-
-    # encode utf8 header strings (of course, there should only be 7 bit in there!)
-    $EncodeObject->EncodeOutput( $Param{Header} );
-
-    # encode utf8 body strings
-    $EncodeObject->EncodeOutput( $Param{Body} );
-
-    # send data
-    if ( !$SMTP->data( ${ $Param{Header} }, "\n", ${ $Param{Body} } ) ) {
-        my $Error = $SMTP->code() . $SMTP->message();
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Can't send message: $Error! Enable Net::SMTP debug for more info!"
-        );
-        $SMTP->quit();
-        return;
-    }
-    $SMTP->quit();
-
-    # debug
-    if ( $Self->{Debug} > 2 ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'notice',
-            Message  => "Sent email to '$ToString' from '$Param{From}'.",
-        );
-    }
-    return 1;
-}
-
-sub _Connect {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for (qw(MailHost FQDN)) {
-        if ( !$Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Need $_!",
-            );
-            return;
-        }
-    }
-
-    # set up connection connection
-    my $SMTP = Net::SMTP->new(
-        $Param{MailHost},
-        Hello   => $Param{FQDN},
-        Port    => $Param{SMTPPort} || 25,
-        Timeout => 30,
-        Debug   => $Param{SMTPDebug},
-    );
-    return $SMTP;
 }
 
 1;

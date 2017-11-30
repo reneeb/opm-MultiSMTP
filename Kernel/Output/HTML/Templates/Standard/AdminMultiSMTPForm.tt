@@ -1,6 +1,6 @@
 # --
 # AgentMultiSMTPForm.tt - provides HTML form for AdminPerlServicesInvoiceStates
-# Copyright (C) 2012 Perl-Services.de, http://perl-services.de
+# Copyright (C) 2011-2017 Perl-Services.de, http://perl-services.de
 # --
 # $Id: AdminMultiSMTPForm.dtl,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
 # --
@@ -52,12 +52,8 @@
                         </label>
                         <div class="Field">
                             <input type="text" id="Host" name="Host" value="[% Data.Host | html %]" class="W75pc Validate_Required [% Data.HostInvalid | html %]"/>
-                            <div id="HostError" class="TooltipErrorMessage">
-                                <p>[% Translate("A host is required.") | html %]</p>
-                            </div>
-                            <div id="HostServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("A host is required.") | html %]</p>
-                            </div>
+                            <div id="HostError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="HostServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                         </div>
                         <div class="Clear"></div>
 
@@ -67,12 +63,8 @@
                         </label>
                         <div class="Field">
                             <input type="text" id="Port" name="Port" value="[% Data.Port | html %]" class="W75pc Validate_Required [% Data.PortInvalid | html %]" maxlength="120"/>
-                            <div id="PortError" class="TooltipErrorMessage">
-                                <p>[% Translate("Port is mandatory.") | html %]</p>
-                            </div>
-                            <div id="PortServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("Port is mandatory.") | html %]</p>
-                            </div>
+                            <div id="PortError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="PortServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                         </div>
                         <div class="Clear"></div>
 
@@ -82,12 +74,8 @@
                         </label>
                         <div class="Field">
                             <input type="text" id="User" name="User" value="[% Data.User | html %]" class="W75pc Validate_Required [% Data.UserInvalid | html %]" maxlength="120"/>
-                            <div id="UserError" class="TooltipErrorMessage">
-                                <p>[% Translate("User is mandatory.") | html %]</p>
-                            </div>
-                            <div id="UserServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("User is mandatory.") | html %]</p>
-                            </div>
+                            <div id="UserError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="UserServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                         </div>
                         <div class="Clear"></div>
 
@@ -97,12 +85,8 @@
                         </label>
                         <div class="Field">
                             <input type="password" id="PasswordDecrypted" name="PasswordDecrypted" value="[% Data.PasswordDecrypted | html %]" class="W75pc Validate_Required [% Data.PasswordInvalid | html %]" maxlength="120"/>
-                            <div id="PasswordDecryptedError" class="TooltipErrorMessage">
-                                <p>[% Translate("Password is mandatory.") | html %]</p>
-                            </div>
-                            <div id="PasswordDecryptedServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("Password is mandatory.") | html %]</p>
-                            </div>
+                            <div id="PasswordDecryptedError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="PasswordDecryptedServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                         </div>
                         <div class="Clear"></div>
 
@@ -112,12 +96,8 @@
                         </label>
                         <div class="Field">
                             [% Data.EmailsSelect %]
-                            <div id="UserError" class="TooltipErrorMessage">
-                                <p>[% Translate("Email is mandatory.") | html %]</p>
-                            </div>
-                            <div id="UserServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("Email is mandatory.") | html %]</p>
-                            </div>
+                            <div id="UserError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="UserServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                         </div>
                         <div class="Clear"></div>
 
@@ -127,12 +107,8 @@
                         </label>
                         <div class="Field">
                             [% Data.TypeSelect %]
-                            <div id="UserError" class="TooltipErrorMessage">
-                                <p>[% Translate("Type is mandatory.") | html %]</p>
-                            </div>
-                            <div id="UserServerError" class="TooltipErrorMessage">
-                                <p>[% Translate("Type is mandatory.") | html %]</p>
-                            </div>
+                            <div id="UserError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="UserServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                         </div>
                         <div class="Clear"></div>
 

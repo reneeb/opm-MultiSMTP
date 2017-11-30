@@ -1,6 +1,7 @@
 # --
 # Kernel/Language/de_MultiSMTP.pm - the German translation of MultiSMTP
-# Copyright (C) 2011 - 2016 Perl-Services.de, http://perl-services.de/
+# Copyright (C) 2011-2017 Perl-Services.de, http://perl-services.de/
+# Changes Copyright (C) 2017 WestDevTeam, http://westdev.by
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -26,41 +27,19 @@ sub Data {
     $Lang->{'The key for password encryption.'} = '';
     $Lang->{'The fallback mechanism when MultiSMTP fails.'} = '';
     $Lang->{'Enable debugging mode of MultiSMTP.'} = '';
-    $Lang->{'None'} = '';
     $Lang->{'Debug MultiSMTP'} = 'Debugge MultiSMTP';
     $Lang->{'Debug MultiSMTP and Net::SMTP'} = 'Debugge MultiSMTP und Net::SMTP';
 
     # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPForm.tt
     $Lang->{'SMTP Management'} = '';
-    $Lang->{'Actions'} = '';
-    $Lang->{'Go to overview'} = '';
     $Lang->{'Add/Change SMTP'} = 'SMTP hinzufügen/bearbeiten';
     $Lang->{'Anonymous SMTP'} = '';
-    $Lang->{'Host'} = 'Hostname';
-    $Lang->{'A host is required.'} = 'Ein Hostname wird benötigt.';
-    $Lang->{'Port'} = 'Port';
-    $Lang->{'Port is mandatory.'} = 'Eine Port-Angabe wird benötigt.';
-    $Lang->{'User'} = 'Benutzer';
-    $Lang->{'User is mandatory.'} = 'Ein Benutzername wird benötigt.';
-    $Lang->{'Password'} = '';
-    $Lang->{'Password is mandatory.'} = '';
     $Lang->{'Emails'} = 'E-Mails';
-    $Lang->{'Email is mandatory.'} = 'E-Mail-Adressen werden benötigt.';
-    $Lang->{'Type'} = 'Typ';
-    $Lang->{'Type is mandatory.'} = 'Typ wird benötigt.';
-    $Lang->{'Validity'} = '';
-    $Lang->{'Comment'} = '';
-    $Lang->{'Save'} = '';
-    $Lang->{'or'} = '';
-    $Lang->{'Cancel'} = '';
 
     # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPList.tt
     $Lang->{'Add SMTP'} = 'SMTP hinzufügen';
-    $Lang->{'List'} = '';
     $Lang->{'ID'} = '';
-    $Lang->{'Date'} = '';
     $Lang->{'Creator'} = 'Ersteller';
-    $Lang->{'Action'} = '';
     $Lang->{'No matches found.'} = '';
     $Lang->{'edit'} = '';
     $Lang->{'delete'} = '';

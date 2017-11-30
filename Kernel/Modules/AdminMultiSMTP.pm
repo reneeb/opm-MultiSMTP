@@ -1,6 +1,6 @@
 # --
 # Kernel/Modules/AdminMultiSMTP.pm - provides admin notification translations
-# Copyright (C) 2011 - 2015 Perl-Services.de, http://perl-services.de/
+# Copyright (C) 2011-2017 Perl-Services.de, http://perl-services.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
