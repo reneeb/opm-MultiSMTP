@@ -81,7 +81,7 @@
         <Navigation>MultiSMTP::Core</Navigation>
         <Value>
             <Item ValueType="Select" SelectedID="0">
-                <Item ValueType="Option" Value="0" Translatable="1">None4</Item>
+                <Item ValueType="Option" Value="0" Translatable="1">None</Item>
                 <Item ValueType="Option" Value="1" Translatable="1">Debug MultiSMTP</Item>
                 <Item ValueType="Option" Value="2" Translatable="1">Debug MultiSMTP and Net::SMTP</Item>
             </Item>
