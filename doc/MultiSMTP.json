@@ -78,5 +78,29 @@
                 { "new_name": "stmp_password", "old_name": "password", "required": "true", "type": "VARCHAR", "size":250 }
             ]
         }
+    ],
+    "intro": [
+        {
+            "type": "Install",
+            "version": 0,
+            "lang": "en",
+            "title": "Change Email sender module",
+            "text": [
+                "To send the email through different SMTP servers, set the SysConfig option SendmailModule",
+                " in group \"Framework\" and subgroup \"Core::Sendmail\" to ",
+                "MultiSMTP.<br /><br />"
+            ]
+        },
+        {
+            "type": "Install",
+            "version": 0,
+            "lang": "de",
+            "title": "E-Mail-Modul ändern",
+            "text": [
+                "Zur Nutzung unterschiedlicher SMTP-Server müssen Sie die Einstellung SendmailModule in der SysConfig",
+                " ändern. Die Option können Sie in der Gruppe",
+                "\"Framework\" und Subgruppe \"Core::Sendmail\" finden.<br /><br />"
+            ]
+        }
     ]
 }
