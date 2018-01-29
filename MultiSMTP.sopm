@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
-    <!-- GENERATED WITH OTRS::OPM::Maker::Command::sopm (1.39) -->
+    <!-- GENERATED WITH OTRS::OPM::Maker::Command::sopm (1.4) -->
     <Name>MultiSMTP</Name>
     <Version>6.0.1</Version>
     <Framework>6.0.x</Framework>
@@ -72,4 +72,14 @@
         <TableDrop Name="ps_multi_smtp_address" />
         <TableDrop Name="ps_multi_smtp" />
     </DatabaseUninstall>
+    <IntroInstall Type="post" Lang="en" Title="Change Email sender module"><![CDATA[
+            To send the email through different SMTP servers, set the SysConfig option SendmailModule<br />
+ in group "Framework" and subgroup "Core::Sendmail" to <br />
+MultiSMTP.<br /><br />
+    ]]></IntroInstall>
+    <IntroInstall Type="post" Lang="de" Title="E-Mail-Modul ändern"><![CDATA[
+            Zur Nutzung unterschiedlicher SMTP-Server müssen Sie die Einstellung SendmailModule in der SysConfig<br />
+ ändern. Die Option können Sie in der Gruppe<br />
+"Framework" und Subgruppe "Core::Sendmail" finden.<br /><br />
+    ]]></IntroInstall>
 </otrs_package>
