@@ -157,7 +157,7 @@ sub Send {
 
             my $Success = $SMTPObject->Send( %Param );
 
-            return $SMTPObject->Send( %Param );
+            return $Success;
         }
         else{
             $ErrorMessage .= ": not found smtp for adress $PlainFrom";
