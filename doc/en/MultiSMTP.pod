@@ -1,10 +1,10 @@
 =head1 NAME
 
-MultiSMTP - make OTRS aware of multiple SMTP servers
+MultiSMTP - make OTOBO aware of multiple SMTP servers
 
 =head1 DESCRIPTION
 
-A standard OTRS installation is not able to use different SMTP servers for each sender address. This can lead to problems as many recipient servers deny to deliver the mails as a reverse lookup does not respond the hostname of the sender address.
+A standard OTOBO installation is not able to use different SMTP servers for each sender address. This can lead to problems as many recipient servers deny to deliver the mails as a reverse lookup does not respond the hostname of the sender address.
 
 So each sender address needs its own SMTP server - and this is provided with this package.
 
@@ -14,7 +14,7 @@ When a mail is sent, the package searches for the SMTP settings that belong to t
 
 =head1 AUTHOR AND LICENSE
 
-This package was written by Renee Baecker E<lt>otrs@perl-services.deE<gt>.
+This package was written by Renee Baecker E<lt>info@perl-services.deE<gt>.
 
 The package is licensed under AGPL. If you
 did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
@@ -41,7 +41,7 @@ Balazs Ur (L<http://otrs-megoldasok.hu/>) added the Hungarian translation.
 
 =head2 Ilya Shadryn
 
-Ilya Shadryn (L<https://github.com/WestDragon>) added the Russian translation and add capability otrs 6.
+Ilya Shadryn (L<https://github.com/WestDragon>) added the Russian translation and add capability otobo 6.
 
 =cut
 

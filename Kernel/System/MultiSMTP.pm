@@ -1,10 +1,16 @@
 # --
-# Kernel/System/MultiSMTP.pm - All SMTP related functions should be here eventually
-# Copyright (C) 2011-2017 Perl-Services.de
+# OTOBO is a web-based ticketing system for service organisations.
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# Copyright (C) 2011 - 2021 Perl-Services.de
+# --
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later version.
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
 package Kernel::System::MultiSMTP;
@@ -79,7 +85,7 @@ to add a news
         Type     => 'SMTP', # or SMTP/S
         Comments => 'A comment about this entry',
         Port     => 25,
-        Emails   => [ 'test@test.tld', 'otrs@test.tld' ],
+        Emails   => [ 'test@test.tld', 'otobo@test.tld' ],
         ValidID  => 1,
         UserID   => 123,
     );
@@ -190,7 +196,7 @@ to update news
         Type     => 'SMTP', # or SMTP/S
         Port     => 25,
         Comments => 'A comment',
-        Emails   => [ 'test@test.tld', 'otrs@test.tld' ],
+        Emails   => [ 'test@test.tld', 'otobo@test.tld' ],
         ValidID  => 1,
         UserID   => 123,
     );
@@ -291,7 +297,7 @@ This returns something like:
         PasswordDecrypted   => 'secret',
         Comments   => 'A comment',
         Type       => 'SMTP', # or SMTP/S
-        Emails     => [ 'test@test.tld', 'otrs@test.tld' ],
+        Emails     => [ 'test@test.tld', 'otobo@test.tld' ],
         CreateTime => '2010-04-07 15:41:15',
         ChangeTime => '2010-04-07 15:41:15',
         CreateBy   => 123,

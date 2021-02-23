@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<otrs_package version="1.0">
-    <!-- GENERATED WITH OTRS::OPM::Maker::Command::sopm (1.4) -->
+<otobo_package version="1.0">
+    <!-- GENERATED WITH OTRS::OPM::Maker::Command::sopm (1.44) -->
     <Name>MultiSMTP</Name>
-    <Version>6.0.1</Version>
-    <Framework>6.0.x</Framework>
+    <Version>10.0.1</Version>
+    <Framework>10.0.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
     <URL>http://www.perl-services.de</URL>
-    <Description Lang="de">Ein Modul, mit dem man mehrere SMTP-Server für OTRS nutzen kann.</Description>
-    <Description Lang="en">A module that allows OTRS to use several SMTP servers.</Description>
-    <Description Lang="hu">Egy modul, amely lehetővé teszi az OTRS-nek több SMTP-kiszolgáló használatát.</Description>
-    <Description Lang="ru">Модуль, который позволяет OTRS использовать несколько SMTP-серверов.</Description>
+    <Description Lang="de">Ein Modul, mit dem man mehrere SMTP-Server für OTOBO nutzen kann.</Description>
+    <Description Lang="en">A module that allows OTOBO to use several SMTP servers.</Description>
+    <Description Lang="hu">Egy modul, amely lehetővé teszi az OTOBO-nek több SMTP-kiszolgáló használatát.</Description>
+    <Description Lang="ru">Модуль, который позволяет OTOBO использовать несколько SMTP-серверов.</Description>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
     <Filelist>
         <File Permission="644" Location="Kernel/Config/Files/XML/MultiSMTP.xml" />
@@ -82,4 +82,4 @@ MultiSMTP.<br /><br />
  ändern. Die Option können Sie in der Gruppe<br />
 "Framework" und Subgruppe "Core::Sendmail" finden.<br /><br />
     ]]></IntroInstall>
-</otrs_package>
+</otobo_package>
