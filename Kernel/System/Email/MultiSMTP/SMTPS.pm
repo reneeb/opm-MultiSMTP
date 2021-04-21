@@ -13,7 +13,13 @@ package Kernel::System::Email::MultiSMTP::SMTPS;
 use strict;
 use warnings;
 
-use Net::SSLGlue::SMTP;
+BEGIN {
+    if ( !defined &Net::SMTP::starttls ) {
+        ## nofilter(TidyAll::Plugin::OTRS::Perl::Require)
+        ## nofilter(TidyAll::Plugin::OTRS::Perl::SyntaxCheck)
+        require Net::SSLGlue::SMTP;
+    }
+}
 
 use parent 'Kernel::System::Email::MultiSMTP::SMTP';
 
