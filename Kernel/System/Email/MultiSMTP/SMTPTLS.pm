@@ -1,11 +1,12 @@
 # --
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
-# Changes Copyright (C) 2011-2017 Perl-Services.de, http://perl-services.de
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2021 Znuny GmbH, https://znuny.org/
+# Changes Copyright (C) 2011 - 2021 Perl-Services.de, http://perl-services.de
 # Changes Copyright (C) 2017 WestDevTeam, http://westdev.by
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# the enclosed file COPYING for license information (GPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
 # --
 
 package Kernel::System::Email::MultiSMTP::SMTPTLS;
@@ -15,7 +16,12 @@ use warnings;
 
 use Net::SMTP;
 
+# ---
+# PS
+# ---
+# use parent qw(Kernel::System::Email::SMTP);
 use parent 'Kernel::System::Email::MultiSMTP::SMTP';
+# ---
 
 our @ObjectDependencies = (
     'Kernel::System::Log',
@@ -34,11 +40,11 @@ sub _Connect {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    for (qw(MailHost FQDN)) {
-        if ( !$Param{$_} ) {
+    for my $Needed (qw(MailHost FQDN)) {
+        if ( !$Param{$Needed} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "Need $_!"
+                Message  => "Need $Needed!"
             );
             return;
         }
