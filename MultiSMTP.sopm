@@ -2,16 +2,14 @@
 <otrs_package version="1.0">
     <!-- GENERATED WITH OPM::Maker::Command::sopm (1.1.0) -->
     <Name>MultiSMTP</Name>
-    <Version>6.0.3</Version>
-    <Framework>6.0.x</Framework>
-    <Framework>6.1.x</Framework>
-    <Framework>6.2.x</Framework>
+    <Version>6.3.1</Version>
+    <Framework>6.3.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
-    <URL>http://www.perl-services.de</URL>
-    <Description Lang="de">Ein Modul, mit dem man mehrere SMTP-Server für OTRS nutzen kann.</Description>
-    <Description Lang="en">A module that allows OTRS to use several SMTP servers.</Description>
-    <Description Lang="hu">Egy modul, amely lehetővé teszi az OTRS-nek több SMTP-kiszolgáló használatát.</Description>
-    <Description Lang="ru">Модуль, который позволяет OTRS использовать несколько SMTP-серверов.</Description>
+    <URL>https://www.perl-services.de</URL>
+    <Description Lang="de">Ein Modul, mit dem man mehrere SMTP-Server für Znuny nutzen kann.</Description>
+    <Description Lang="en">A module that allows Znuny to use several SMTP servers.</Description>
+    <Description Lang="hu">Egy modul, amely lehetővé teszi az Znuny-nek több SMTP-kiszolgáló használatát.</Description>
+    <Description Lang="ru">Модуль, который позволяет Znuny использовать несколько SMTP-серверов.</Description>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
     <Filelist>
         <File Permission="644" Location="Kernel/Config/Files/XML/MultiSMTP.xml" />
@@ -39,6 +37,8 @@
             <Column Name="host" Required="true" Type="VARCHAR" Size="250" />
             <Column Name="smtp_user" Required="true" Type="VARCHAR" Size="200" />
             <Column Name="smtp_password" Required="true" Type="VARCHAR" Size="250" />
+            <Column Name="authentication_type" Required="true" Type="VARCHAR" Size="250" />
+            <Column Name="oauth2_name" Required="false" Type="VARCHAR" Size="250" />
             <Column Name="port" Required="true" Type="VARCHAR" Size="250" />
             <Column Name="comments" Required="false" Type="VARCHAR" Size="250" />
             <Column Name="encrypted" Required="true" Type="SMALLINT" />
@@ -68,6 +68,10 @@
         <TableAlter Name="ps_multi_smtp" Version="3.2.2">
             <ColumnChange NameNew="stmp_user" NameOld="user" Required="true" Type="VARCHAR" Size="200" />
             <ColumnChange NameNew="stmp_password" NameOld="password" Required="true" Type="VARCHAR" Size="250" />
+        </TableAlter>
+        <TableAlter Name="ps_multi_smtp" Version="6.3.1">
+            <ColumnAdd Name="authentication_type" Required="true" Type="VARCHAR" Size="250" />
+            <ColumnAdd Name="oauth2_name" Required="false" Type="VARCHAR" Size="250" />
         </TableAlter>
     </DatabaseUpgrade>
     <DatabaseUninstall Type="pre">

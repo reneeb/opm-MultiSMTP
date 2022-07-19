@@ -31,18 +31,14 @@ sub Data {
     $Lang->{'Debug MultiSMTP and Net::SMTP'} = 'Debugge MultiSMTP und Net::SMTP';
 
     # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPForm.tt
-    $Lang->{'SMTP Management'} = '';
+    $Lang->{'SMTP Management'} = 'SMTP Verwaltung';
     $Lang->{'Add/Change SMTP'} = 'SMTP hinzufügen/bearbeiten';
-    $Lang->{'Anonymous SMTP'} = '';
     $Lang->{'Emails'} = 'E-Mails';
+    $Lang->{'Authentication Type'} = 'Art d. Authentifizierung';
 
     # Kernel/Output/HTML/Templates/Standard/AdminMultiSMTPList.tt
     $Lang->{'Add SMTP'} = 'SMTP hinzufügen';
-    $Lang->{'ID'} = '';
     $Lang->{'Creator'} = 'Ersteller';
-    $Lang->{'No matches found.'} = '';
-    $Lang->{'edit'} = '';
-    $Lang->{'delete'} = '';
 }
 
 1;

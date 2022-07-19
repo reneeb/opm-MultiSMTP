@@ -1,5 +1,4 @@
 # --
-# Kernel/Modules/AdminMultiSMTP.pm - provides admin notification translations
 # Copyright (C) 2011 - 2022 Perl-Services.de, https://www.perl-services.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -39,7 +38,11 @@ sub Run {
     my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
     my $SMTPObject   = $Kernel::OM->Get('Kernel::System::MultiSMTP');
 
-    my @Params = (qw(ID Host User PasswordDecrypted Type ValidID UserID Port Comments Anonymous));
+    my @Params = qw(
+        ID Host User PasswordDecrypted Type ValidID UserID Port Comments
+        Anonymous AuthenticationType OAuth2Name
+    );
+
     my %GetParam;
     for my $Needed (@Params) {
         $GetParam{$Needed} = $ParamObject->GetParam( Param => $Needed ) || '';
@@ -92,9 +95,9 @@ sub Run {
         }
 
         PARAM:
-        for my $Param (qw(ID Host User PasswordDecrypted Type ValidID Port)) {
+        for my $Param (qw(ID Host User Type ValidID Port)) {
 
-            next PARAM if $GetParam{Anonymous} and ( $Param eq 'PasswordDecrypted' || $Param eq 'User' );
+            next PARAM if $GetParam{Anonymous} and $Param eq 'User';
 
             if ( !$GetParam{$Param} ) {
                 $Errors{ $Param . 'Invalid' } = 'ServerError';
@@ -151,9 +154,9 @@ sub Run {
         }
 
         PARAM:
-        for my $Param (qw(ValidID User PasswordDecrypted Host Type Port)) {
+        for my $Param (qw(ValidID User Host Type Port)) {
 
-            next PARAM if $GetParam{Anonymous} and ( $Param eq 'PasswordDecrypted' || $Param eq 'User' );
+            next PARAM if $GetParam{Anonymous} and $Param eq 'User';
 
             if ( !$GetParam{$Param} ) {
                 $Errors{ $Param . 'Invalid' } = 'ServerError';
@@ -277,6 +280,19 @@ sub _MaskSMTPForm {
         Class      => 'Modernize',
     );
 
+
+    $Param{AuthenticationTypeSelect} = $LayoutObject->BuildSelection(
+        Data       => {
+            'password'     => 'Password',
+            'oauth2_token' => 'OAuth2 Token',
+        },
+        Name        => 'AuthenticationType',
+        Size        => 1,
+        SelectedID  => $Param{AuthenticationType} || $SMTP{AuthenticationType} || 'password',
+        HTMLQuote   => 1,
+        Translation => 1,
+        Class       => 'Modernize',
+    );
 
     my $ValidID = $ValidObject->ValidLookup( Valid => 'valid' );
 

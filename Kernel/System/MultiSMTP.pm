@@ -1,5 +1,4 @@
 # --
-# Kernel/System/MultiSMTP.pm - All SMTP related functions should be here eventually
 # Copyright (C) 2011 - 2022 Perl-Services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -12,22 +11,20 @@ package Kernel::System::MultiSMTP;
 use strict;
 use warnings;
 
-our $VERSION = 0.3;
-
-our @ObjectDependencies = (
-    'Kernel::Config',
-    'Kernel::System::DB',
-    'Kernel::System::Encode',
-    'Kernel::System::Log',
-    'Kernel::System::Main',
-    'Kernel::System::Time',
-    'Kernel::System::User',
-    'Kernel::System::Valid',
+our @ObjectDependencies = qw(
+    Kernel::Config
+    Kernel::System::DB
+    Kernel::System::Encode
+    Kernel::System::Log
+    Kernel::System::Main
+    Kernel::System::Time
+    Kernel::System::User
+    Kernel::System::Valid
 );
 
 =head1 NAME
 
-Kernel::System::MultiSMTP - backend for product news
+Kernel::System::MultiSMTP - backend for managing SMTP servers
 
 =head1 PUBLIC INTERFACE
 
@@ -82,6 +79,9 @@ to add a news
         Emails   => [ 'test@test.tld', 'otrs@test.tld' ],
         ValidID  => 1,
         UserID   => 123,
+
+        AuthenticationType => 'password', # password|oauth2_token
+        OAuth2Name         => 'config_name',
     );
 
 =cut
@@ -89,7 +89,11 @@ to add a news
 sub SMTPAdd {
     my ( $Self, %Param ) = @_;
 
-    my @NeededFields = qw(User Password Emails Type ValidID UserID Port Host);
+    $Param{AuthenticationType} ||= 'password';
+
+    my @NeededFields = qw(
+        User Password Emails Type ValidID UserID Port Host AuthenticationType
+    );
 
     my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
     my $DBObject  = $Kernel::OM->Get('Kernel::System::DB');
@@ -100,6 +104,12 @@ sub SMTPAdd {
         $Param{Password} = '';
 
         splice @NeededFields, 0, 2;
+    }
+    elsif ( $Param{AuthenticationType} eq 'oauth2_token' ) {
+        $Param{Password} = '';
+
+        splice @NeededFields, 1, 1;
+        push @NeededFields, 'OAuth2Name';
     }
 
     # check needed stuff
@@ -131,8 +141,10 @@ sub SMTPAdd {
     return if !$DBObject->Do(
         SQL => 'INSERT INTO ps_multi_smtp '
             . '(host, smtp_user, smtp_password, encrypted, type, create_time, create_by, '
-            . ' valid_id, change_time, change_by, port, comments) '
-            . 'VALUES (?, ?, ?, ?, ?, current_timestamp, ?, ?, current_timestamp, ?, ?, ?)',
+            . ' valid_id, change_time, change_by, port, comments, authentication_type, '
+            . ' oauth2_name ) '
+            . 'VALUES (?, ?, ?, ?, ?, current_timestamp, ?, ?, current_timestamp, '
+            . '?, ?, ?, ?, ?)',
         Bind => [
             \$Param{Host},
             \$Param{User},
@@ -144,6 +156,8 @@ sub SMTPAdd {
             \$Param{UserID},
             \$Param{Port},
             \$Param{Comments},
+            \$Param{AuthenticationType},
+            \$Param{OAuth2Name},
         ],
     );
 
@@ -193,6 +207,9 @@ to update news
         Emails   => [ 'test@test.tld', 'otrs@test.tld' ],
         ValidID  => 1,
         UserID   => 123,
+
+        AuthenticationType => 'password', # password|oauth2_token
+        OAuth2Name         => 'config_name',
     );
 
 =cut
@@ -203,7 +220,11 @@ sub SMTPUpdate {
     my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
     my $DBObject  = $Kernel::OM->Get('Kernel::System::DB');
 
-    my @NeededFields = qw(User Password Emails Type ValidID UserID Port Host);
+    $Param{AuthenticationType} ||= 'password';
+
+    my @NeededFields = qw(
+        User Password Emails Type ValidID UserID Port Host AuthenticationType
+    );
 
     # remove user and password from needed fields when this is an anonymous account
     if ( $Param{Anonymous} ) {
@@ -211,6 +232,12 @@ sub SMTPUpdate {
         $Param{Password} = '';
 
         splice @NeededFields, 0, 2;
+    }
+    elsif ( $Param{AuthenticationType} eq 'oauth2_token' ) {
+        $Param{Password} = '';
+
+        splice @NeededFields, 1, 1;
+        push @NeededFields, 'OAuth2Name';
     }
 
     # check needed stuff
@@ -242,7 +269,7 @@ sub SMTPUpdate {
     return if !$DBObject->Do(
         SQL => 'UPDATE ps_multi_smtp SET host = ?, smtp_user = ?, smtp_password = ?, type = ?, port = ?, '
             . 'encrypted = ?, valid_id = ?, change_time = current_timestamp, change_by = ?, '
-            . 'comments = ? '
+            . 'comments = ?, authentication_type = ?, oauth2_name = ? '
             . 'WHERE id = ?',
         Bind => [
             \$Param{Host},
@@ -254,6 +281,8 @@ sub SMTPUpdate {
             \$Param{ValidID},
             \$Param{UserID},
             \$Param{Comments},
+            \$Param{AuthenticationType},
+            \$Param{OAuth2Name},
             \$Param{ID},
         ],
     );
@@ -318,7 +347,8 @@ sub SMTPGet {
     # sql
     return if !$DBObject->Prepare(
         SQL => 'SELECT ps_multi_smtp.id, host, smtp_user, smtp_password, type, address, encrypted, '
-            . 'change_time, change_by, create_time, create_by, valid_id, port, comments '
+            . 'change_time, change_by, create_time, create_by, valid_id, port, comments, '
+            . 'authentication_type, oauth2_name '
             . 'FROM ps_multi_smtp INNER JOIN ps_multi_smtp_address ON ps_multi_smtp.id = smtp_id '
             . 'WHERE ps_multi_smtp.id = ?',
         Bind  => [ \$Param{ID} ],
@@ -339,6 +369,9 @@ sub SMTPGet {
         $SMTP{ValidID}    = $Data[11];
         $SMTP{Port}       = $Data[12];
         $SMTP{Comments}   = $Data[13];
+
+        $SMTP{AuthenticationType} = $Data[14] || 'password';
+        $SMTP{OAuth2Name}         = $Data[15];
 
         push @{ $SMTP{Emails} }, $Data[5];
     }
@@ -485,7 +518,8 @@ sub SMTPGetForAddress {
 
     return if !$DBObject->Prepare(
         SQL => 'SELECT ps_multi_smtp.id, host, smtp_user, smtp_password, type, address, encrypted, '
-            . 'change_time, change_by, create_time, create_by, valid_id, port, comments '
+            . 'change_time, change_by, create_time, create_by, valid_id, port, comments, '
+            . 'authentication_type, oauth2_name '
             . 'FROM ps_multi_smtp INNER JOIN ps_multi_smtp_address ON ps_multi_smtp.id = smtp_id '
             . 'WHERE address = ?' . $ValidWhere,
         Bind  => [ \$Param{Address}, @ValidBind ],
@@ -509,6 +543,9 @@ sub SMTPGetForAddress {
             ValidID    => $Data[11],
             Port       => $Data[12],
             Comments   => $Data[13],
+
+            AuthenticationType => $Data[14] || 'password',
+            OAuth2Name         => $Data[15],
         );
     }
 

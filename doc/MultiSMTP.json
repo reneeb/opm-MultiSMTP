@@ -1,21 +1,19 @@
 {
     "name": "MultiSMTP",
-    "version": "6.0.3",
+    "version": "6.3.1",
     "framework": [
-        "6.0.x",
-        "6.1.x",
-        "6.2.x"
+        "6.3.x"
     ],
     "vendor": {
         "name":  "Perl-Services.de",
-        "url": "http://www.perl-services.de"
+        "url": "https://www.perl-services.de"
     },
     "license": "GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007",
     "description" : {
-        "en": "A module that allows OTRS to use several SMTP servers.",
-        "de": "Ein Modul, mit dem man mehrere SMTP-Server für OTRS nutzen kann.",
-        "hu": "Egy modul, amely lehetővé teszi az OTRS-nek több SMTP-kiszolgáló használatát.",
-        "ru": "Модуль, который позволяет OTRS использовать несколько SMTP-серверов."
+        "en": "A module that allows Znuny to use several SMTP servers.",
+        "de": "Ein Modul, mit dem man mehrere SMTP-Server für Znuny nutzen kann.",
+        "hu": "Egy modul, amely lehetővé teszi az Znuny-nek több SMTP-kiszolgáló használatát.",
+        "ru": "Модуль, который позволяет Znuny использовать несколько SMTP-серверов."
     },
     "database" : [
        {
@@ -28,6 +26,8 @@
                 { "name": "host", "required": "true", "type": "VARCHAR", "size" : 250 },
                 { "name": "smtp_user", "required": "true", "type": "VARCHAR", "size": 200 },
                 { "name": "smtp_password", "required": "true", "type": "VARCHAR", "size": 250 },
+                { "name": "authentication_type", "required": "true", "type": "VARCHAR", "size": 250 },
+                { "name": "oauth2_name", "required": "false", "type": "VARCHAR", "size": 250 },
                 { "name": "port", "required": "true", "type": "VARCHAR", "size":250 },
                 { "name": "comments", "required": "false", "type": "VARCHAR", "size": 250 },
                 { "name": "encrypted", "required": "true", "type": "SMALLINT" },
@@ -78,6 +78,15 @@
             "columns":[
                 { "new_name": "stmp_user", "old_name": "user", "required": "true", "type": "VARCHAR", "size":200 },
                 { "new_name": "stmp_password", "old_name": "password", "required": "true", "type": "VARCHAR", "size":250 }
+            ]
+        },
+        {
+            "type": "ColumnAdd",
+            "name": "ps_multi_smtp",
+            "version" : "6.3.1",
+            "columns":[
+                { "name": "authentication_type", "required": "true", "type": "VARCHAR", "size": 250 },
+                { "name": "oauth2_name", "required": "false", "type": "VARCHAR", "size": 250 }
             ]
         }
     ],

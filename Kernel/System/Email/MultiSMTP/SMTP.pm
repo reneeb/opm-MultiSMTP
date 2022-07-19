@@ -1,6 +1,6 @@
 # --
 # Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
-# Copyright (C) 2021 Znuny GmbH, https://znuny.org/
+# Copyright (C) 2021-2022 Znuny GmbH, https://znuny.org/
 # Changes Copyright (C) 2011 - 2022 Perl-Services.de, https://www.perl-services.de
 # Changes Copyright (C) 2017 WestDevTeam, http://westdev.by
 # --
@@ -15,15 +15,16 @@ use strict;
 use warnings;
 
 use Net::SMTP;
+use Authen::SASL qw(Perl);
 
 use parent 'Kernel::System::Email::SMTP';
 
 our @ObjectDependencies = (
     'Kernel::Config',
-    'Kernel::System::DB',
     'Kernel::System::Encode',
     'Kernel::System::Log',
-    'Kernel::System::CommunicationLog',
+    'Kernel::System::OAuth2Token',
+    'Kernel::System::OAuth2TokenConfig',
 );
 
 sub new {
@@ -50,13 +51,17 @@ sub new {
 
     ( $Self->{SMTPType} ) = ( $Type =~ m/::Email::MultiSMTP::(.*)$/i );
     # get config data
-    $Self->{FQDN}     = $Kernel::OM->Get('Kernel::Config')->Get('FQDN');
+    $Self->{FQDN}                  = $Kernel::OM->Get('Kernel::Config')->Get('FQDN');
 
-    $Self->{MailHost} = $Param{Host};
-    $Self->{SMTPPort} = $Param{Port};
-    $Self->{User}     = $Param{User};
-    $Self->{Password} = $Param{Password};
+    $Self->{MailHost}              = $Param{Host};
+    $Self->{SMTPPort}              = $Param{Port};
+    $Self->{User}                  = $Param{User};
+    $Self->{Password}              = $Param{Password};
+    $Self->{AuthenticationType}    = $Param{AuthenticationType} // 'password';
+    $Self->{OAuth2TokenConfigName} = $Param{OAuth2Name};
     # ---
+
+    $Self->{EmailModuleName} = $Self->_GetEmailModuleName();
 
     return $Self;
 }
@@ -87,19 +92,21 @@ sub Check {
     # ---
     # PS
     # ---
-    #    # get config data
-    #    $Self->{FQDN}     = $ConfigObject->Get('FQDN');
-    #    $Self->{MailHost} = $ConfigObject->Get('SendmailModule::Host')
-    #        || die "No SendmailModule::Host found in Kernel/Config.pm";
-    #    $Self->{SMTPPort} = $ConfigObject->Get('SendmailModule::Port');
-    #    $Self->{User}     = $ConfigObject->Get('SendmailModule::AuthUser');
-    #    $Self->{Password} = $ConfigObject->Get('SendmailModule::AuthPassword');
+    # # get config data
+    # $Self->{FQDN}     = $ConfigObject->Get('FQDN');
+    # $Self->{MailHost} = $ConfigObject->Get('SendmailModule::Host')
+    #     || die "No SendmailModule::Host found in Kernel/Config.pm";
+    # $Self->{SMTPPort}              = $ConfigObject->Get('SendmailModule::Port');
+    # $Self->{User}                  = $ConfigObject->Get('SendmailModule::AuthUser');
+    # $Self->{Password}              = $ConfigObject->Get('SendmailModule::AuthPassword');
+    # $Self->{AuthenticationType}    = $ConfigObject->Get('SendmailModule::AuthenticationType') // 'password';
+    # $Self->{OAuth2TokenConfigName} = $ConfigObject->Get('SendmailModule::OAuth2TokenConfigName');
     # ---
 
     $Param{CommunicationLogObject}->ObjectLog(
         ObjectLogType => 'Connection',
         Priority      => 'Debug',
-        Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{SMTPType},
+        Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
         Value         => 'Testing connection to SMTP service (3 attempts max.).',
     );
 
@@ -119,7 +126,7 @@ sub Check {
         $Param{CommunicationLogObject}->ObjectLog(
             ObjectLogType => 'Connection',
             Priority      => 'Debug',
-            Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{SMTPType},
+            Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
             Value         => sprintf( $TryConnectMessage, $Try, ),
         );
 
@@ -149,7 +156,7 @@ sub Check {
         $Param{CommunicationLogObject}->ObjectLog(
             ObjectLogType => 'Connection',
             Priority      => 'Debug',
-            Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{SMTPType},
+            Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
             Value         => "$Try: Connection could not be established. Waiting for 0.3 seconds.",
         );
 
@@ -163,7 +170,7 @@ sub Check {
         $Param{CommunicationLogObject}->ObjectLog(
             ObjectLogType => 'Connection',
             Priority      => 'Error',
-            Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{SMTPType},
+            Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{EmailModuleName},
             Value         => "Could not connect to host '$Self->{MailHost}'. ErrorMessage: $!",
         );
 
@@ -177,35 +184,97 @@ sub Check {
         SMTP => $SMTP,
     );
 
-    # use smtp auth if configured
-    if ( $Self->{User} && $Self->{Password} ) {
+    # Set authentication to successful by default because it was the default before,
+    # without the changes made here. This is needed to be able to use SMTP without any
+    # configured authentication.
+    my $AuthenticationSuccessful = 1;
+
+    if (
+        $Self->{AuthenticationType} eq 'password'
+        && $Self->{User}
+        && $Self->{Password}
+        )
+    {
+        $Param{CommunicationLogObject}->ObjectLog(
+            ObjectLogType => 'Connection',
+            Priority      => 'Debug',
+            Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
+            Value         => "Using SMTP authentication with user '$Self->{User}' and (hidden) password.",
+        );
+
+        $AuthenticationSuccessful = $SMTP->( 'auth', $Self->{User}, $Self->{Password} );
+    }
+    elsif ( $Self->{AuthenticationType} eq 'oauth2_token' ) {
+        if ( !$Self->{OAuth2TokenConfigName} ) {
+            return $ReturnError->(
+                ErrorMessage => 'SysConfig option SendmailModule::OAuth2TokenConfigName is not set.',
+                Code         => 0,
+            );
+        }
+        my $OAuth2TokenConfigObject = $Kernel::OM->Get('Kernel::System::OAuth2TokenConfig');
+
+        my %OAuth2TokenConfig = $OAuth2TokenConfigObject->DataGet(
+            Name   => $Self->{OAuth2TokenConfigName},
+            UserID => 1,
+        );
+        if ( !%OAuth2TokenConfig ) {
+            return $ReturnError->(
+                ErrorMessage => "OAuth2 token config with name '$Self->{OAuth2TokenConfigName}' could not be found.",
+                Code         => 0,
+            );
+        }
+
+        my $OAuth2TokenObject = $Kernel::OM->Get('Kernel::System::OAuth2Token');
+
+        my $OAuth2Token = $OAuth2TokenObject->GetToken(
+            TokenConfigID => $OAuth2TokenConfig{ $OAuth2TokenConfigObject->{Identifier} },
+            UserID        => 1,
+        );
+        if ( !$OAuth2Token ) {
+            return $ReturnError->(
+                ErrorMessage =>
+                    "OAuth2 token for config with name '$Self->{OAuth2TokenConfigName}' could not be retrieved.",
+                Code => 0,
+            );
+        }
 
         $Param{CommunicationLogObject}->ObjectLog(
             ObjectLogType => 'Connection',
             Priority      => 'Debug',
-            Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{SMTPType},
-            Value         => "Using SMTP authentication with user '$Self->{User}' and (hidden) password.",
+            Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
+            Value =>
+                "Using SMTP authentication with user '$Self->{User}' and OAuth2 token config '$Self->{OAuth2TokenConfigName}'.",
         );
 
-        if ( !$SMTP->( 'auth', $Self->{User}, $Self->{Password} ) ) {
+        my $SASLObject = Authen::SASL->new(
+            mechanism => 'XOAUTH2',
+            callback  => {
+                user         => $Self->{User},
+                auth         => 'Bearer',
+                access_token => $OAuth2Token,
+            },
+        );
 
-            my $Code  = $SMTP->( 'code', );
-            my $Error = $Code . ', ' . $SMTP->( 'message', );
+        $AuthenticationSuccessful = $SMTP->( 'auth', $SASLObject );
+    }
 
-            $SMTP->( 'quit', );
+    if ( !$AuthenticationSuccessful ) {
+        my $Code  = $SMTP->( 'code', );
+        my $Error = $Code . ', ' . $SMTP->( 'message', );
 
-            $Param{CommunicationLogObject}->ObjectLog(
-                ObjectLogType => 'Connection',
-                Priority      => 'Error',
-                Key           => 'Kernel::System::Email::MultiSMTP::'.$Self->{SMTPType},
-                Value         => "SMTP authentication failed (SMTP code: $Code, ErrorMessage: $Error).",
-            );
+        $SMTP->( 'quit', );
 
-            return $ReturnError->(
-                ErrorMessage => "SMTP authentication failed: $Error!",
-                Code         => $Code,
-            );
-        }
+        $Param{CommunicationLogObject}->ObjectLog(
+            ObjectLogType => 'Connection',
+            Priority      => 'Error',
+            Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
+            Value         => "SMTP authentication failed (SMTP code: $Code, ErrorMessage: $Error).",
+        );
+
+        return $ReturnError->(
+            ErrorMessage => "SMTP authentication failed: $Error!",
+            Code         => $Code,
+        );
     }
 
     return $ReturnSuccess->(
@@ -219,7 +288,7 @@ sub Send {
     $Param{CommunicationLogObject}->ObjectLog(
         ObjectLogType => 'Message',
         Priority      => 'Info',
-        Key           => 'Kernel::System::Email::SMTP',
+        Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
         Value         => 'Received message for sending, validating message contents.',
     );
 
@@ -230,7 +299,7 @@ sub Send {
             $Param{CommunicationLogObject}->ObjectLog(
                 ObjectLogType => 'Message',
                 Priority      => 'Error',
-                Key           => 'Kernel::System::Email::SMTP',
+                Key           => 'Kernel::System::Email::MutliSMTP::' . $Self->{EmailModuleName},
                 Value         => "Need $Needed!",
             );
 
@@ -257,7 +326,7 @@ sub Send {
     $Param{CommunicationLogObject}->ObjectLog(
         ObjectLogType => 'Message',
         Priority      => 'Debug',
-        Key           => 'Kernel::System::Email::SMTP',
+        Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
         Value         => "Sending envelope from (mail from: $Param{From}) to server.",
     );
 
@@ -274,7 +343,7 @@ sub Send {
         $Param{CommunicationLogObject}->ObjectLog(
             ObjectLogType => 'Message',
             Priority      => 'Error',
-            Key           => 'Kernel::System::Email::SMTP',
+            Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
             Value         => $FullErrorMessage,
         );
 
@@ -291,7 +360,7 @@ sub Send {
         $Param{CommunicationLogObject}->ObjectLog(
             ObjectLogType => 'Message',
             Priority      => 'Debug',
-            Key           => 'Kernel::System::Email::SMTP',
+            Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
             Value         => "Sending envelope to (rcpt to: $To) to server.",
         );
 
@@ -308,7 +377,7 @@ sub Send {
         $Param{CommunicationLogObject}->ObjectLog(
             ObjectLogType => 'Message',
             Priority      => 'Error',
-            Key           => 'Kernel::System::Email::SMTP',
+            Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
             Value         => $FullErrorMessage,
         );
 
@@ -334,7 +403,7 @@ sub Send {
     $Param{CommunicationLogObject}->ObjectLog(
         ObjectLogType => 'Message',
         Priority      => 'Debug',
-        Key           => 'Kernel::System::Email::SMTP',
+        Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
         Value         => "Sending message data to server.",
     );
 
@@ -373,7 +442,7 @@ sub Send {
         $Param{CommunicationLogObject}->ObjectLog(
             ObjectLogType => 'Message',
             Priority      => 'Error',
-            Key           => 'Kernel::System::Email::SMTP',
+            Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
             Value         => $FullErrorMessage,
         );
 
@@ -395,7 +464,7 @@ sub Send {
     $Param{CommunicationLogObject}->ObjectLog(
         ObjectLogType => 'Message',
         Priority      => 'Info',
-        Key           => 'Kernel::System::Email::SMTP',
+        Key           => 'Kernel::System::Email::MultiSMTP::' . $Self->{EmailModuleName},
         Value         => "Email successfully sent from '$Param{From}' to '$ToString'.",
     );
 
@@ -423,14 +492,25 @@ sub _Connect {
     my $FQDN = $Param{FQDN};
     $FQDN =~ s{:\d+}{}smx;
 
+    my %SSLOptions = $Self->_GetSSLOptions();
+
+    my $SMTPDefaultPort = $Self->_GetSMTPDefaultPort();
+    my $SMTPPort        = $Self->{SMTPPort} || $Param{SMTPPort} || $SMTPDefaultPort;
+
     # set up connection connection
     my $SMTP = Net::SMTP->new(
         $Param{MailHost},
-        Hello   => $FQDN,
-        Port    => $Param{SMTPPort} || 25,
+        Hello => $FQDN,
+        Port  => $SMTPPort,
+        %SSLOptions,
         Timeout => 30,
         Debug   => $Param{SMTPDebug},
     );
+
+    my %StartTLSOptions = $Self->_GetStartTLSOptions();
+    if (%StartTLSOptions) {
+        $SMTP->starttls(%StartTLSOptions);
+    }
 
     return $SMTP;
 }
@@ -505,6 +585,35 @@ sub _GetSMTPSafeWrapper {
         return @ArrayResult if $Wantarray;
         return $ScalarResult;
     };
+}
+
+sub _GetSMTPDefaultPort {
+    my ( $Self, %Param ) = @_;
+
+    return 25;
+}
+
+sub _GetSSLOptions {
+    my ( $Self, %Param ) = @_;
+
+    return;
+}
+
+sub _GetStartTLSOptions {
+    my ( $Self, %Param ) = @_;
+
+    return;
+}
+
+sub _GetEmailModuleName {
+    my ( $Self, %Param ) = @_;
+
+    my $PackageName = ref $Self;
+    if ( $PackageName =~ m{\AKernel::System::Email::MultiSMTP::(.*)\z} ) {
+        $PackageName = $1;
+    }
+
+    return $PackageName;
 }
 
 1;

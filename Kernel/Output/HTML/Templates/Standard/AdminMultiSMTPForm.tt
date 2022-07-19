@@ -1,8 +1,5 @@
 # --
-# AgentMultiSMTPForm.tt - provides HTML form for AdminPerlServicesInvoiceStates
 # Copyright (C) 2011 - 2022 Perl-Services.de, https://www.perl-services.de
-# --
-# $Id: AdminMultiSMTPForm.dtl,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -79,16 +76,32 @@
                         </div>
                         <div class="Clear"></div>
 
-                        <label for="PasswordDecrypted" id="PasswordLabel" class="Mandatory">
-                            <span id="PasswordMarker" class="Marker">*</span>
+                        <label for="PasswordDecrypted" id="PasswordLabel">
                             [% Translate("Password") | html %]:
                         </label>
                         <div class="Field">
-                            <input type="password" id="PasswordDecrypted" name="PasswordDecrypted" value="[% Data.PasswordDecrypted | html %]" class="W75pc Validate_Required [% Data.PasswordInvalid | html %]" maxlength="120"/>
-                            <div id="PasswordDecryptedError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
-                            <div id="PasswordDecryptedServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <input type="password" id="PasswordDecrypted" name="PasswordDecrypted" value="[% Data.PasswordDecrypted | html %]" class="W75pc [% Data.PasswordInvalid | html %]" maxlength="120"/>
                         </div>
                         <div class="Clear"></div>
+
+                        <label for="AuthenticationType" id="AuthenticationTypeLabel" class="Mandatory">
+                            <span id="UserMarker" class="Marker">*</span>
+                            [% Translate("Authentication Type") | html %]:
+                        </label>
+                        <div class="Field">
+                            [% Data.AuthenticationTypeSelect %]
+                        </div>
+                        <div class="Clear"></div>
+
+
+                        <label for="OAuth2Name" id="OAuth2NameLabel">
+                            [% Translate("OAuth2 Name") | html %]:
+                        </label>
+                        <div class="Field">
+                            <input type="text" id="OAuth2Name" name="OAuth2Name" value="[% Data.OAuth2Name | html %]" class="W75pc" maxlength="120"/>
+                        </div>
+                        <div class="Clear"></div>
+
 
                         <label for="Emails" class="Mandatory">
                             <span class="Marker">*</span>
