@@ -1,21 +1,21 @@
 {
     "name": "MultiSMTP",
-    "version": "6.0.3",
+    "version": "10.0.1",
+    "product": "otobo",
     "framework": [
-        "6.0.x",
-        "6.1.x",
-        "6.2.x"
+        "10.0.x",
+        "10.1.x"
     ],
     "vendor": {
         "name":  "Perl-Services.de",
-        "url": "http://www.perl-services.de"
+        "url": "https://www.perl-services.de"
     },
     "license": "GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007",
     "description" : {
-        "en": "A module that allows OTRS to use several SMTP servers.",
-        "de": "Ein Modul, mit dem man mehrere SMTP-Server für OTRS nutzen kann.",
-        "hu": "Egy modul, amely lehetővé teszi az OTRS-nek több SMTP-kiszolgáló használatát.",
-        "ru": "Модуль, который позволяет OTRS использовать несколько SMTP-серверов."
+        "en": "A module that allows OTOBO to use several SMTP servers.",
+        "de": "Ein Modul, mit dem man mehrere SMTP-Server für OTOBO nutzen kann.",
+        "hu": "Egy modul, amely lehetővé teszi az OTOBO-nek több SMTP-kiszolgáló használatát.",
+        "ru": "Модуль, который позволяет OTOBO использовать несколько SMTP-серверов."
     },
     "database" : [
        {

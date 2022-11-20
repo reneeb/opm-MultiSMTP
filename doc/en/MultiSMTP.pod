@@ -1,10 +1,10 @@
 =head1 NAME
 
-MultiSMTP - make OTRS aware of multiple SMTP servers
+MultiSMTP - make OTOBO aware of multiple SMTP servers
 
 =head1 DESCRIPTION
 
-A standard OTRS installation is not able to use different SMTP servers for each sender address. This can lead to problems as many recipient servers deny to deliver the mails as a reverse lookup does not respond the hostname of the sender address.
+A standard OTOBO installation is not able to use different SMTP servers for each sender address. This can lead to problems as many recipient servers deny to deliver the mails as a reverse lookup does not respond the hostname of the sender address.
 
 So each sender address needs its own SMTP server - and this is provided with this package.
 

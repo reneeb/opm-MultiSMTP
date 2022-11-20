@@ -2,11 +2,11 @@
 
 =head1 NÉV
 
-MultiSMTP - felkészíti az OTRS keretrendszert több SMTP-kiszolgáló használatára
+MultiSMTP - felkészíti az OTOBO keretrendszert több SMTP-kiszolgáló használatára
 
 =head1 LEÍRÁS
 
-Egy szabványos OTRS telepítés nem képes különböző SMTP-kiszolgálók 
+Egy szabványos OTOBO telepítés nem képes különböző SMTP-kiszolgálók 
 használatára az egyes küldőcímeknél. Ez problémákhoz vezethet, ugyanis több 
 címzett kiszolgálója megtagadja a levelek kézbesítését, mivel a fordított 
 keresés nem a küldőcím gépnevét adja vissza.
@@ -59,5 +59,5 @@ fiókokat használtak.
 
 =head1 MAGYAR FORDÍTÁS
 
-A magyar fordítást az OTRS-megoldások csapata készítette.
+A magyar fordítást az OTOBO-megoldások csapata készítette.
 Copyright (C) 2016 Úr Balázs, L<http://otrs-megoldasok.hu>

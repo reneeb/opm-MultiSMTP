@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<otrs_config version="2.0" init="Config">
+<otobo_config version="2.0" init="Config">
     <Setting Name="Frontend::Module###AdminMultiSMTP" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the MultiSMTP interface.</Description>
         <Navigation>Frontend::Admin::ModuleRegistration</Navigation>
@@ -97,4 +97,4 @@
             </Item>
         </Value>
     </Setting>
-</otrs_config>
+</otobo_config>
