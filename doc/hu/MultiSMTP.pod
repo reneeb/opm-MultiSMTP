@@ -29,7 +29,7 @@ szabványos SMTP mechanizmus használ).
 
 =head1 SZERZŐ ÉS LICENC
 
-Ezt a csomagot Renée Bäcker E<lt>otrs@perl-services.deE<gt> készítette.
+Ezt a csomagot Renée Bäcker E<lt>info@perl-services.deE<gt> készítette.
 
 A csomag az AGPL feltételi szerint licencelt. Ha nem kapta meg ezt a fájlt, 
 akkor nézze meg a L<http://www.gnu.org/licenses/agpl.txt> címen.

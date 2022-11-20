@@ -24,7 +24,7 @@ MultiSMTP - позволяет OTOBO использовать несколько
 
 =head1 АВТОР И ЛИЦЕНЗИЯ
 
-Этот пакет написан Renee Baecker E<lt>otrs@perl-services.deE<gt>.
+Этот пакет написан Renee Baecker E<lt>info@perl-services.deE<gt>.
 
 Пакет лицензируется по LGPL. Если вы не получили этот файл, смотрите L<http://www.gnu.org/licenses/agpl.txt>.
 
@@ -51,6 +51,6 @@ Balazs Ur (L<http://otrs-megoldasok.hu/>) добавил Венгерский я
 
 =head2 Ilya Shadryn
 
-Ilya Shadryn (L<https://github.com/WestDragon>) добавил Русский язык и совместимость с otrs 6.
+Ilya Shadryn (L<https://github.com/WestDragon>) добавил Русский язык и совместимость с otobo 6.
 
 =cut
