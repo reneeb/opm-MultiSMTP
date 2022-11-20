@@ -1,6 +1,6 @@
 {
     "name": "MultiSMTP",
-    "version": "10.0.1",
+    "version": "10.0.2",
     "product": "otobo",
     "framework": [
         "10.0.x",

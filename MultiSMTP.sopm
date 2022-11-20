@@ -2,7 +2,7 @@
 <otobo_package version="1.0">
     <!-- GENERATED WITH OPM::Maker::Command::sopm (1.1.0) -->
     <Name>MultiSMTP</Name>
-    <Version>10.0.1</Version>
+    <Version>10.0.2</Version>
     <Framework>10.0.x</Framework>
     <Framework>10.1.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
