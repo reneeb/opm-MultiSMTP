@@ -1,6 +1,6 @@
 # --
 # Kernel/Language/de_MultiSMTP.pm - the German translation of MultiSMTP
-# Copyright (C) 2011 - 2022 Perl-Services.de, https://www.perl-services.de/
+# Copyright (C) 2011 - 2023 Perl-Services.de, https://www.perl-services.de/
 # Changes Copyright (C) 2017 WestDevTeam, http://westdev.by
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see

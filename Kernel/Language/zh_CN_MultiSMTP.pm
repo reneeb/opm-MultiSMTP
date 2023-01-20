@@ -1,7 +1,7 @@
 # --
 # Kernel/Language/zh_CN_MultiSMTP.pm - the Chinese translation of MultiSMTP
 # Copyright (C) 2011-2017 never.min@gmail.com
-# Copyright (C) 2011 - 2022 Perl-Services.de, https://www.perl-services.de/
+# Copyright (C) 2011 - 2023 Perl-Services.de, https://www.perl-services.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you

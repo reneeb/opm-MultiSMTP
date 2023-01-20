@@ -1,6 +1,6 @@
 # --
 # Kernel/Language/hu_MultiSMTP.pm - the Hungarian translation of MultiSMTP
-# Copyright (C) 2011 - 2022 Perl-Services.de, https://www.perl-services.de/
+# Copyright (C) 2011 - 2023 Perl-Services.de, https://www.perl-services.de/
 # Copyright (C) 2016-2017 Balázs Úr, http://www.otrs-megoldasok.hu
 # Changes Copyright (C) 2017 WestDevTeam, http://westdev.by
 # --
