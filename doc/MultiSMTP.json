@@ -1,9 +1,10 @@
 {
     "name": "MultiSMTP",
-    "version": "6.3.2",
+    "version": "6.3.3",
     "framework": [
         "6.3.x",
-        "6.4.x"
+        "6.4.x",
+        "6.5.x"
     ],
     "vendor": {
         "name":  "Perl-Services.de",
