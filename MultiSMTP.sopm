@@ -2,9 +2,11 @@
 <otrs_package version="1.0">
     <!-- GENERATED WITH OPM::Maker::Command::sopm (1.1.0) -->
     <Name>MultiSMTP</Name>
-    <Version>6.3.2</Version>
+    <Version>6.3.4</Version>
     <Framework>6.3.x</Framework>
     <Framework>6.4.x</Framework>
+    <Framework>6.5.x</Framework>
+    <Framework>7.0.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
     <URL>https://www.perl-services.de</URL>
     <Description Lang="de">Ein Modul, mit dem man mehrere SMTP-Server für Znuny nutzen kann.</Description>
