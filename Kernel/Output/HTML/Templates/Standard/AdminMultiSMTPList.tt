@@ -9,9 +9,8 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
-    <h1>[% Translate("SMTP Management") | html %]</h1>
-    <div class="SidebarColumn">
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst ActionsSideBar ActionsSideBar">
+    <div class="SidebarColumn ActionsSideBarComp ActionsSideBarComp">
         <div class="WidgetSimple">
             <div class="Header">
                 <h2>[% Translate("Actions") | html %]</h2>
@@ -27,6 +26,27 @@
     </div>
 
     <div class="ContentColumn">
+        <h1 class="InvisibleText">[% Translate("SMTP Management") | html %]</h1>
+
+        [% BreadcrumbPath = [
+                {
+                    Name => Translate("SMTP Management"),
+                    Link => Env("Action"),
+                },
+            ]
+        %]
+
+        [% SWITCH Data.Action %]
+            [% CASE 'Add' %]
+                [% BreadcrumbPath.push({ Name => Translate('Add'),}) %]
+            [% CASE 'Change' %]
+                [% USE EditTitle = String(Translate("Edit")) %]
+                [% BreadcrumbPath.push({ Name => EditTitle.append( ': ', Data.Name ) }) %]
+        [% END %]
+
+        [% INCLUDE "Breadcrumb.tt" Path = BreadcrumbPath %]
+
+
         <div class="WidgetSimple">
             <div class="Header">
                 <h2>[% Translate("List") | html %]</h2>
