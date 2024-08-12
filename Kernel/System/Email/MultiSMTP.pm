@@ -125,7 +125,7 @@ sub Send {
                 $Module => \%SMTP,
             );
 
-            my $SMTPObject  = $Kernel::OM->Get($Module);
+            my $SMTPObject  = $Kernel::OM->Create($Module);
 
             if ($SMTPObject->{User} ne $SMTP{User}) {
                 if ( $Self->{Debug} ) {
